@@ -1,0 +1,16 @@
+{
+  "id": 2,
+  "gene_id": "BnaA01G0000200ZS",
+  "chr": "scaffoldA01",
+  "start": 152729,
+  "end": 153872,
+  "stand": "+",
+  "description": "Thaumatin-like protein 1b",
+  "preferred_name": "-",
+  "gos": "-",
+  "kegg_ko": "-",
+  "pfams": "Thaumatin",
+  "damor_v1_0": "BnaA01G0000101D",
+  "westar_v1_0": "BnaA01G0000101WE",
+  "kale": "kaleA010000011"
+}

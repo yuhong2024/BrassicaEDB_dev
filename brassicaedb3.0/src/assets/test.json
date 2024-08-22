@@ -1,0 +1,16 @@
+{
+  "pieData": [
+    { "name": "Category A", "value": 40 },
+    { "name": "Category B", "value": 20 },
+    { "name": "Category C", "value": 30 },
+    { "name": "Category D", "value": 10 }
+  ],
+  "barData1": {
+    "categories": ["X1", "X2", "X3", "X4"],
+    "values": [50, 20, 30, 10]
+  },
+  "barData2": {
+    "categories": ["Y1", "Y2", "Y3", "Y4"],
+    "values": [10, 40, 20, 30]
+  }
+}
