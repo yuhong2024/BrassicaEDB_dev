@@ -62,7 +62,7 @@
         </template>
         <el-menu-item index="/tools/blast">Blast</el-menu-item>
         <el-menu-item index="/tools/jbrowse">Jbrowse</el-menu-item>
-        <el-menu-item index="/tools/primer">Primer</el-menu-item>
+        <el-menu-item index="/tools/primer">qPrimer</el-menu-item>
         <el-menu-item index="/tools/efpseq">eFP-seq</el-menu-item>
         <el-menu-item index="/tools/coexpression">Co-expression</el-menu-item>
         <el-menu-item index="/tools/seqfetch">KEGG Enrichment</el-menu-item>
@@ -76,11 +76,19 @@
             <span>Analysis</span>
           </router-link>
         </template>
-        <el-menu-item index="/tools/blast">Blast</el-menu-item>
-        <el-menu-item index="/tools/jbrowse">Jbrowse</el-menu-item>
-        <el-menu-item index="/tools/primer">Primer</el-menu-item>
-        <el-menu-item index="/tools/seqfetch">KEGG Enrichment</el-menu-item>
+<!--        <el-menu-item index="/tools/blast">Blast</el-menu-item>-->
+<!--        <el-menu-item index="/tools/jbrowse">Jbrowse</el-menu-item>-->
+<!--        <el-menu-item index="/tools/primer">Primer</el-menu-item>-->
+<!--        <el-menu-item index="/tools/seqfetch">KEGG Enrichment</el-menu-item>-->
+        <el-menu-item index="/analysis/a">Genetic Differences Between Species</el-menu-item>
+        <el-menu-item index="/analysis/b">Regulatory Network Prediction</el-menu-item>
+        <el-menu-item index="/analysis/InterspeciesCo-expression">Interspecies Co-expression</el-menu-item>
+
+
+
       </el-sub-menu>
+
+
 
       <!-- Download -->
       <el-sub-menu index="/download">

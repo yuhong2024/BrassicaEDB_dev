@@ -51,6 +51,16 @@ import imageKegg from '@/assets/img/home/tools/kegg.png';
 import imagePrimer from '@/assets/img/home/tools/primer.png';
 import imageSeqfetch from '@/assets/img/home/tools/seqfetch.png';
 
+
+import imageGD from '@/assets/img/home/analysis/Genetic_differences_between_species.svg';
+import imageICE from '@/assets/img/home/analysis/Interspecies_co-expression.svg';
+import imageRNP from '@/assets/img/home/analysis/Regulatory_network_prediction.svg';
+
+
+
+
+
+
 // 定义 sections 数据
 const sections = ref([
   {
@@ -59,37 +69,37 @@ const sections = ref([
     items: [
       {
         name: 'Brassica carinata',
-        description: 'A leafy green vegetable commonly grown in Ethiopia. It belongs to the cruciferous family and is related to mustard.',
+        description: 'BBCC (2n=34), An ancient crop, which has remarkable ability to resist stress.',
         image: image1,
         path: '/genefeature/brassicacarinata',
       },
       {
         name: 'Brassica juncea',
-        description: 'A common leafy vegetable belonging to the cruciferous family. It is native to Asia, especially China and India, and has a long history of cultivation.',
+        description: 'AABB (2n=36), Type specimens were collected from Asia, an specialty vegetable of China.',
         image: image2,
         path: '/genefeature/juncea',
       },
       {
         name: 'Brassica napus',
-        description: 'Oil crops mainly used in the production of edible oil. The plant is 60-120 cm tall, with broad leaves and yellow flowers.',
+        description: 'AACC (2n=38), An important oil crop, origined from Brassica rapa and Brassica oleracea about 7500 years ago.',
         image: image3,
         path: '/genefeature/napus',
       },
       {
         name: 'Brassica nigra',
-        description: 'A plant belonging to the cruciferous family, also known as black mustard. Its seeds are often used to make mustard, a spicy condiment.',
+        description: 'BB (2n=16), Cultivated for its dark brown to black seeds, often used as a spice.' ,
         image: image4,
         path: '/genefeature/nigra',
       },
       {
         name: 'Brassica oleracea',
-        description: 'A common leafy green vegetable, also known as cabbage or cabbage heart. The leaves of kale are round and usually form a tight spherical head.',
+        description: 'CC (2n=18), Which is named because it can make blue indigo dye.',
         image: image5,
         path: '/genefeature/oleracea',
       },
       {
         name: 'Brassica rapa',
-        description: 'A common leafy vegetable belonging to the cruciferous family. It is especially popular in China and East Asia.',
+        description: 'AA (2n=20), Originating in northern China, it was introduced to Japan, Europe in the 19th century.',
         image: image6,
         path: '/genefeature/rapa',
       },
@@ -97,30 +107,66 @@ const sections = ref([
   },
 
   {
+    title: 'BEDB Analysis',
+    titleLink: '/analysis',
+    items: [
+      {
+        name: 'Regulatory network prediction',
+        description: 'Transcriptome expression data were submitted to identify transcription factors and target genes, and to predict regulatory networks.',
+        image: imageGD,
+        path: '/search/co-expression',
+      },
+      {
+        name: 'Genetic differences between species',
+        description: 'The differentially expressed genes of Orthologous gene were analyzed by the submitted transcriptome expression data. ',
+        image: imageICE,
+        path: '/search/tf',
+      },
+      {
+        name: 'Interspecies co-expression',
+        description: 'The transcriptome expression data submitted were used to analyze the co-expression regulatory network of Orthologous gene between species.',
+        image: imageRNP,
+        path: '/search/alternative-splicing',
+      },
+
+
+    ],
+  },
+
+
+
+
+
+
+
+
+
+
+  {
     title: 'BEDB Search',
     titleLink: '/search',
     items: [
       {
         name: 'Co-expression Network',
-        description: 'Weighted gene co-expression network search (WGCNA) was used to construct a weighted network to reveal the complex relationships between genes and help understand how genes work together in the network.',
+        description: 'Analysis of coexpression networks in six species of Brassica.',
         image: imageCo,
         path: '/search/co-expression',
       },
       {
         name: 'TF Regulatory Network',
-        description: 'The transcription factor regulatory network of six species of Brassica was identified and the transcription factor regulatory network of each species was predicted using the transcriptional expression data.',
+        description: 'Transcription factor regulatory network of six species of Brassica ',
         image: imageTF,
         path: '/search/tf',
       },
       {
         name: 'Alternative Splicing',
-        description: 'The search of five variable splicing events in six species of Brassica shows that alternative splicing in plants not only increases the complexity of the genome, but also provides flexible regulatory mechanisms for plants under complex environmental conditions, helping them adapt to various growth and development environments.',
+        description: 'The analysis of five variable splicing events in six species of Brassica.',
         image: imageTr,
         path: '/search/alternative-splicing',
       },
       {
         name: 'Homologous Genes',
-        description: 'In the six species of Brassica, homologous genes between species are of great significance for understanding gene function, genome evolution and genetic relationships among species.',
+        description: 'Interspecific homologous gene in six species species of Brassica.',
         image: imageHom,
         path: '/search/homologous-gene',
       },
@@ -128,20 +174,28 @@ const sections = ref([
 
       {
         name: 'Transcriptional Expression',
-        description: 'Gene expression in transcriptome data of six species of Brassica, interpretation of the relationship between expressed genes and experimental conditions or biological phenomena, search of gene function and regulation.',
+        description: 'Gene expression in transcriptome data of six species of Brassica.',
         image: imageGene,
         path: '/search/transcriptional-expression',
       },
 
       {
-        name: 'New Part',
-        description: 'Gene expression in transcriptome data of six species of Brassica, interpretation of the relationship between expressed genes and experimental conditions or biological phenomena, search of gene function and regulation.',
+        name: 'eFP Module ',
+        description: 'Gene expression patterns of six species of Brassica.',
         image: imageGene,
         path: '/search/transcriptional-expression',
       },
 
     ],
   },
+
+
+
+
+
+
+
+
   {
     title: 'BEDB Tools',
     titleLink: '/tools',
@@ -185,6 +239,20 @@ const sections = ref([
     ],
   },
 ]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </script>
 
 <style scoped>

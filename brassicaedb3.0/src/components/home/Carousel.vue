@@ -15,7 +15,9 @@ import { ref } from 'vue';
 import image1 from '@/assets/img/home/display/image1.png';
 import image2 from '@/assets/img/home/display/image2.png';
 import image3 from '@/assets/img/home/display/image3.jpg';
-import image4 from '@/assets/img/home/display/image4.jpg';
+import image4 from '@/assets/img/home/display/image4.png';
+
+
 
 const items = ref([
   { src: image1, alt: 'Image 1' },

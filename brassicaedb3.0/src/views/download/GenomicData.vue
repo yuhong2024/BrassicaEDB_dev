@@ -1,178 +1,308 @@
 <template>
-  <div class="home">
-    <!-- 面包屑导航 -->
+  <div class="qprimer-page">
+    <!-- Breadcrumb Navigation -->
     <div class="breadcrumb-container">
-      <el-breadcrumb separator-class="el-icon-arrow-right">
-        <el-breadcrumb-item>Home</el-breadcrumb-item>
-        <el-breadcrumb-item>BrassicaEDB</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="breadcrumb-left">
+        <h2>qPrimer</h2>
+      </div>
+      <div class="breadcrumb-right">
+        <el-breadcrumb separator="/">
+          <el-breadcrumb-item to="/">Home</el-breadcrumb-item>
+          <el-breadcrumb-item to="/tools">Tools</el-breadcrumb-item>
+          <el-breadcrumb-item>qPrimer</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
 
-    <!-- 介绍部分 -->
-    <IntroText />
+    <!-- Introduction Section -->
+    <el-card class="intro-card">
+      <div class="intro-content">
+        <img src="@/assets/img/tools/qprimer.png" alt="Primer Image" class="intro-image" />
+        <div class="intro-text">
+          <h2>qPrimer</h2>
+          <p>
+            The qPrimer package is a versatile Python toolset designed for the design, verification, annotation, and visualization of qPCR primers, aiding researchers in optimizing genetic analysis and PCR workflows​.
+            &nbsp;
+              <a href="https://github.com/swu1019lab/qPrimer" target="_blank"> [Github]</a>&nbsp;
+              <a href="https://pubmed.ncbi.nlm.nih.gov/39119895/" target="_blank"> [Citation]</a>
+            </p>
 
-    <!-- 轮播图 -->
-    <div class="carousel-container">
-      <Carousel />
-    </div>
-
-
-    <!-- 搜索部分卡片式布局 -->
-    <el-card shadow="hover" class="search-card">
-      <SearchGene />
+        </div>
+      </div>
     </el-card>
 
-    <!-- 统计部分 -->
-    <Statistics />
+    <!-- 上传表单卡片 -->
+    <el-card class="upload-card">
+      <el-form ref="uploadForm" :model="form" @submit.prevent="handleSubmit" label-position="top">
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="Sequence File (.fa):" prop="seq_file" :rules="fileRules">
+              <el-upload
+                  class="upload-box"
+                  action=""
+                  :before-upload="beforeUpload"
+                  :on-change="handleFileChange('seq_file')"
+                  :file-list="seqFileList"
+                  :limit="1"
+                  :auto-upload="false"
+              >
+                <el-button type="primary">Choose Sequence File</el-button>
+              </el-upload>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="INI File (.ini):" prop="ini_file" :rules="fileRules">
+              <el-upload
+                  class="upload-box"
+                  action=""
+                  :before-upload="beforeUpload"
+                  :on-change="handleFileChange('ini_file')"
+                  :file-list="iniFileList"
+                  :limit="1"
+                  :auto-upload="false"
+              >
+                <el-button type="primary">Choose INI File</el-button>
+              </el-upload>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-button type="primary" @click="validateAndSubmit" class="submit-button">Submit</el-button>
 
-    <!-- 图表部分 -->
-    <div class="charts-container">
-      <el-row :gutter="20">
-        <el-col :span="12">
-          <StatisticsChart :title="'Summary (Species)'" :chartOptions="barChartOptions" />
-        </el-col>
-        <el-col :span="12">
-          <StatisticsChart :title="'Summary (Genome Distribution)'" :chartOptions="pieChartOptions" />
-        </el-col>
-      </el-row>
+        <!-- 进度条 -->
+        <el-progress
+            v-if="uploadProgress > 0"
+            :percentage="uploadProgress"
+            status="active"
+            :text-inside="true"
+            :stroke-width="18"
+            class="upload-progress"
+        ></el-progress>
+      </el-form>
+    </el-card>
+
+    <!-- 结果展示 -->
+    <div v-if="htmlContent" class="result">
+      <div class="result-header">
+        <div class="left-section">
+          <h2>Result</h2>
+          <el-button type="success" @click="browseResult">Browse</el-button>
+        </div>
+        <div class="right-section">
+          <el-button type="primary" @click="downloadResult">Download Result</el-button>
+        </div>
+      </div>
+      <div v-html="htmlContent" class="result-content"></div>
     </div>
-
-    <!-- 新的 DisplayCard 组件 -->
-    <DisplayCard />
-
-
-    <!-- 返回顶部按钮 -->
-    <el-backtop :right="100" :bottom="100" />
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import axios from 'axios';
-import DisplayCard from '@/components/home/DisplayCard.vue';
+import { ref } from 'vue';
+import { ElMessage } from 'element-plus';
 
-import IntroText from '@/components/home/IntroText.vue';
-import Carousel from '@/components/home/Carousel.vue';
-import SearchGene from '@/components/SearchGene.vue';
-import Statistics from '@/components/home/Statistics.vue';
-import StatisticsChart from '@/components/home/StatisticsChart.vue';
+// 表单数据
+const form = ref({
+  seq_file: null,
+  ini_file: null,
+});
 
-//引入genefeature的图片
-import image1 from '@/assets/img/home/genefeature/B1.svg'; // 引入图片
-import image2 from '@/assets/img/home/genefeature/B2.svg';
-import image3 from '@/assets/img/home/genefeature/B3.svg';
-import image4 from '@/assets/img/home/genefeature/B4.svg';
-import image5 from '@/assets/img/home/genefeature/B5.svg';
-import image6 from '@/assets/img/home/genefeature/B6.svg';
+// 文件列表
+const seqFileList = ref([]);
+const iniFileList = ref([]);
 
-import imageCo from '@/assets/img/home/search/Co.svg'; // 引入图片
-import imageGene from '@/assets/img/home/search/Gene.svg'; // 引入图片
-import imageHom from '@/assets/img/home/search/Hom.svg'; // 引入图片
-import imageTF from '@/assets/img/home/search/TF.svg'; // 引入图片
-import imageTr from '@/assets/img/home/search/Transcript.svg'; // 引入图片
+// 上传进度
+const uploadProgress = ref(0);
 
-import imageBlast from '@/assets/img/home/tools/blast.png';
-import imageGo from '@/assets/img/home/tools/go.png';
-import imageJbrowse from '@/assets/img/home/tools/jbrowse.png';
-import imageKegg from '@/assets/img/home/tools/kegg.png';
-import imagePrimer from '../../assets/img/home/tools/primer.png';
-import imageSeqfetch from '../../assets/img/home/tools/seqfetch.png';
+// 文件校验规则
+const fileRules = [
+  { required: true, message: 'Please upload a file', trigger: 'change' },
+];
 
+// 上传前验证文件大小
+const beforeUpload = (file) => {
+  const isLimitSize = file.size / 1024 < 50; // 50 KB 限制
+  if (!isLimitSize) {
+    ElMessage.error('File size exceeds the 50KB limit. Please upload a smaller file.');
+  }
+  return isLimitSize;
+};
 
+// 提交结果的 HTML 内容
+const htmlContent = ref('');
 
-
-const barChartOptions = ref({});
-const pieChartOptions = ref({});
-const fetchData = async () => {
-  try {
-    const response = await axios.get('https://brassica.wangyuhong.cn/api/homeboard/');
-    const data = response.data;
-
-    // 更新柱状图配置
-    barChartOptions.value = {
-
-      tooltip: { trigger: 'axis' },
-      xAxis: {
-        type: 'category',
-        data: Object.keys(data.biosample_bar),
-        axisLabel: {
-          interval: 0, // 保证显示所有标签
-          rotate: 40,  // 旋转标签角度
-          margin: 4  // 标签与轴线之间的距离
-        }
-      },
-      yAxis: { type: 'value' },
-      series: [{ data: Object.values(data.biosample_bar), type: 'bar' }]
-    };
-
-    // 更新饼图配置
-    pieChartOptions.value = {
-
-      tooltip: { trigger: 'item' },
-      series: [
-        {
-          name: 'Genomes',
-          type: 'pie',
-          radius: '80%',
-          data: Object.entries(data.genome_pie).map(([name, value]) => ({
-            value,
-            name
-          })),
-          emphasis: {
-            itemStyle: {
-              shadowBlur: 10,
-              shadowOffsetX: 0,
-              shadowColor: 'rgba(0, 0, 0, 0.5)'
-            }
-          }
-        }
-      ]
-    };
-  } catch (error) {
-    console.error('Error fetching data:', error);
+// 处理文件变化
+const handleFileChange = (type) => (file) => {
+  form.value[type] = file.raw;
+  if (type === 'seq_file') {
+    seqFileList.value = [file];
+  } else if (type === 'ini_file') {
+    iniFileList.value = [file];
   }
 };
 
-onMounted(fetchData);
+// 表单验证并提交
+const validateAndSubmit = () => {
+  if (!form.value.seq_file || !form.value.ini_file) {
+    ElMessage.error('Please select both sequence and INI files.');
+    return;
+  }
 
+  handleSubmit();
+};
 
+// 提交表单数据
+const handleSubmit = async () => {
+  const formData = new FormData();
+  formData.append('seq_file', form.value.seq_file);
+  formData.append('ini_file', form.value.ini_file);
+
+  const xhr = new XMLHttpRequest();
+
+  xhr.open('POST', 'https://brassica.wangyuhong.cn/api/qprimer/designvisualize/', true);
+
+  xhr.setRequestHeader('Accept', 'text/html');
+
+  // 进度条处理
+  xhr.upload.onprogress = (event) => {
+    if (event.lengthComputable) {
+      uploadProgress.value = Math.round((event.loaded * 100) / event.total);
+    }
+  };
+
+  xhr.onload = () => {
+    if (xhr.status === 200) {
+      htmlContent.value = xhr.responseText;
+    } else {
+      ElMessage.error('Error: ' + xhr.statusText);
+    }
+    uploadProgress.value = 0; // 上传完成后隐藏进度条
+  };
+
+  xhr.onerror = () => {
+    ElMessage.error('Error: Network Error');
+    uploadProgress.value = 0;
+  };
+
+  xhr.send(formData);
+};
+
+// 下载结果 HTML 文件
+const downloadResult = () => {
+  const blob = new Blob([htmlContent.value], { type: 'text/html' });
+  const url = window.URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'qPrimer_result.html';
+  link.click();
+  URL.revokeObjectURL(url);
+};
+
+// 浏览结果
+const browseResult = () => {
+  const blob = new Blob([htmlContent.value], { type: 'text/html' });
+  const url = window.URL.createObjectURL(blob);
+  window.open(url, '_blank');
+};
 </script>
 
 <style scoped>
-/* 面包屑导航 */
+.qprimer-page {
+  max-width: 1200px; /* 页面宽度 */
+  margin: 0 auto;
+  padding: 20px;
+}
+
 .breadcrumb-container {
-  padding: 16px 0;
-  border-bottom: 2px solid #42b983; /* 主题色作为底边 */
-  background-color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
 }
 
-/* 轮播图容器 */
-.carousel-container {
-  margin:25px 0;
+.breadcrumb-left h2 {
+  margin: 0;
+  font-weight: bold;
 }
 
-/* 搜索容器 */
-.search-container {
-  margin: 30px 0;
+.breadcrumb-right .el-breadcrumb {
+  font-size: 16px;
 }
 
-/* 搜索卡片 */
-.search-card {
-  margin-bottom: 5px;
-  padding: 5px;
-  border-radius: 10px; /* 圆角处理 */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 添加阴影 */
-  background: linear-gradient(135deg, #42b983, #8fd3f4); /* 使用渐变背景 */
+.intro-card {
+  margin-bottom: 20px;
 }
 
-/* 图表容器 */
-.charts-container {
-  margin: 2px 0;
+.intro-content {
+  display: flex;
+  align-items: center;
 }
 
+.intro-image {
+  width: 120px;
+  height: auto;
+  margin-right: 20px;
+  border-radius: 8px;
+}
 
+.intro-text h2 {
+  margin: 0;
+  font-size: 24px;
+}
 
+.intro-text p {
+  margin-top: 10px;
+  font-size: 16px;
+  line-height: 1.6;
+}
 
+.upload-card {
+  margin-bottom: 20px;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.upload-box {
+  width: 100%;
+}
+
+.submit-button {
+  margin-top: 10px;
+  width: 100%;
+}
+
+.upload-progress {
+  margin-top: 15px;
+}
+
+.result {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid #ebeef5;
+  border-radius: 4px;
+}
+
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.left-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.right-section {
+  margin-left: auto;
+}
+
+.result-content {
+  max-height: 1200px;
+  overflow-y: auto;
+  border-top: 1px solid #ebeef5;
+  padding-top: 10px;
+}
 </style>
-
-

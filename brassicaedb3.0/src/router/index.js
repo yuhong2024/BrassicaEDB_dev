@@ -31,6 +31,17 @@ import About from '../views/more/About.vue';
 import Update from '../views/more/Update.vue';
 import SearchResult from '@/views/SearchResult.vue';
 
+import Analysis from '../views/analysis/indexanalysis.vue';
+import GeneticDifferencesBetweenSpecies from '../views/analysis/geneticdifferencesbetweenspecies.vue';
+import InterspeciesCoExpression from '../views/analysis/interspeciescoexpression.vue';
+import RegulatoryNetworkPrediction from '../views/analysis/regulatorynetworkprediction.vue';
+import PageA from '../views/analysis/a.vue';
+import PageB from '../views/analysis/b.vue';
+
+
+
+
+
 const routes = [
     { path: '/', component: Home, meta: { title: 'Home', breadcrumbs: ['Home'] } },
     { path: '/search-result/:geneId', name: 'SearchResult', component: SearchResult, props: true },
@@ -41,6 +52,16 @@ const routes = [
     { path: '/genefeature/nigra', component: BrassicaNigra, meta: { title: 'Brassica nigra', breadcrumbs: ['Home', 'Gene feature', 'Brassica nigra'] } },
     { path: '/genefeature/oleracea', component: BrassicaOleracea, meta: { title: 'Brassica oleracea', breadcrumbs: ['Home', 'Gene feature', 'Brassica oleracea'] } },
     { path: '/genefeature/rapa', component: BrassicaRapa, meta: { title: 'Brassica rapa', breadcrumbs: ['Home', 'Gene feature', 'Brassica rapa'] } },
+
+    { path: '/analysis', component: Analysis, meta: { title: 'Analysis', breadcrumbs: ['Home', 'Analysis'] } },
+    // Analysis 路由
+    { path: '/analysis', component: Analysis, meta: { title: 'Analysis', breadcrumbs: ['Home', 'Analysis'] } },
+    { path: '/analysis/a', component: PageA, meta: { title: 'Page A', breadcrumbs: ['Home', 'Analysis', 'Page A'] } },
+    { path: '/analysis/b', component: PageB, meta: { title: 'Page B', breadcrumbs: ['Home', 'Analysis', 'Page B'] } },
+
+    { path: '/analysis/genetic-differences', component: GeneticDifferencesBetweenSpecies, meta: { title: 'Genetic Differences Between Species', breadcrumbs: ['Home', 'Analysis', 'Genetic Differences Between Species'] } },
+    { path: '/analysis/interspecies-coexpression', component: InterspeciesCoExpression, meta: { title: 'Interspecies Co-expression', breadcrumbs: ['Home', 'Analysis', 'Interspecies Co-expression'] } },
+    { path: '/analysis/regulatory-network-prediction', component: RegulatoryNetworkPrediction, meta: { title: 'Regulatory Network Prediction', breadcrumbs: ['Home', 'Analysis', 'Regulatory Network Prediction'] } },
 
     // 修改后的 Search 路由
     { path: '/search', component: Search, meta: { title: 'Search', breadcrumbs: ['Home', 'Search'] } },
