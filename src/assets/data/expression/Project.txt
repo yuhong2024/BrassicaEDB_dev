@@ -1,0 +1,193 @@
+Organism	BioProject	Samples	Description
+Brassica carinata	PRJNA298501	4	Comparative transcriptome analysis between purple and green leaves
+Brassica carinata	PRJNA600205	9	RNA-seq of Brassicaceae pollen and stigma samples
+Brassica carinata	PRJNA641876	224	The evolution of gene spatiotemporal expression in six brassica species during embryogenesis
+Brassica carinata	PRJNA770258	12	pollen development in synthetic haploid and tetraploid Brassica carinata
+Brassica carinata	PRJNA813851	3	Damage treatment
+Brassica carinata	PRJNA835891	35	RNA sequencing
+Brassica carinata	PRJNA974582	12	Tolerance of Brassica carinata to cadmium
+Brassica juncea	PRJNA1020652	36	RNA sequencing of brassica juncea
+Brassica juncea	PRJNA1022584	4	RNA-sequencing of Brassica juncea seed
+Brassica juncea	PRJNA1039958	2	Salt stress responsive
+Brassica juncea	PRJNA1044267	6	yellow seed color genes
+Brassica juncea	PRJNA244493	3	Challenge with Alternaria brassicicola
+Brassica juncea	PRJNA245462	2	Different expressed genes in different parts of Brassica juncea plants.
+Brassica juncea	PRJNA270523	3	High temperature and drought stress
+Brassica juncea	PRJNA271638	2	Elucidate salt induced changes in whole transcriptome of CS-52
+Brassica juncea	PRJNA276704	2	Salinity tolerance
+Brassica juncea	PRJNA290942	2	CMS (Moricandia arvensis) brassica juncea and its fertility restorer line.
+Brassica juncea	PRJNA298501	4	No description available
+Brassica juncea	PRJNA395472	3	Mustard leaves after armyworm chewing
+Brassica juncea	PRJNA479948	4	Cadmium stress
+Brassica juncea	PRJNA497315	5	Five alloplasmic male sterility line
+Brassica juncea	PRJNA544908	6	Transcriptome analysis the purple leaf formation in Brassica juncea
+Brassica juncea	PRJNA562990	6	Cytokinin promoted callus sprouting
+Brassica juncea	PRJNA576081	3	Infestation by aphid species Lipaphis erysimi and Aphis craccivora respectively
+Brassica juncea	PRJNA592031	18	Brassica response to Cd
+Brassica juncea	PRJNA615316	58	Brassica juncea Genome sequencing and assembly
+Brassica juncea	PRJNA641876	224	The evolution of gene spatiotemporal expression in six brassica species during embryogenesis
+Brassica juncea	PRJNA670607	3	"Brassicaceae crops: Armoracia rusticana (AR), Brassica junce (BJ) and Wasabia japonica (WJ) Transcriptomes"
+Brassica juncea	PRJNA672814	4	Anthocyanin studies of Brassica juncea
+Brassica juncea	PRJNA770000	36	Pur-color
+Brassica juncea	PRJNA771260	18	Seed size/weight
+Brassica juncea	PRJNA800112	12	Insights into the formation of purple vein and leaf edge cracks by transcriptome analysis in Brassica juncea
+Brassica juncea	PRJNA821827	1	Brassica juncea RNA-seq sequence reads
+Brassica juncea	PRJNA824648	17	Seed size difference
+Brassica juncea	PRJNA894452	12	Petals at different developmental stages
+Brassica juncea	PRJNA993419	6	Brassica juncea Raw sequence reads
+Brassica napus	PRJNA601012	6	Fresh blooming petals
+Brassica napus	PRJNA623053	24	Cold tolerance
+Brassica napus	PRJNA637700	15	Reveal the phenomenon of female sterility
+Brassica napus	PRJNA658388	15	Different light quality
+Brassica napus	PRJNA685002	25	a pair of sensitive-freezing and -resistant rapes
+Brassica napus	PRJNA714285	32	Roots with contrasting growth rates at continuous
+Brassica napus	PRJNA722877	78	Gene expression during B. napus development
+Brassica napus	PRJNA723727	6	Big and small seed transcriptome analysis
+Brassica napus	PRJNA725003	12	Root response to warming temperatures
+Brassica napus	PRJNA730112	12	Seed develop different stages
+Brassica napus	PRJNA748871	27	Leaf samples inoculated with Xanthomonas
+Brassica napus	PRJNA749083	6	White flower and yellow flower
+Brassica napus	PRJNA757136	15	Soil salinity
+Brassica napus	PRJNA758228	12	6 representative Brassica napus seeds tissue
+Brassica napus	PRJNA777001	9	Gene expression of the early formation and subseq
+Brassica napus	PRJNA779103	20	Brassica napus stems at bud bolting stage
+Brassica napus	PRJNA782763	36	Colorful flower yellow apricot white and pink
+Brassica napus	PRJNA792016	18	Network related to vernalization
+Brassica napus	PRJNA792935	6	Stem tips from extreme dwarf plants and normal he
+Brassica napus	PRJNA800835	18	Shoot apex with different temperature treatment i
+Brassica napus	PRJNA808238	8	ATACseq RNAseq BS-seq
+Brassica napus	PRJNA821348	4	Anthocyanidin mutant
+Brassica napus	PRJNA830457	17	Sclerotiorum-infected and control mock-infected l
+Brassica napus	PRJNA836775	32	The expression patterns of hybrid embryo developm
+Brassica napus	PRJNA846178	45	SAM development.
+Brassica napus	PRJNA846709	9	Green leaves and albino leaves in Brassica napus
+Brassica napus	PRJNA848086	18	RNA-seq raw data of red rapeseed
+Brassica napus	PRJNA853177	18	2 materials RNAseq in three periods 10 DAF 24 D
+Brassica napus	PRJNA855492	6	Purple/red traits in stems and flowers
+Brassica napus	PRJNA876031	9	Salt tolerance and drought stress
+Brassica napus	PRJNA877382	6	Treated Brassica napus with Brassinolide spraye
+Brassica napus	PRJNA880312	36	Root tissues that were uninoculated and inoculate
+Brassica napus	PRJNA880456	6	PSH47 in Brassica napus L and J9707
+Brassica napus	PRJNA885390	8	Stems at three key stages including 28 days 42
+Brassica napus	PRJNA893225	9	Sufficient water condition drought and drought
+Brassica napus	PRJNA896133	36	Heterosis pilot
+Brassica napus	PRJNA901224	12	Transcription of Brasscia napus
+Brassica napus	PRJNA924540	4	Seeds with artificial ageing in Brassica napus
+Brassica napus	PRJNA932169	6	Normal RNA-seq of Brassica napus L.
+Brassica napus	PRJNA942610	12	Normal sequencing type of Brassica napus
+Brassica napus	PRJNA945384	79	Brassica napus radiation panel
+Brassica napus	PRJNA949847	48	High and low potassium efficiency to reveal the g
+Brassica napus	PRJNA967094	8	Study on alleviating plant salt stress
+Brassica napus	PRJNA967236	4	R and S lines root under aluminum toxicity stress
+Brassica napus	PRJNA977421	8	Drought stress
+Brassica napus	PRJNA978264	16	Seedlings after drought stress.
+Brassica napus	PRJNA982894	9	Seed under waterlogging.
+Brassica nigra	PRJNA516907	2	Brassica nigra genome sequencing and assembly
+Brassica nigra	PRJNA641876	224	The evolution of gene spatiotemporal expression in six brassica species during embryogenesis
+Brassica oleracea	PRJNA1047966	72	Brassica oleracea Genome sequencing and assembly
+Brassica oleracea	PRJNA1051351	12	kohlrabis seedlings under polyethylene glycol-simulated drought stress
+Brassica oleracea	PRJNA297049	2	Calcium-regulated genes in relation to broccoli hypocotyl cell expansion
+Brassica oleracea	PRJNA328771	4	Splicing-related genes are alternatively spliced upon changes in ambient temperatures in plants
+Brassica oleracea	PRJNA329471	3	Transcriptomic changes accompanying allopolyploidization are commonly paralleled in Brassica napus.
+Brassica oleracea	PRJNA345072	12	Response to Plasmodiophora brassicae
+Brassica oleracea	PRJNA389176	12	ABA signalling manipulation suppresses senescence of a leafy vegetable stored at room temperature
+Brassica oleracea	PRJNA398175	9	"Leaf tissues of Brassica napus, Brassica rapa, Brassica oleracea"
+Brassica oleracea	PRJNA398451	16	Different resistance level to clubroot
+Brassica oleracea	PRJNA401214	2	Brassica oleracea var. alboglabra Raw sequence reads
+Brassica oleracea	PRJNA416819	12	Black rot risistant regulation
+Brassica oleracea	PRJNA432478	6	Flower buds before the mature microspore stage
+Brassica oleracea	PRJNA447962	11	Variegated leaf development in ornamental kale
+Brassica oleracea	PRJNA449400	6	RNA-seq of resynthesized allotetraploid Brassica napus and its diploid parents
+Brassica oleracea	PRJNA474411	6	Purple inner leaves of ornamental cabbage (Brassica oleracea var. acephala)
+Brassica oleracea	PRJNA474470	11	No description available
+Brassica oleracea	PRJNA481230	12	Different expression about the diploid and autotetraploid
+Brassica oleracea	PRJNA489323	23	"Young leaves, inflorescence stems, blooming flowers and siliques from 6-month-old plants"
+Brassica oleracea	PRJNA490257	12	Treated with whitefly's to study mechanism of resistance.
+Brassica oleracea	PRJNA498278	2	extreme pools for purple and green indivdiduals in BC1 population
+Brassica oleracea	PRJNA498376	2	extreme pools for purple and green indivdiduals in F2 population
+Brassica oleracea	PRJNA516113	4	Brassica oleracea var. botrytis Genome sequencing and assembly
+Brassica oleracea	PRJNA521833	4	Three-dimensional genome organization in Brassica rapa and Brassica oleracea
+Brassica oleracea	PRJNA525713	15	Brassica oleracea var. albograbra Raw sequence reads
+Brassica oleracea	PRJNA552767	6	Gene differential expression analysis between a pair of near isogenic lines.
+Brassica oleracea	PRJNA577908	2	Whole genome resequencing RNASeq Whole genome bisfulfite sequencing
+Brassica oleracea	PRJNA580294	2	"Two pools, A-pool and N-pool, derived from BC1 population for albino trait mapping."
+Brassica oleracea	PRJNA604889	30	Leaf-pathogen interaction transcriptom
+Brassica oleracea	PRJNA623495	6	Characterisation of transcriptomic profiles for high glucoraphanin broccoli lines
+Brassica oleracea	PRJNA633531	27	Field grown myb28 knockout Brassica oleracea plants generated using CRISPR-Cas9 gene editing
+Brassica oleracea	PRJNA641876	224	The evolution of gene spatiotemporal expression in six brassica species during embryogenesis
+Brassica oleracea	PRJNA649862	6	Sprouts under red and blue light
+Brassica oleracea	PRJNA672666	107	Temperature-induced transcriptome profiles of endosprem and embryo during seed development and germination in Brassica oleracea
+Brassica oleracea	PRJNA683970	12	Metabolome Analysis of Cauliflower Curds with Emphasis on Purple Appearance
+Brassica oleracea	PRJNA706136	6	RNAseq of wild Brassica oleracea species following Sclerotinia-infection
+Brassica oleracea	PRJNA735118	24	RNA-seq of B. oleracea infected by Plasmodiophora brassicae
+Brassica oleracea	PRJNA743408	2	Lack of vernalization requirement in Chinese kale was due to the deletion of BoFLC as well as low expression of its paralogs
+Brassica oleracea	PRJNA745091	6	Sequencing analysis of transcriptome and proteome of B. oleracea treated with sulfur
+Brassica oleracea	PRJNA764317	9	Brassica oleracea var. italica Genome sequencing and assembly
+Brassica oleracea	PRJNA769963	6	MeJA processing broccoli hairy roots at different times
+Brassica oleracea	PRJNA777001	9	Study gene expression of the early formation and subsequent evolution of B. napus and provide reference for MeRIP-seq.
+Brassica oleracea	PRJNA796369	6	Melatonin regulating the transformation of glucoraphanin to sulforaphane in broccoli hairy roots
+Brassica oleracea	PRJNA830457	17	Subgenome-dominant expression and alternative splicing in response to pathogen stress in polyploid Brassica napus and progenitors
+Brassica oleracea	PRJNA865393	3	Experiments for Brassica rapa and Brassica oleracea.
+Brassica oleracea	PRJNA874461	6	"Brassica rapa, Brassica oleracea and Brassica napus under 5-Azacytidine."
+Brassica oleracea	PRJNA897022	17	Warming-induced changes
+Brassica oleracea	PRJNA954884	1	Time course transcriptomic analysis of cabbage during vernalization
+Brassica rapa	PRJNA312975	7	Brassica rapa subsp. chinensis cultivar:Makino var. Utilis Tsen et Lee Transcriptome or Gene expression
+Brassica rapa	PRJNA390062	8	Brassica rapa Transcriptome or Gene expression
+Brassica rapa	PRJNA398175	9	"The RNA-seq raw data from Leaf tissues of Brassica napus, Brassica rapa, Brassica oleracea"
+Brassica rapa	PRJNA422522	9	Single a A1/C1 chromosome substitution line in Brassica rapa restituted from natural B. napus
+Brassica rapa	PRJNA423182	6	Molecular mechanisms responsible for leaf etiolation
+Brassica rapa	PRJNA428539	18	Reveal the structrual genes responsible for yellow seed coat color of Brassica rapa L.
+Brassica rapa	PRJNA437247	27	Monosomic alien addition lines (MAALs) in a restituted Brassica rapa
+Brassica rapa	PRJNA448347	9	Brassica diploid tetraploid hexaploid Raw sequence reads
+Brassica rapa	PRJNA449400		RNA-seq of resynthesized allotetraploid Brassica napus and its diploid parents
+Brassica rapa	PRJNA471024	2	Wucai flower bud sequence
+Brassica rapa	PRJNA481230	12	Different expression about the diploid and autotetraploid
+Brassica rapa	PRJNA489323	23	"Young leaves, inflorescence stems, blooming flowers and siliques"
+Brassica rapa	PRJNA490252	12	Revealed that several phytohormones were associated with heat tolerance.
+Brassica rapa	PRJNA497343	9	No description available
+Brassica rapa	PRJNA512955	12	Yellow seed is a desirable trait during the breeding of high-quality oilseed.
+Brassica rapa	PRJNA514958	24	"Brassica rapa breed:Eukaryotic breed cultivar:Longyou-7, Lenox Transcriptome or Gene expression"
+Brassica rapa	PRJNA521833	4	Three-dimensional genome organization in Brassica rapa and Brassica oleracea
+Brassica rapa	PRJNA528807	6	Transcriptome analysis of CS22 infected by P. brassicae
+Brassica rapa	PRJNA543136	58	72 Brassica rapa accessions with varying germination rates was sequenced
+Brassica rapa	PRJNA550286	12	Investigate how the roots of L7 and T2 responded to cold stress.
+Brassica rapa	PRJNA552162	24	Identification of Key Genes for Salt Tolerance in Chinese Cabbage
+Brassica rapa	PRJNA558197	30	Brassica rapa Transcriptome or Gene expression
+Brassica rapa	PRJNA558855	30	Studied at five different developmental stages.
+Brassica rapa	PRJNA574553	6	Leaves of BcERF070-silenced and control pTY plants inoculation with turnip yellow mosaic virus
+Brassica rapa	PRJNA576336	3	Genome sequencing and assembly of B. rapa
+Brassica rapa	PRJNA577908	2	Whole genome resequencing RNASeq Whole genome bisfulfite sequencing
+Brassica rapa	PRJNA593493	149	Two rapid cycling oiltype B. rapa varieties.
+Brassica rapa	PRJNA605481	8	Early and late-bolting Chinese cabbage sequencing
+Brassica rapa	PRJNA614632	6	Mutation of STERILE APETALA is involved in pistil abortion and organ size in Chinese cabbage
+Brassica rapa	PRJNA615255	41	Brassica rapa vernalization transcriptome
+Brassica rapa	PRJNA634805	2	Uncovers its key roles for biomass heterosis in Chinese cabbage
+Brassica rapa	PRJNA641876	224	The evolution of gene spatiotemporal expression in six brassica species during embryogenesis
+Brassica rapa	PRJNA642307	9	Comparative studies of ploidy Brassica rapa species.
+Brassica rapa	PRJNA645708	13	Brassica rapa Raw sequence reads
+Brassica rapa	PRJNA657160	12	Early and late pollen development
+Brassica rapa	PRJNA660555	9	Chinese cabbage heterosis
+Brassica rapa	PRJNA663233	54	54 samples under normal and heat stress conditions
+Brassica rapa	PRJNA671749	12	Male sterility during flower bud development in Chinese Cabbage
+Brassica rapa	PRJNA681362	4	Overexpression of MIR319
+Brassica rapa	PRJNA682276	8	Cold tolerance response in non-heading Chinese cabbage
+Brassica rapa	PRJNA682761	6	BrWF3 transcriptome
+Brassica rapa	PRJNA692311	35	Chinese Cabbage days after inoculation Plasmodiophora brassicae.
+Brassica rapa	PRJNA693041	18	Shock in interspecific F1 allotriploid hybrids between Brassica species.
+Brassica rapa	PRJNA695379	12	RNA sequencing reads of two landraces of turnip
+Brassica rapa	PRJNA730930	33	The sequencing reads for the Brassica rapa pan-genome project
+Brassica rapa	PRJNA730971	15	Reveal circRNAs involved in clubroot disease conditioning in Brassica rapa.
+Brassica rapa	PRJNA743585	24	transcriptomic profiling response to clubroot disease in Chinese cabbage
+Brassica rapa	PRJNA758599	6	Transcriptome sequencing reads for a yellow sarson line and a caixin line
+Brassica rapa	PRJNA761575	9	Mutation of BrKAO2 mediates leafy head formation by affecting GA biosynthesis
+Brassica rapa	PRJNA761995	6	Transcriptome analysis of circadian clock gene mutant in Brassica rapa
+Brassica rapa	PRJNA763246	27	Low temperature treatment of Chinese cabbage
+Brassica rapa	PRJNA764554	12	B.rape inoculation with TuMV.
+Brassica rapa	PRJNA770000	36	Find the purple color accumulation mechanism in Chinese cabbage
+Brassica rapa	PRJNA778186	48	RNA-seq data of Chinese cabbage: leaves at heading stage
+Brassica rapa	PRJNA784003	15	Study the changes of lncRNA expression during vernalization
+Brassica rapa	PRJNA811760	44	No description available
+Brassica rapa	PRJNA837709	27	Treatment the cabbages with 6-BA for 3 min
+Brassica rapa	PRJNA857479	3	LED treatment pakchoi transcriptomic data
+Brassica rapa	PRJNA868504	7	Infection biology of Plasmodiophora brassicae primary and secondary zoospores in host and non-host
+Brassica rapa	PRJNA881745	12	Two different light treatment

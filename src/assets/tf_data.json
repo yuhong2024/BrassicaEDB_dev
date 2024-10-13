@@ -1,0 +1,23 @@
+[
+  { "TF": "AP2", "Brassica_carinata": 57, "Brassica_juncea": 56, "Brassica_napus": 67, "Brassica_nigra": 34, "Brassica_oleracea": 34, "Brassica_rapa": 35 },
+  { "TF": "ARF", "Brassica_carinata": 54, "Brassica_juncea": 55, "Brassica_napus": 63, "Brassica_nigra": 32, "Brassica_oleracea": 33, "Brassica_rapa": 31 },
+  { "TF": "ARR-B", "Brassica_carinata": 26, "Brassica_juncea": 27, "Brassica_napus": 33, "Brassica_nigra": 16, "Brassica_oleracea": 17, "Brassica_rapa": 17 },
+  { "TF": "B3", "Brassica_carinata": 84, "Brassica_juncea": 77, "Brassica_napus": 96, "Brassica_nigra": 46, "Brassica_oleracea": 48, "Brassica_rapa": 48 },
+  { "TF": "BBR-BPC", "Brassica_carinata": 18, "Brassica_juncea": 18, "Brassica_napus": 20, "Brassica_nigra": 10, "Brassica_oleracea": 11, "Brassica_rapa": 10 },
+  { "TF": "BES1", "Brassica_carinata": 21, "Brassica_juncea": 24, "Brassica_napus": 27, "Brassica_nigra": 14, "Brassica_oleracea": 14, "Brassica_rapa": 15 },
+  { "TF": "bHLH", "Brassica_carinata": 423, "Brassica_juncea": 434, "Brassica_napus": 512, "Brassica_nigra": 255, "Brassica_oleracea": 271, "Brassica_rapa": 267 },
+  { "TF": "bZIP", "Brassica_carinata": 185, "Brassica_juncea": 202, "Brassica_napus": 228, "Brassica_nigra": 120, "Brassica_oleracea": 126, "Brassica_rapa": 123 },
+  { "TF": "C2H2", "Brassica_carinata": 287, "Brassica_juncea": 296, "Brassica_napus": 337, "Brassica_nigra": 173, "Brassica_oleracea": 174, "Brassica_rapa": 178 },
+  { "TF": "C3H", "Brassica_carinata": 114, "Brassica_juncea": 107, "Brassica_napus": 131, "Brassica_nigra": 68, "Brassica_oleracea": 69, "Brassica_rapa": 68 },
+  { "TF": "CAMTA", "Brassica_carinata": 16, "Brassica_juncea": 16, "Brassica_napus": 20, "Brassica_nigra": 10, "Brassica_oleracea": 10, "Brassica_rapa": 10 },
+  { "TF": "CO-like", "Brassica_carinata": 36, "Brassica_juncea": 38, "Brassica_napus": 46, "Brassica_nigra": 24, "Brassica_oleracea": 24, "Brassica_rapa": 25 },
+  { "TF": "CPP", "Brassica_carinata": 21, "Brassica_juncea": 22, "Brassica_napus": 27, "Brassica_nigra": 14, "Brassica_oleracea": 14, "Brassica_rapa": 14 },
+  { "TF": "DBB", "Brassica_carinata": 32, "Brassica_juncea": 34, "Brassica_napus": 41, "Brassica_nigra": 22, "Brassica_oleracea": 22, "Brassica_rapa": 22 },
+  { "TF": "Dof", "Brassica_carinata": 117, "Brassica_juncea": 122, "Brassica_napus": 142, "Brassica_nigra": 71, "Brassica_oleracea": 73, "Brassica_rapa": 75 },
+  { "TF": "E2F/DP", "Brassica_carinata": 23, "Brassica_juncea": 26, "Brassica_napus": 31, "Brassica_nigra": 16, "Brassica_oleracea": 16, "Brassica_rapa": 16 },
+  { "TF": "EIL", "Brassica_carinata": 20, "Brassica_juncea": 21, "Brassica_napus": 24, "Brassica_nigra": 13, "Brassica_oleracea": 13, "Brassica_rapa": 14 },
+  { "TF": "ERF", "Brassica_carinata": 321, "Brassica_juncea": 325, "Brassica_napus": 357, "Brassica_nigra": 201, "Brassica_oleracea": 205, "Brassica_rapa": 202 },
+  { "TF": "FAR1", "Brassica_carinata": 21, "Brassica_juncea": 22, "Brassica_napus": 25, "Brassica_nigra": 13, "Brassica_oleracea": 13, "Brassica_rapa": 14 },
+  { "TF": "GATA", "Brassica_carinata": 86, "Brassica_juncea": 89, "Brassica_napus": 99, "Brassica_nigra": 53, "Brassica_oleracea": 50, "Brassica_rapa": 50 },
+  { "TF": "G2-like", "Brassica_carinata": 117, "Brassica_juncea": 116, "Brassica_napus": 139, "Brassica_nigra": 69, "Brassica_oleracea": 71, "Brassica_rapa": 69 }
+]
