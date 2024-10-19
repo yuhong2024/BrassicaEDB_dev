@@ -20,7 +20,6 @@
     <el-card class="intro-card">
       <div class="intro-content">
         <img src="@/assets/img/home/search/Hom.svg" alt="Brassica Image" class="intro-image" />
-
         <div class="intro-text">
           <h2>Homologous Gene</h2>
           <p>
@@ -34,19 +33,137 @@
       </div>
     </el-card>
 
-    <!-- Placeholder for further content -->
-    <div class="default-state">
-      <!-- Future content like search panel or results will go here -->
-    </div>
+    <!-- 表格展示板块 -->
+    <el-card class="table-card">
+      <!-- 全局搜索框 -->
+      <div class="search-container">
+        <el-input
+            v-model="searchQuery"
+            placeholder="Search"
+            clearable
+            class="global-search"
+            @input="handleSearch"
+        ></el-input>
+      </div>
+
+      <!-- 表格 -->
+      <el-table :data="paginatedData" style="width: 100%" v-loading="loading" border>
+        <!-- 动态生成列，并添加点击搜索功能 -->
+        <el-table-column
+            v-for="(header, index) in headers"
+            :key="index"
+            :label="header"
+            :prop="header"
+            sortable
+        >
+          <!-- 动态渲染表格单元格内容，显示“无数据” -->
+          <template #default="{ row }">
+            <span v-if="row[header] !== '-'">{{ row[header] }}</span>
+            <span v-else>-</span>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <!-- 分页器 -->
+      <div class="pagination-container">
+        <el-pagination
+            background
+            layout="prev, pager, next"
+            :total="filteredData.length"
+            :page-size="pageSize"
+            @current-change="handlePageChange"
+        />
+      </div>
+    </el-card>
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
+import { ref, onMounted } from 'vue';
+
+// 面包屑导航数据
 const breadcrumbs = [
   { name: 'Home', path: '/' },
   { name: 'Analysis', path: '/analysis' },
   { name: 'Homologous Gene', path: '/analysis/homologous-gene' }
 ];
+
+// 表格头部
+const headers = [
+  'Arabidopsis_thaliana',
+  'Brassica_carinata',
+  'Brassica_juncea',
+  'Brassica_napus',
+  'Brassica_nigra',
+  'Brassica_oleracea',
+  'Brassica_rapa'
+];
+
+// 数据和状态管理
+const tableData = ref([]);
+const filteredData = ref([]);
+const paginatedData = ref([]);
+const searchQuery = ref('');
+const columnSearchQuery = ref({});
+const loading = ref(false);
+const currentPage = ref(1);
+const pageSize = ref(15);
+
+// 加载 JSON 文件的数据
+const fetchData = async () => {
+  loading.value = true;
+  try {
+    // 动态导入 JSON 文件
+    const data = await import('@/assets/test/Homologous.json');
+    tableData.value = data.default; // 由于是 JSON 数据，使用 `default`
+    filteredData.value = tableData.value;
+    updatePaginatedData();
+  } catch (error) {
+    console.error('读取文件出错:', error);
+  }
+  loading.value = false;
+};
+
+// 处理全局搜索
+const handleSearch = () => {
+  filteredData.value = tableData.value.filter(row => {
+    return headers.some(header => {
+      const cellData = row[header] ? row[header].toString().toLowerCase() : '';
+      return cellData.includes(searchQuery.value.toLowerCase());
+    });
+  });
+  currentPage.value = 1;
+  updatePaginatedData();
+};
+
+// 处理列的搜索
+const handleColumnSearch = header => {
+  const query = columnSearchQuery.value[header]?.toLowerCase() || '';
+  filteredData.value = tableData.value.filter(row => {
+    const cellData = row[header] ? row[header].toString().toLowerCase() : '';
+    return cellData.includes(query);
+  });
+  currentPage.value = 1;
+  updatePaginatedData();
+};
+
+// 分页更新数据
+const handlePageChange = page => {
+  currentPage.value = page;
+  updatePaginatedData();
+};
+
+// 更新当前页的数据
+const updatePaginatedData = () => {
+  const start = (currentPage.value - 1) * pageSize.value;
+  const end = currentPage.value * pageSize.value;
+  paginatedData.value = filteredData.value.slice(start, end);
+};
+
+// 页面挂载时加载数据
+onMounted(() => {
+  fetchData();
+});
 </script>
 
 <style scoped>
@@ -130,8 +247,25 @@ const breadcrumbs = [
   line-height: 1.6;
 }
 
-/* 占位符内容样式 */
-.default-state {
+/* 表格布局样式 */
+.table-card {
   margin-top: 20px;
+  padding: 20px;
+}
+
+.search-container {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.global-search {
+  width: 500px;
+}
+
+.pagination-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
 }
 </style>

@@ -1,9 +1,9 @@
 <template>
-  <div class="development-page">
+  <div class="project-expression-page">
     <!-- 面包屑导航栏 -->
     <div class="breadcrumb-container">
       <div class="breadcrumb-left">
-        <h1>Under Development</h1>
+        <h1>Project Expression Data</h1>
       </div>
       <div class="breadcrumb-right">
         <nav aria-label="breadcrumb">
@@ -11,46 +11,79 @@
             <li class="breadcrumb-item">
               <router-link to="/">Home</router-link>
             </li>
-            <li class="breadcrumb-item">Development</li>
+            <li class="breadcrumb-item">Project Expression</li>
           </ol>
         </nav>
       </div>
     </div>
 
-    <!-- 内容部分 -->
-    <div class="content-section">
-      <!-- 占位符组件 -->
-      <el-empty description="Page is under development">
-        <template #image>
-          <el-icon><i class="el-icon-loading"></i></el-icon>
-        </template>
-      </el-empty>
+    <!-- 表格展示 -->
+    <el-card class="content-card">
+      <el-table
+          :data="paginatedData"
+          stripe
+          style="width: 100%;"
+      >
+        <el-table-column prop="Organism" label="Organism" width="180"></el-table-column>
+        <el-table-column prop="Mode" label="Mode" width="120"></el-table-column>
+        <el-table-column prop="Tissue" label="Tissue" width="120"></el-table-column>
+        <el-table-column prop="Classify" label="Classify" width="120"></el-table-column>
+        <el-table-column prop="Treatment_type" label="Treatment Type" width="180"></el-table-column>
+        <el-table-column prop="BioProject" label="BioProject" width="180"></el-table-column>
+        <el-table-column prop="Description" label="Description" width="300"></el-table-column>
+      </el-table>
 
-      <!-- 进度条 -->
-      <el-progress :percentage="65" status="active" />
-
-      <!-- 开发进度描述 -->
-      <p class="progress-text">Development is currently at 65%. Stay tuned for updates!</p>
-
-      <!-- 返回主页按钮 -->
-      <el-button type="primary" @click="goHome">Back to Home</el-button>
-    </div>
+      <!-- 分页控件 -->
+      <el-pagination
+          v-model:current-page="currentPage"
+          :page-size="pageSize"
+          :total="data.length"
+          layout="prev, pager, next"
+          style="margin-top: 20px; text-align: center;"
+          @current-change="handlePageChange"
+      />
+    </el-card>
   </div>
 </template>
 
-<script setup>
-import {ElMessage} from 'element-plus';
-
-const goHome = () => {
-  ElMessage.info('Redirecting to Home');
-  setTimeout(() => {
-    window.location.href = '/';
-  }, 1000);
+<script>
+export default {
+  data() {
+    return {
+      data: [], // 存储从 JSON 文件加载的数据
+      currentPage: 1, // 当前页码
+      pageSize: 10, // 每页显示条目数
+    };
+  },
+  computed: {
+    paginatedData() {
+      const start = (this.currentPage - 1) * this.pageSize;
+      const end = this.currentPage * this.pageSize;
+      return this.data.slice(start, end);
+    },
+  },
+  mounted() {
+    this.loadData();
+  },
+  methods: {
+    async loadData() {
+      try {
+        const response = await fetch('https://brassica.wangyuhong.cn/api/projects/');
+        const jsonData = await response.json();
+        this.data = jsonData; // 将数据保存到data中
+      } catch (error) {
+        console.error('Error loading data:', error);
+      }
+    },
+    handlePageChange(page) {
+      this.currentPage = page;
+    },
+  },
 };
 </script>
 
 <style scoped>
-.development-page {
+.project-expression-page {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
@@ -95,23 +128,12 @@ const goHome = () => {
   text-decoration: underline;
 }
 
-.content-section {
+.content-card {
+  margin-top: 20px;
+  padding: 20px;
+}
+
+.el-pagination {
   text-align: center;
-  padding: 40px;
-}
-
-.progress-text {
-  margin-top: 20px;
-  font-size: 16px;
-  color: #606266;
-}
-
-.el-progress {
-  margin: 30px auto;
-  width: 80%;
-}
-
-.el-button {
-  margin-top: 20px;
 }
 </style>

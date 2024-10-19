@@ -201,13 +201,17 @@ export default {
         title: {text: 'Gene Expression Trend Chart'},
         tooltip: {trigger: 'axis'},
         legend: {data: Object.keys(trendData), bottom: 0, type: 'scroll'},
-        grid: {top: '10%', left: '3%', right: '4%', bottom: '20%', containLabel: true},
+        grid: {top: '10%', left: '5%', right: '4%', bottom: '20%', containLabel: true},
         xAxis: {type: 'category', data: sampleNames, axisLabel: {rotate: 45, interval: 0}},
         yAxis: {type: 'value', name: 'Expression Value (TPM)'},
         series,
       };
       const chart = echarts.init(this.$refs.trendChart, null, {width: 1000, height: 500});
       chart.setOption(option);
+      window.addEventListener('resize', () => {
+        chart.resize();  // 动态调整图表大小
+      });
+
     },
     drawHeatmap() {
       const heatmapData = this.heatmapData;
@@ -229,6 +233,9 @@ export default {
       };
       const chart = echarts.init(this.$refs.heatmapChart, null, {width: 900, height: 500});
       chart.setOption(option);
+      window.addEventListener('resize', () => {
+        chart.resize();  // 动态调整图表大小
+      });
     },
     drawBoxplot() {
       const boxplotData = this.boxplotData;
@@ -253,12 +260,21 @@ export default {
       const option = {
         title: {text: 'Gene Expression Boxplot'},
         legend: {data: geneIds, bottom: 20},
+            grid: {
+              top: '10%',
+              left: '5%',
+              right: '5%',
+              bottom: '25%', // 增加底部间距
+              containLabel: true},
         xAxis: {type: 'category', data: tissueNames},
         yAxis: {type: 'value', name: 'TPM'},
         series,
       };
       const chart = echarts.init(this.$refs.boxplotChart, null, {width: 900, height: 500});
       chart.setOption(option);
+      window.addEventListener('resize', () => {
+        chart.resize();  // 动态调整图表大小
+      });
     },
     drawBarplot() {
       const barplotData = this.barplotData;
@@ -280,6 +296,9 @@ export default {
       };
       const chart = echarts.init(this.$refs.barplotChart, null, {width: 1000, height: 500});
       chart.setOption(option);
+      window.addEventListener('resize', () => {
+        chart.resize();  // 动态调整图表大小
+      });
     },
   },
 };
@@ -368,10 +387,43 @@ export default {
   margin-bottom: 20px;
 }
 
+
+
 .chart-container {
-  width: 100%;
-  height: 600px;
+  width: 100%; /* 设置宽度为80%，居中显示 */
+  margin: 0 auto; /* 通过auto margin使其水平居中 */
+  height: 100%; /* 设置高度 */
+  display: flex;
+  justify-content: center;
+  align-items: center; /* 垂直和水平居中 */
+
 }
+
+@media screen and (max-width: 768px) {
+  .chart-container {
+    height: 400px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .chart-container {
+    height: 300px;
+  }
+}
+
+
+@media screen and (max-width: 768px) {
+  .chart-container {
+    height: 400px; /* 针对小屏幕的优化 */
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .chart-container {
+    height: 300px; /* 针对更小屏幕的优化 */
+  }
+}
+
 
 .chart-section {
   margin-bottom: 20px;

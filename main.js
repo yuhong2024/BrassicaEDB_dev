@@ -10,6 +10,7 @@ import Papa from 'papaparse';
 import VueECharts from 'vue-echarts';  // 引入 Vue-ECharts 组件
 import 'echarts';  // 引入 ECharts 的所有模块
 
+
 // 创建 Vue 应用程序实例
 const app = createApp(App);
 

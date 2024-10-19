@@ -1,0 +1,204 @@
+<template>
+  <div class="project-table-container">
+    <!-- 卡片式布局 -->
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <span>Project Data</span>
+      </div>
+
+      <!-- 筛选栏 -->
+      <el-row :gutter="20" class="filter-row">
+        <el-col :span="4">
+          <el-select v-model="selectedOrganism" placeholder="选择 Organism" style="width: 100%;">
+            <el-option v-for="organism in uniqueOrganisms" :key="organism" :label="organism" :value="organism"></el-option>
+          </el-select>
+        </el-col>
+
+        <el-col :span="4">
+          <el-select v-model="selectedMode" placeholder="选择 Mode" style="width: 100%;">
+            <el-option v-for="mode in uniqueModes" :key="mode" :label="mode" :value="mode"></el-option>
+          </el-select>
+        </el-col>
+
+        <el-col :span="4">
+          <el-select v-model="selectedTissue" placeholder="选择 Tissue" style="width: 100%;">
+            <el-option v-for="tissue in uniqueTissues" :key="tissue" :label="tissue" :value="tissue"></el-option>
+          </el-select>
+        </el-col>
+
+        <el-col :span="4">
+          <el-select v-model="selectedClassify" placeholder="选择 Classify" style="width: 100%;">
+            <el-option v-for="classify in uniqueClassify" :key="classify" :label="classify" :value="classify"></el-option>
+          </el-select>
+        </el-col>
+
+        <el-col :span="4">
+          <el-select v-model="selectedTreatmentType" placeholder="选择 Treatment Type" style="width: 100%;">
+            <el-option v-for="treatmentType in uniqueTreatmentTypes" :key="treatmentType" :label="treatmentType" :value="treatmentType"></el-option>
+          </el-select>
+        </el-col>
+
+        <el-col :span="4">
+          <el-select v-model="selectedBioProject" placeholder="选择 BioProject" style="width: 100%;">
+            <el-option v-for="bioproject in uniqueBioProjects" :key="bioproject" :label="bioproject" :value="bioproject"></el-option>
+          </el-select>
+        </el-col>
+      </el-row>
+
+      <!-- 表格 -->
+      <el-table :data="paginatedData" style="width: 100%; margin-top: 20px;">
+        <el-table-column prop="Organism" label="Organism" width="180"></el-table-column>
+        <el-table-column prop="Mode" label="Mode" width="180"></el-table-column>
+        <el-table-column prop="Tissue" label="Tissue" width="180"></el-table-column>
+        <el-table-column prop="Classify" label="Classify" width="180"></el-table-column>
+        <el-table-column prop="Treatment_type" label="Treatment Type" width="180"></el-table-column>
+        <el-table-column prop="BioProject" label="BioProject" width="180"></el-table-column>
+        <el-table-column prop="Description" label="Description"></el-table-column>
+      </el-table>
+
+      <!-- 分页 -->
+      <el-pagination
+          background
+          layout="prev, pager, next"
+          :total="filteredData.length"
+          :page-size="pageSize"
+          :current-page="currentPage"
+          @current-change="handlePageChange"
+          style="margin-top: 20px; text-align: center;">
+      </el-pagination>
+    </el-card>
+  </div>
+</template>
+
+<script>
+import { ref, computed, onMounted } from 'vue';
+import * as XLSX from 'xlsx';
+
+export default {
+  name: 'ProjectTable',
+  setup() {
+    const tableData = ref([]);
+    const selectedOrganism = ref('');
+    const selectedMode = ref('');
+    const selectedTissue = ref('');
+    const selectedClassify = ref('');
+    const selectedTreatmentType = ref('');
+    const selectedBioProject = ref('');
+
+    // 分页数据
+    const pageSize = ref(10); // 每页展示的行数
+    const currentPage = ref(1); // 当前页码
+
+    // 组件挂载时从 Excel 文件读取数据
+    onMounted(() => {
+      fetch('/src/assets/data/expression/test_Project_Select.xlsx')
+          .then(response => response.arrayBuffer())
+          .then(data => {
+            const workbook = XLSX.read(data, { type: 'array' });
+            const sheetName = workbook.SheetNames[0];
+            const sheet = workbook.Sheets[sheetName];
+            const jsonData = XLSX.utils.sheet_to_json(sheet);
+
+            tableData.value = jsonData.map(row => ({
+              Organism: row.Organism,
+              Mode: row.Mode,
+              Tissue: row.Tissue,
+              Classify: row.Classify,
+              Treatment_type: row.Treatment_type,
+              BioProject: row.BioProject,
+              Description: row.Description,
+            }));
+          });
+    });
+
+    // 计算唯一的 Organism 列表
+    const uniqueOrganisms = computed(() => {
+      return [...new Set(tableData.value.map(item => item.Organism))];
+    });
+
+    // 计算唯一的 Mode 列表
+    const uniqueModes = computed(() => {
+      return [...new Set(tableData.value.filter(item => !selectedOrganism.value || item.Organism === selectedOrganism.value).map(item => item.Mode))];
+    });
+
+    // 计算唯一的 Tissue 列表
+    const uniqueTissues = computed(() => {
+      return [...new Set(tableData.value.filter(item => (!selectedOrganism.value || item.Organism === selectedOrganism.value) && (!selectedMode.value || item.Mode === selectedMode.value)).map(item => item.Tissue))];
+    });
+
+    // 计算唯一的 Classify 列表
+    const uniqueClassify = computed(() => {
+      return [...new Set(tableData.value.filter(item => (!selectedOrganism.value || item.Organism === selectedOrganism.value) && (!selectedMode.value || item.Mode === selectedMode.value) && (!selectedTissue.value || item.Tissue === selectedTissue.value)).map(item => item.Classify))];
+    });
+
+    // 计算唯一的 Treatment Type 列表
+    const uniqueTreatmentTypes = computed(() => {
+      return [...new Set(tableData.value.filter(item => (!selectedOrganism.value || item.Organism === selectedOrganism.value) && (!selectedMode.value || item.Mode === selectedMode.value) && (!selectedTissue.value || item.Tissue === selectedTissue.value) && (!selectedClassify.value || item.Classify === selectedClassify.value)).map(item => item.Treatment_type))];
+    });
+
+    // 计算唯一的 BioProject 列表
+    const uniqueBioProjects = computed(() => {
+      return [...new Set(tableData.value.filter(item => (!selectedOrganism.value || item.Organism === selectedOrganism.value) && (!selectedMode.value || item.Mode === selectedMode.value) && (!selectedTissue.value || item.Tissue === selectedTissue.value) && (!selectedClassify.value || item.Classify === selectedClassify.value) && (!selectedTreatmentType.value || item.Treatment_type === selectedTreatmentType.value)).map(item => item.BioProject))];
+    });
+
+    // 过滤数据
+    const filteredData = computed(() => {
+      return tableData.value.filter(item => {
+        const matchesOrganism = !selectedOrganism.value || item.Organism === selectedOrganism.value;
+        const matchesMode = !selectedMode.value || item.Mode === selectedMode.value;
+        const matchesTissue = !selectedTissue.value || item.Tissue === selectedTissue.value;
+        const matchesClassify = !selectedClassify.value || item.Classify === selectedClassify.value;
+        const matchesTreatmentType = !selectedTreatmentType.value || item.Treatment_type === selectedTreatmentType.value;
+        const matchesBioProject = !selectedBioProject.value || item.BioProject === selectedBioProject.value;
+        return matchesOrganism && matchesMode && matchesTissue && matchesClassify && matchesTreatmentType && matchesBioProject;
+      });
+    });
+
+    // 分页数据
+    const paginatedData = computed(() => {
+      const start = (currentPage.value - 1) * pageSize.value;
+      const end = start + pageSize.value;
+      return filteredData.value.slice(start, end);
+    });
+
+    // 处理页码切换
+    const handlePageChange = (newPage) => {
+      currentPage.value = newPage;
+    };
+
+    return {
+      selectedOrganism,
+      selectedMode,
+      selectedTissue,
+      selectedClassify,
+      selectedTreatmentType,
+      selectedBioProject,
+      uniqueOrganisms,
+      uniqueModes,
+      uniqueTissues,
+      uniqueClassify,
+      uniqueTreatmentTypes,
+      uniqueBioProjects,
+      filteredData,
+      paginatedData,
+      pageSize,
+      currentPage,
+      handlePageChange,
+    };
+  }
+};
+</script>
+
+<style scoped>
+.project-table-container {
+  padding: 20px;
+}
+
+.el-select {
+  margin-bottom: 20px;
+}
+
+.filter-row {
+  margin-bottom: 20px;
+}
+</style>
