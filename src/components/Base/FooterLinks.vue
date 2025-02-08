@@ -19,45 +19,53 @@
 <script setup>
 const categories = [
   {
-    title: "Gene feature",
+    title: "Browse",
     links: [
-      { name: "Brassica carinata", url: "/genefeature/brassicacarinata" },
-      { name: "Brassica juncea", url: "/genefeature/juncea" },
-      { name: "Brassica napus", url: "/genefeature/napus" },
-      { name: "Brassica nigra", url: "/genefeature/nigra" },
-      { name: "Brassica oleracea", url: "/genefeature/oleracea" },
-      { name: "Brassica rapa", url: "/genefeature/rapa" },
+      { name: "Brassica carinata", url: "/browse/carinata" },
+      { name: "Brassica juncea", url: "/browse/juncea" },
+      { name: "Brassica napus", url: "/browse/napus" },
+      { name: "Brassica nigra", url: "/browse/nigra" },
+      { name: "Brassica oleracea", url: "/browse/oleracea" },
+      { name: "Brassica rapa", url: "/browse/rapa" },
     ],
   },
   {
     title: "Search",
     links: [
-      { name: "Homologous gene", url: "/search/homologous" },
-      { name: "Expression", url: "/search/expression" },
-      { name: "Alternative splicing", url: "/search/splicing" },
-      { name: "Co-expression", url: "/search/coexpression" },
-      { name: "TF", url: "/search/tf" },
+      { name: "Transcriptome Expression", url: "/search/expression" },
+      { name: "Interspecific Homologous", url: "/search/homologous" },
+      { name: "eFP-seq", url: "/search/efp" },
+      { name: "TF Regulatory Network", url: "/search/tf" },
+      { name: "Co-expression Network", url: "/search/coexpression" },
+      { name: "Alternative Splicing", url: "/search/splicing" },
+
     ],
+
   },
   {
     title: "Tools",
     links: [
+      { name: "qPrimer", url: "/tools/qprimer" },
+      { name: "Seq-fetch", url: "/tools/seqfetch" },
+      { name: "GO enrichment ", url: "/tools/go" },
+      { name: "KEGG enrichment", url: "/tools/kegg" },
       { name: "Blast", url: "/tools/blast" },
       { name: "Jbrowse", url: "/tools/jbrowse" },
-      { name: "Primer", url: "/tools/primer" },
-      { name: "eFP-seq", url: "/tools/efpseq" },
-      { name: "Co-expression", url: "/tools/coexpression" },
-      { name: "Seq-fetch", url: "/tools/seqfetch" },
-      { name: "KEGG enrichment", url: "/tools/seqfetch" },
     ],
   },
+
   {
-    title: "Download",
+    title: "More",
     links: [
-      { name: "Basic data", url: "/download/basicdata" },
-      { name: "Genomic data", url: "/download/genomicdata" },
+      { name: "About", url: "/more/About" },
+      { name: "Help", url: "/more/help" },
+      { name: "Links", url: "/more/links" },
+      { name: "Update", url: "/more/update" },
     ],
   },
+
+
+
 ];
 </script>
 

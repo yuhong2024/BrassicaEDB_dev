@@ -1,37 +1,7 @@
 <template>
   <div class="container">
-    <!-- 统一的面包屑导航栏 -->
-    <div class="breadcrumb-container">
-      <div class="breadcrumb-left">
-        <h1>qPrimer</h1>
-      </div>
-      <div class="breadcrumb-right">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item" v-for="(item, index) in breadcrumbs" :key="index">
-              <router-link :to="item.path">{{ item.name }}</router-link>
-            </li>
-          </ol>
-        </nav>
-      </div>
-    </div>
 
-    <!-- Introduction Section -->
-    <el-card class="intro-card">
-      <div class="intro-content">
-        <img src="@/assets/img/tools/qprimer.png" alt="Primer Image" class="intro-image" />
-        <div class="intro-text">
-          <h2>qPrimer</h2>
-          <p>
-            The qPrimer package is a versatile Python toolset designed for the design, verification, annotation, and visualization of qPCR primers, aiding researchers in optimizing genetic analysis and PCR workflows​.
-            &nbsp;
-            <a href="https://github.com/swu1019lab/qPrimer" target="_blank"> [Github]</a>&nbsp;
-            <a href="https://pubmed.ncbi.nlm.nih.gov/39119895/" target="_blank"> [Citation]</a>
-          </p>
-        </div>
-      </div>
-    </el-card>
-
+    <qprimer />
     <!-- Sequence Input Section -->
     <el-card class="input-card">
       <h3>Sequence Input</h3>
@@ -150,11 +120,8 @@
 </template>
 
 <script setup>
-const breadcrumbs = [
-  {name: 'Home', path: '/'},
-  {name: 'Tools', path: '/tools'},
-  {name: 'qPrimer', path: '/tools/qprimer'}
-];
+import qprimer from "@/components/Tools/Title/qprimer.vue";
+
 
 // 表单数据和方法代码同之前一样
 import {ref} from 'vue';
@@ -250,6 +217,8 @@ const handleSubmit = async () => {
     formData.append('params', JSON.stringify(params.value));
   }
 
+
+
   const xhr = new XMLHttpRequest();
 
   xhr.open('POST', 'https://brassica.wangyuhong.cn/api/qprimer/designvisualize/', true);
@@ -311,81 +280,10 @@ const browseResult = () => {
 /* 主容器样式 */
 .container {
   width: 100%;
-  max-width: 1400px;
+  max-width: 100%;
   margin: 0 auto;
   padding: 20px;
   box-sizing: border-box;
-}
-
-/* 面包屑导航栏样式 */
-.breadcrumb-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  background-color: #f0f4f8;
-  border-bottom: 1px solid #ddd;
-  margin-bottom: 20px;
-}
-
-.breadcrumb-left h1 {
-  margin: 0;
-  font-size: 1.5rem;
-  color: #333;
-}
-
-.breadcrumb-right nav {
-  display: flex;
-}
-
-.breadcrumb {
-  display: flex;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.breadcrumb-item + .breadcrumb-item::before {
-  content: " / ";
-  padding: 0 0.5rem;
-  color: #6c757d;
-}
-
-.breadcrumb-item a {
-  color: #42b983;
-  text-decoration: none;
-}
-
-.breadcrumb-item a:hover {
-  text-decoration: underline;
-}
-
-/* Introduction 样式 */
-.intro-card {
-  margin-bottom: 20px;
-}
-
-.intro-content {
-  display: flex;
-  align-items: center;
-}
-
-.intro-image {
-  width: 120px;
-  height: auto;
-  margin-right: 20px;
-  border-radius: 8px;
-}
-
-.intro-text h2 {
-  margin: 0;
-  font-size: 24px;
-}
-
-.intro-text p {
-  margin-top: 10px;
-  font-size: 16px;
-  line-height: 1.6;
 }
 
 /* 输入和参数卡片样式 */

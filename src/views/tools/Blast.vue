@@ -1,27 +1,7 @@
 <template>
   <div class="container">
-    <!-- 直接在页面内实现的面包屑导航栏 -->
-    <div class="breadcrumb-container">
-      <div class="breadcrumb-left">
-        <h1>{{ pageTitle }}</h1>
-      </div>
-      <div class="breadcrumb-right">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item" v-for="(item, index) in breadcrumbs" :key="index">
-              <router-link :to="item.path">{{ item.name }}</router-link>
-            </li>
-          </ol>
-        </nav>
-      </div>
-    </div>
 
-    <!-- 说明部分卡片 -->
-    <el-card class="instructions-card" shadow="hover">
-      <h4>Instruction</h4>
-      <p>In WebApollo, copy/paste the given gene region from the end of page 8. Then double click a gene prediction model...</p>
-    </el-card>
-
+    <blast />
     <!-- BLAST 分析卡片 -->
     <el-card class="blast-card" shadow="hover">
       <h2>Run BLAST Analysis</h2>
@@ -110,13 +90,7 @@
 <script setup>
 import { ref } from 'vue';
 import axios from 'axios';
-
-const pageTitle = 'BLAST';
-const breadcrumbs = [
-  { name: 'Home', path: '/' },
-  { name: 'Tools', path: '/tools' },
-  { name: 'BLAST', path: '/tools/Blast' }
-];
+import blast from "@/components/Tools/Title/blast.vue";
 
 const blastForm = ref({
   database: 'nt',
@@ -193,68 +167,10 @@ const downloadResults = () => {
 /* 主容器样式 */
 .container {
   width: 100%;
-  max-width: 1400px;
+  max-width: 100%;
   margin: 0 auto;
   padding: 20px;
   box-sizing: border-box;
-}
-
-/* 面包屑导航栏样式 */
-.breadcrumb-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  background-color: #f0f4f8;
-  border-bottom: 1px solid #ddd;
-  margin-bottom: 20px;
-}
-
-.breadcrumb-left h1 {
-  margin: 0;
-  font-size: 1.5rem;
-  color: #333;
-}
-
-.breadcrumb-right nav {
-  display: flex;
-}
-
-.breadcrumb {
-  display: flex;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.breadcrumb-item + .breadcrumb-item::before {
-  content: " / ";
-  padding: 0 0.5rem;
-  color: #6c757d;
-}
-
-.breadcrumb-item a {
-  color: #42b983;
-  text-decoration: none;
-}
-
-.breadcrumb-item a:hover {
-  text-decoration: underline;
-}
-
-/* Instructions, BLAST, and Results 卡片样式 */
-.el-card {
-  margin-bottom: 30px;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-}
-
-.instructions-card h4,
-.blast-card h2,
-.results-card h2 {
-  color: #1e88e5;
 }
 
 /* 输入框样式 */

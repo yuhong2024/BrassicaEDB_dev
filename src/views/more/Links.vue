@@ -1,19 +1,8 @@
 <template>
   <div class="container">
-    <!-- 统一的面包屑导航栏 -->
-    <div class="breadcrumb-container">
-      <div class="breadcrumb-left">
-        <h1>Links</h1>
-      </div>
-      <div class="breadcrumb-right">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item" v-for="(item, index) in breadcrumbs" :key="index">
-              <router-link :to="item.path">{{ item.name }}</router-link>
-            </li>
-          </ol>
-        </nav>
-      </div>
+    <!-- 页面标题 -->
+    <div class="links-page">
+      <LinksTitle />
     </div>
 
     <!-- BrassicaSearch Title -->
@@ -21,7 +10,7 @@
       <h1>BrassicaSearch</h1>
     </div>
 
-    <!-- Large Search Box -->
+    <!-- 搜索框 -->
     <div class="search-container">
       <el-input
           v-model="searchQuery"
@@ -32,59 +21,68 @@
       />
     </div>
 
-    <!-- Links Display -->
+    <!-- 链接展示区域 -->
     <el-row :gutter="20" class="links-grid">
       <el-col :span="8" v-for="(link, index) in filteredLinks" :key="index">
-        <el-card shadow="hover" class="link-card animated-card">
-          <a :href="link.url" target="_blank">
-            <img
-                :src="link.favicon"
-                :alt="link.title"
-                class="link-favicon"
-                @error="handleImageError(index)"
-            />
-          </a>
-          <div class="link-info">
-            <h3>{{ link.title }}</h3>
-            <p><a :href="link.url" target="_blank">{{ link.url }}</a></p>
-            <p>{{ link.description }}</p>
-          </div>
-        </el-card>
+        <!-- 链接包裹整个卡片 -->
+        <a :href="link.url" target="_blank" class="link-anchor">
+          <el-card shadow="hover" class="link-card">
+            <div class="card-content">
+              <!-- 图标或替代图标 -->
+              <div class="icon-container">
+                <img
+                    :src="link.favicon"
+                    :alt="link.title"
+                    class="link-favicon"
+                    @error="handleImageError(index)"
+                />
+                <!-- 替代 Element 图标 -->
+                <el-icon v-if="!link.favicon" class="fallback-icon">
+                  <Document />
+                </el-icon>
+              </div>
+              <!-- 链接信息 -->
+              <div class="link-info">
+                <h3>{{ link.title }}</h3>
+                <p>{{ link.description }}</p>
+              </div>
+            </div>
+          </el-card>
+        </a>
       </el-col>
     </el-row>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
-
-// 面包屑导航数据
-const breadcrumbs = [
-  { name: 'Home', path: '/' },
-  { name: 'More', path: '/more' },
-  { name: 'Links', path: '/links' }
-];
+import { ref, computed } from "vue";
+import { Document } from "@element-plus/icons-vue";
+import LinksTitle from "@/components/More/Title/links.vue";
 
 // 网站链接数据
 const links = ref([
   {
-    title: 'BnIR Database',
-    url: 'https://yanglab.hzau.edu.cn/BnIR',
-    description: 'A comprehensive database for Brassica napus integrated regulation.',
-    favicon: 'https://yanglab.hzau.edu.cn/favicon.ico'
+    title: 'BrassicaEDB v1.0',
+    url: 'https://brassica.biodb.org/',
+    description: 'BrassicaEDB - A Gene Expression Database for Brassica Crops',
+    favicon: 'https://brassica.biodb.org/favicon.ico'
   },
+
+  {
+    "title": "QPrimerDB",
+    "url": "https://qprimerdb.biodb.org/",
+    "description": "A resource for designing quality primers for biological research.",
+    "favicon": "https://qprimerdb.biodb.org/favicon.ico"
+  },
+
   {
     title: 'iAnimal Database',
     url: 'https://ianimal.pro/index',
     description: 'Explore animal genetic resources and their information.',
     favicon: 'https://ianimal.pro/favicon.ico'
   },
-  {
-    title: 'QPrimerDB',
-    url: 'https://qprimerdb.biodb.org/',
-    description: 'A resource for designing quality primers for biological research.',
-    favicon: 'https://qprimerdb.biodb.org/favicon.ico'
-  },
+
+
   {
     title: 'PlantTFDB',
     url: 'https://planttfdb.gao-lab.org/',
@@ -145,179 +143,142 @@ const links = ref([
   }
 
 
-
-  // 其他链接...
 ]);
 
-// 默认图标
-const defaultFavicon = '/src/assets/img/default-favicon.png';
+// 默认图标（占位图）
+const defaultFavicon = null;
 
 // 搜索功能
-const searchQuery = ref('');
-const filteredLinks = computed(() => {
-  return links.value.filter(link =>
-      link.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      link.description.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      link.url.toLowerCase().includes(searchQuery.value.toLowerCase())
-  );
-});
+const searchQuery = ref("");
+const filteredLinks = computed(() =>
+    links.value.filter(
+        (link) =>
+            link.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+            link.description.toLowerCase().includes(searchQuery.value.toLowerCase())
+    )
+);
 
-// 图片加载错误时使用默认图标
+// 图片加载错误时替换为 null（用于显示图标）
 const handleImageError = (index) => {
-  links.value[index].favicon = defaultFavicon;
+  links.value[index].favicon = null;
 };
 </script>
 
 <style scoped>
-/* 主容器样式 */
+/* 容器样式 */
 .container {
   width: 100%;
-  max-width: 1400px;
   margin: 0 auto;
   padding: 20px;
+  background: linear-gradient(to bottom right, #e0f8e0, #b2f2b2); /* 渐变绿色背景 */
   box-sizing: border-box;
 }
 
-/* 面包屑导航栏样式 */
-.breadcrumb-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  background-color: #f7f9fc;
-  border-bottom: 1px solid #ddd;
-  margin-bottom: 20px;
+.links-page {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0px;
+  box-sizing: border-box;
 }
 
-.breadcrumb-left h1 {
-  margin: 0;
-  font-size: 2rem;
-  color: #333;
-}
-
-.breadcrumb-right nav {
-  display: flex;
-}
-
-.breadcrumb {
-  display: flex;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.breadcrumb-item + .breadcrumb-item::before {
-  content: " / ";
-  padding: 0 0.5rem;
-  color: #6c757d;
-}
-
-.breadcrumb-item a {
-  color: #42b983;
-  text-decoration: none;
-}
-
-.breadcrumb-item a:hover {
-  text-decoration: underline;
-}
-
-/* Search Title */
+/* 页面标题 */
 .search-title {
-  margin: 40px 0 20px;
   text-align: center;
+  margin: 30px 0 20px;
 }
 
 .search-title h1 {
-  font-size: 42px;
-  font-weight: 500;
+  font-size: 2.5rem;
   color: #333;
-  letter-spacing: 0.05rem;
+  font-weight: bold;
 }
 
-/* Large Search Box */
+/* 搜索框 */
 .search-container {
-  margin-bottom: 40px;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
 }
 
 .large-search-box {
   width: 80%;
-  max-width: 700px;
+  max-width: 600px;
   height: 50px;
-  font-size: 18px;
-  padding: 10px 15px;
+  font-size: 16px;
+  padding: 10px;
   border-radius: 25px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.large-search-box:focus-within {
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
-
-/* Links Grid */
+/* 链接展示 */
 .links-grid {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .link-card {
-  margin-bottom: 30px;
-  text-align: center;
+  margin: 10px 0;
+  border-radius: 12px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .link-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
-.animated-card {
-  animation: fadeInUp 0.5s ease both;
+/* 链接外部样式 */
+.link-anchor {
+  text-decoration: none;
+  color: inherit;
+  display: block;
 }
 
-@keyframes fadeInUp {
-  0% {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
+/* 卡片内容 */
+.card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* 图标样式 */
+.icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60px;
+  margin-bottom: 10px;
 }
 
 .link-favicon {
-  width: 70px;
-  height: 70px;
+  width: 60px;
+  height: 60px;
   object-fit: contain;
-  margin-bottom: 20px;
-  border-radius: 50%;
-  transition: transform 0.3s ease;
 }
 
-.link-card:hover .link-favicon {
-  transform: rotate(360deg);
+.fallback-icon {
+  font-size: 60px;
+  color: #409eff;
 }
 
+/* 链接信息 */
 .link-info h3 {
   margin: 0;
-  font-size: 20px;
+  font-size: 1.2rem;
   color: #333;
 }
 
 .link-info p {
-  margin: 5px 0;
-  font-size: 15px;
+  margin: 5px 0 0;
+  font-size: 0.9rem;
   color: #666;
-}
-
-.link-info a {
-  color: #409EFF;
-  text-decoration: none;
-}
-
-.link-info a:hover {
-  text-decoration: underline;
 }
 </style>

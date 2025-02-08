@@ -55,10 +55,9 @@ onMounted(async () => {
 
 <style scoped>
 .statistics-panel {
-  padding: 2rem;
-  background-color: #ffffff;
+  padding: 1rem;
   text-align: center;
-  margin-bottom: 10px; /* 减少底部外边距 */
+  margin-bottom: 1px; /* 减少底部外边距 */
 }
 
 .statistics-cards {
@@ -70,7 +69,7 @@ onMounted(async () => {
 
 .statistics-card {
   flex: 1 1 150px;
-  min-width: 150px;
+  min-width: 200px;
   max-width: 250px;
 }
 
@@ -91,4 +90,29 @@ onMounted(async () => {
   color: #42b983;
   text-align: center;
 }
+
+/* 响应式布局 */
+@media (max-width: 1200px) {
+  .statistics-card {
+    flex: 1 1 calc(50% - 2rem); /* 中等屏幕时每行显示2个卡片 */
+  }
+}
+
+@media (max-width: 768px) {
+  .statistics-card {
+    flex: 1 1 calc(100% - 2rem); /* 小屏幕时每行显示1个卡片 */
+  }
+
+  .statistics-panel {
+    padding: 1rem;
+  }
+}
+.card-content p {
+  margin: 0;
+  font-weight: bold;
+  font-size: 18px; /* 调整字体大小到16px */
+  color: #333; /* 添加更清晰的字体颜色（可选） */
+}
+
+
 </style>

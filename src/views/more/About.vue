@@ -1,292 +1,205 @@
 <template>
-  <div class="about-page">
-    <!-- Breadcrumb Navigation -->
-    <div class="breadcrumb-container">
-      <div class="breadcrumb-left">
-        <h1>About BrassicaEDB</h1>
+  <div class="page-container">
+    <!-- 左侧目录导航 -->
+    <aside class="toc">
+      <h3 class="toc-title">Table of Contents</h3>
+      <ul>
+        <li v-for="item in toc" :key="item.id" :class="`toc-level-${item.level}`">
+          <a href="#" @click.prevent="scrollTo(item.id)">{{ item.text }}</a>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Markdown 内容区域 -->
+    <main class="markdown-container">
+      <div class="help-page">
+        <HelpTitle />
       </div>
-      <div class="breadcrumb-right">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item" v-for="(item, index) in breadcrumbs" :key="index">
-              <router-link :to="item.path">{{ item.name }}</router-link>
-            </li>
-          </ol>
-        </nav>
-      </div>
-    </div>
-
-    <!-- Community Forum Section -->
-    <el-card class="forum-card">
-      <h2>BrassicaEDB Community Forum</h2>
-      <p>
-        Welcome to the BrassicaEDB Community Forum! Engage with other researchers, share your findings, ask questions, and provide feedback to improve the BrassicaEDB. Our developers are here to help and respond to your queries in real-time.
-      </p>
-
-      <!-- Forum Categories -->
-      <el-row :gutter="20" class="forum-categories">
-        <el-col :xs="24" :sm="8">
-          <el-card shadow="hover" class="hover-card" @click="selectCategory('General Discussion')">
-            <h3>General Discussion</h3>
-          </el-card>
-        </el-col>
-        <el-col :xs="24" :sm="8">
-          <el-card shadow="hover" class="hover-card" @click="selectCategory('Gene Expression')">
-            <h3>Gene Expression</h3>
-          </el-card>
-        </el-col>
-        <el-col :xs="24" :sm="8">
-          <el-card shadow="hover" class="hover-card" @click="selectCategory('Feature Requests')">
-            <h3>Feature Requests</h3>
-          </el-card>
-        </el-col>
-      </el-row>
-
-      <!-- Discussion Threads -->
-      <el-card class="thread-card" v-if="selectedCategory">
-        <h3>{{ selectedCategory }} Threads</h3>
-        <el-list>
-          <el-list-item v-for="thread in threads" :key="thread.id">
-            <h4>{{ thread.title }}</h4>
-            <p>{{ thread.content }}</p>
-            <el-button type="text" @click="viewThread(thread.id)">View Thread</el-button>
-          </el-list-item>
-        </el-list>
-        <el-input v-model="newThreadTitle" placeholder="New Thread Title"></el-input>
-        <el-input type="textarea" v-model="newThreadContent" placeholder="New Thread Content"></el-input>
-        <el-button type="primary" @click="createThread">Post New Thread</el-button>
-      </el-card>
-
-      <!-- Comments Section -->
-      <el-card class="comments-card" v-if="selectedThread">
-        <h3>Comments for: {{ selectedThread.title }}</h3>
-        <el-list>
-          <el-list-item v-for="comment in selectedThread.comments" :key="comment.id">
-            <p><strong>{{ comment.user }}:</strong> {{ comment.text }}</p>
-          </el-list-item>
-        </el-list>
-        <el-input type="textarea" v-model="newComment" placeholder="Add a comment"></el-input>
-        <el-button type="primary" @click="addComment">Post Comment</el-button>
-      </el-card>
-    </el-card>
-
-    <!-- Database Introduction Section -->
-    <el-card class="intro-card">
-      <h2>About BrassicaEDB</h2>
-      <el-divider></el-divider>
-      <el-row :gutter="20">
-        <el-col :xs="24" :sm="12">
-          <p>
-            <strong>BrassicaEDB</strong> is a comprehensive gene expression database specifically designed for Brassica crops. Developed to support researchers worldwide, BrassicaEDB integrates large-scale RNA sequencing (RNA-Seq) data, providing a detailed view of gene expression profiles across various Brassica species.
-          </p>
-          <h3>Research Background</h3>
-          <p>
-            The BrassicaEDB was constructed following the publication of our landmark paper, which analyzed over 940 samples from various tissues and stages of Brassica crops. This database represents a significant advancement in Brassica research, offering tools for gene expression analysis, coexpression network building, and more.
-          </p>
-          <h3>Key Features</h3>
-          <el-card class="feature-card" shadow="always">
-            <el-row :gutter="20">
-              <el-col :xs="24" :sm="8">
-                <el-card shadow="hover" class="hover-card">
-                  <h4>Comprehensive Expression Data</h4>
-                  <p>Explore large-scale RNA-Seq datasets.</p>
-                </el-card>
-              </el-col>
-              <el-col :xs="24" :sm="8">
-                <el-card shadow="hover" class="hover-card">
-                  <h4>Intuitive Interface</h4>
-                  <p>User-friendly design for seamless analysis.</p>
-                </el-card>
-              </el-col>
-              <el-col :xs="24" :sm="8">
-                <el-card shadow="hover" class="hover-card">
-                  <h4>Advanced Tools</h4>
-                  <p>Perform complex analyses with a few clicks.</p>
-                </el-card>
-              </el-col>
-            </el-row>
-          </el-card>
-        </el-col>
-        <el-col :xs="24" :sm="12">
-          <el-image
-              src="src/assets/img/test/tf.jpg"
-              fit="cover"
-              class="intro-image"
-          />
-        </el-col>
-      </el-row>
-      <el-divider></el-divider>
-      <h3>Citation</h3>
-      <p>
-        To reference BrassicaEDB in your research, please use the following citation:
-      </p>
-      <blockquote>
-        Haoyu Chao, Tian Li, Chaoyu Luo, et al. BrassicaEDB: A Gene Expression Database for Brassica Crops. Int. J. Mol. Sci. 2020, 21, 5831.
-      </blockquote>
-      <el-divider></el-divider>
-      <h3>Future Directions</h3>
-      <p>
-        We are committed to expanding the BrassicaEDB to include additional species, more comprehensive data, and enhanced analytical tools, making this an indispensable resource for the Brassica research community.
-      </p>
-    </el-card>
+      <div v-html="renderedContent" class="markdown-content"></div>
+    </main>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, onMounted, nextTick } from 'vue';
+import { marked } from 'marked';
+import HelpTitle from '@/components/More/Title/about.vue';
 
-// Forum data management
-const selectedCategory = ref('');
-const threads = reactive([
-  { id: 1, title: 'Getting Started with BrassicaEDB', content: 'How do I begin?', comments: [] },
-  { id: 2, title: 'Gene Expression Analysis', content: 'Discussion on expression data.', comments: [] },
-]);
+const renderedContent = ref('');
+const toc = ref([]);
 
-const selectedThread = ref(null);
-const newThreadTitle = ref('');
-const newThreadContent = ref('');
-const newComment = ref('');
+// 加载 Markdown 文件
+const loadMarkdownFile = async () => {
+  try {
+    const markdownFile = await fetch(new URL('@/assets/md/About.md', import.meta.url));
+    const markdownText = await markdownFile.text();
+    renderedContent.value = marked(markdownText);
 
-// Breadcrumbs data
-const breadcrumbs = [
-  { name: 'Home', path: '/' },
-  { name: 'More', path: '/more' },
-  { name: 'About', path: '/about' },
-];
-
-// Select forum category
-const selectCategory = (category) => {
-  selectedCategory.value = category;
-  selectedThread.value = null;  // Clear selected thread when changing categories
-};
-
-// View specific thread
-const viewThread = (id) => {
-  selectedThread.value = threads.find(thread => thread.id === id);
-};
-
-// Create new thread
-const createThread = () => {
-  if (newThreadTitle.value && newThreadContent.value) {
-    threads.push({
-      id: threads.length + 1,
-      title: newThreadTitle.value,
-      content: newThreadContent.value,
-      comments: []
-    });
-    newThreadTitle.value = '';
-    newThreadContent.value = '';
+    await nextTick(); // 确保 DOM 渲染完成
+    generateTOC(); // 动态生成目录
+  } catch (error) {
+    console.error('Error loading markdown file:', error);
+    renderedContent.value = '<p>Failed to load content. Please try again later.</p>';
   }
 };
 
-// Add new comment to thread
-const addComment = () => {
-  if (newComment.value && selectedThread.value) {
-    selectedThread.value.comments.push({
-      id: selectedThread.value.comments.length + 1,
-      user: 'User',
-      text: newComment.value
-    });
-    newComment.value = '';
+// 动态生成目录
+const generateTOC = () => {
+  const headers = document.querySelectorAll('.markdown-content h1, .markdown-content h2, .markdown-content h3');
+  toc.value = Array.from(headers).map((header) => {
+    const id = header.innerText.replace(/\s+/g, '-').toLowerCase(); // 基于标题文本生成唯一 ID
+    header.id = id; // 为标题设置 ID
+    return {
+      id,
+      text: header.innerText,
+      level: parseInt(header.tagName[1]), // 提取标题级别
+    };
+  });
+};
+
+// 平滑滚动到指定标题
+const scrollTo = (id) => {
+  const target = document.getElementById(id);
+  if (target) {
+    target.scrollIntoView({ behavior: 'smooth' });
   }
 };
+
+// 页面加载时调用
+onMounted(() => {
+  loadMarkdownFile();
+});
 </script>
 
+
+
 <style scoped>
-.about-page {
-  width: 100%;
-  max-width: 1400px;
+/* 页面主容器 */
+.page-container {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  max-width: 99%; /* 内容宽度占比容器99% */
   margin: 0 auto;
   padding: 20px;
   box-sizing: border-box;
 }
 
-.breadcrumb-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  background-color: #f0f4f8;
-  border-bottom: 1px solid #ddd;
-  margin-bottom: 20px;
+/* 左侧目录样式 */
+.toc {
+  flex: 0 0 12%; /* 目录宽度占20% */
+  max-width: 250px;
+  padding: 20px;
+  background-color: #f5f7fa;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 20px;
+  height: max-content;
+  overflow-y: auto; /* 目录滚动条 */
 }
 
-.breadcrumb-left h1 {
-  margin: 0;
-  font-size: 1.5rem;
+.toc-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
   color: #333;
 }
 
-.breadcrumb-right nav {
-  display: flex;
-}
-
-.breadcrumb {
-  display: flex;
+.toc ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.breadcrumb-item + .breadcrumb-item::before {
-  content: " / ";
-  padding: 0 0.5rem;
-  color: #6c757d;
-}
-
-.breadcrumb-item a {
-  color: #42b983;
-  text-decoration: none;
-}
-
-.breadcrumb-item a:hover {
-  text-decoration: underline;
-}
-
-.forum-card,
-.intro-card {
-  margin-bottom: 20px;
-}
-
-.forum-categories {
-  margin-top: 20px;
-}
-
-.hover-card {
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.hover-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-}
-
-.thread-card,
-.comments-card {
-  margin-top: 20px;
-}
-
-.thread-card h3,
-.comments-card h3 {
+.toc li {
   margin-bottom: 10px;
 }
 
-.comments-card {
-  background-color: #f9f9f9;
+.toc a {
+  color: #409eff;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.toc a:hover {
+  color: #66b1ff;
+}
+
+/* 不同级别标题的缩进 */
+.toc-level-2 {
+  margin-left: 20px;
+}
+
+.toc-level-3 {
+  margin-left: 40px;
+}
+
+/* Markdown 内容容器 */
+.markdown-container {
+  flex: 1; /* 内容区域自适应 */
   padding: 20px;
-}
-
-.feature-card {
-  margin-top: 20px;
-}
-
-.intro-image {
-  width: 100%;
+  background-color: #ffffff;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  overflow-wrap: break-word; /* 防止内容溢出 */
 }
 
-.el-divider {
-  margin: 20px 0;
+/* Markdown 内容样式 */
+.markdown-content {
+  line-height: 1.8;
+  font-size: 1rem;
+  color: #333;
+}
+
+.markdown-content h1 {
+  font-size: 2rem;
+  color: #42b983;
+  margin-top: 1.5rem;
+}
+
+.markdown-content h2 {
+  font-size: 1.6rem;
+  color: #409eff;
+  margin-top: 1.2rem;
+}
+
+.markdown-content h3 {
+  font-size: 1.4rem;
+  color: #66b1ff;
+  margin-top: 1rem;
+}
+
+/* 响应式布局 */
+@media (max-width: 768px) {
+  .page-container {
+    flex-direction: column; /* 切换为上下堆叠 */
+  }
+
+  .toc {
+    flex: 0 0 auto;
+    max-width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .markdown-container {
+    padding: 15px;
+  }
+
+  .markdown-content {
+    font-size: 0.9rem;
+  }
+
+  .markdown-content h1 {
+    font-size: 1.8rem;
+  }
+
+  .markdown-content h2 {
+    font-size: 1.4rem;
+  }
+
+  .markdown-content h3 {
+    font-size: 1.2rem;
+  }
 }
 </style>

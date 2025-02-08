@@ -1,127 +1,145 @@
 <template>
+  <!-- 页面整体容器 -->
   <div class="analysis-page">
+    <!-- 标题 -->
     <h2 class="page-title">Analysis</h2>
-    <el-row :gutter="20">
-      <el-col v-for="analysis in analyses" :key="analysis.title" :span="8">
-        <el-card shadow="hover" class="analysis-card" @click="goToPage(analysis.path)">
-          <el-row>
-            <el-col :span="8">
-              <img :src="analysis.image" alt="Analysis Image" class="analysis-image" />
-            </el-col>
-            <el-col :span="16" class="analysis-content">
-              <h3 class="analysis-title">{{ analysis.title }}</h3>
-              <p class="analysis-description">{{ analysis.description }}</p>
-            </el-col>
-          </el-row>
-        </el-card>
-      </el-col>
-    </el-row>
+
+    <!-- 分析项卡片布局 -->
+    <div class="analysis-section">
+      <el-row :gutter="20" justify="center">
+        <!-- GO 组件 -->
+        <el-col :xs="24" :sm="12" :md="8" :lg="6">
+          <el-card shadow="hover" class="analysis-card" @click="goToPage('go')">
+            <div class="card-content">
+              <!-- 图片 -->
+              <img :src="imageGo" alt="Go Analysis" class="analysis-image" />
+              <!-- 文字内容 -->
+              <div class="card-text">
+                <h3 class="analysis-title">GO Analysis</h3>
+                <p class="analysis-description">Gene Ontology analysis description.</p>
+              </div>
+            </div>
+          </el-card>
+        </el-col>
+
+        <!-- KEGG Enrichment 组件 -->
+        <el-col :xs="24" :sm="12" :md="8" :lg="6">
+          <el-card shadow="hover" class="analysis-card" @click="goToPage('KEGGEnrichment')">
+            <div class="card-content">
+              <img :src="imageKegg" alt="KEGG Enrichment" class="analysis-image" />
+              <div class="card-text">
+                <h3 class="analysis-title">KEGG Enrichment</h3>
+                <p class="analysis-description">KEGG pathway enrichment analysis.</p>
+              </div>
+            </div>
+          </el-card>
+        </el-col>
+
+        <!-- DESeq2 组件 -->
+        <el-col :xs="24" :sm="12" :md="8" :lg="6">
+          <el-card shadow="hover" class="analysis-card" @click="goToPage('deseq')">
+            <div class="card-content">
+              <img :src="imageDeseq" alt="DESeq2 Analysis" class="analysis-image" />
+              <div class="card-text">
+                <h3 class="analysis-title">DESeq2 Analysis</h3>
+                <p class="analysis-description">Differential gene expression analysis.</p>
+              </div>
+            </div>
+          </el-card>
+        </el-col>
+
+        <!-- WGCNA 组件 -->
+        <el-col :xs="24" :sm="12" :md="8" :lg="6">
+          <el-card shadow="hover" class="analysis-card" @click="goToPage('wgcna')">
+            <div class="card-content">
+              <img :src="imageWgcna" alt="WGCNA Analysis" class="analysis-image" />
+              <div class="card-text">
+                <h3 class="analysis-title">WGCNA Analysis</h3>
+                <p class="analysis-description">Weighted Gene Co-expression Network.</p>
+              </div>
+            </div>
+          </el-card>
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 
+
 <script setup>
-import { useRouter } from 'vue-router';  // 引入 useRouter 进行页面跳转
-import imageGeneticDifferences from '@/assets/img/home/analysis/Genetic_differences_between_species.svg';
-import imageNetworkPrediction from '@/assets/img/home/analysis/Regulatory_network_prediction.svg';
-import imageCoExpression from '@/assets/img/home/analysis/Interspecies_co-expression.svg';
+import { useRouter } from 'vue-router';
 
-const router = useRouter();  // 使用 router 进行跳转
+// 引入图片资源
+import imageGo from '@/assets/img/home/tools/go.png';
+import imageKegg from '@/assets/img/home/tools/kegg.png';
+import imageDeseq from '@/assets/img/home/tools/go.png';
+import imageWgcna from '@/assets/img/home/tools/kegg.png';
 
-// 页面跳转函数
+// 路由跳转
+const router = useRouter();
 const goToPage = (path) => {
-  router.push(path);
+  router.push(`/analysis/${path}`);
 };
-
-const analyses = [
-  {
-    title: 'Genetic Differences Between Species',
-    description: 'Analyze and compare the genetic makeup between different species to identify key differences and evolutionary patterns.',
-    image: imageGeneticDifferences,
-    path: '/analysis/differ',
-  },
-  {
-    title: 'Regulatory Network Prediction',
-    description: 'Predict and visualize gene regulatory networks to understand the interactions between genes and their effects on biological processes.',
-    image: imageNetworkPrediction,
-    path: '/analysis/network',
-  },
-  {
-    title: 'Interspecies Co-expression',
-    description: 'Study the co-expression of genes across different species to identify common regulatory patterns and shared pathways.',
-    image: imageCoExpression,
-    path: '/analysis/coexpression',
-  },
-];
 </script>
+
 
 <style scoped>
 .analysis-page {
-  padding: 40px;
-  background-color: #f8fafc;
+  padding: 30px;
 }
 
 .page-title {
-  font-size: 2.5rem;
-  text-align: center;
+  font-size: 24px;
   font-weight: bold;
+  text-align: center;
   margin-bottom: 40px;
-  color: #2c3e50;
-  letter-spacing: 1.5px;
+}
+
+.analysis-section {
+  margin-top: 20px;
 }
 
 .analysis-card {
-  padding: 25px;
-  transition: transform 0.3s;
-  border-radius: 12px;
-  background-color: #fff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  cursor: pointer; /* 增加鼠标悬停样式，提示可点击 */
+  transition: transform 0.3s ease;
 }
 
 .analysis-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  transform: scale(1.05);
 }
 
 .analysis-image {
-  max-width: 60px; /* 调整图片大小 */
+  width: 100%;
   height: auto;
-  margin: 0 auto; /* 图片居中 */
-  display: block;
+  border-radius: 10px;
 }
 
-.analysis-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding-left: 15px;
+.card-text {
+  padding: 15px;
+  text-align: center;
 }
 
 .analysis-title {
-  font-size: 1.35rem;
-  color: #2c9c69;
+  font-size: 18px;
   font-weight: bold;
-  margin-bottom: 5px;
+  color: #2c3e50;
 }
 
 .analysis-description {
-  font-size: 1rem;
   color: #7f8c8d;
-  line-height: 1.5;
+  font-size: 14px;
 }
 
-@media (max-width: 768px) {
-  .analysis-card {
-    height: auto;
-    padding: 20px;
-  }
+.el-card {
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 
-  .analysis-title {
-    font-size: 1.15rem;
-  }
-
-  .analysis-description {
-    font-size: 0.95rem;
-  }
+.el-col {
+  padding: 10px;
 }
 </style>
+
+
+
+
+

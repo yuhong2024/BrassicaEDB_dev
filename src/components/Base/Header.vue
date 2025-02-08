@@ -21,20 +21,17 @@
         </router-link>
       </el-menu-item>
 
-      <!-- Gene Feature -->
-      <el-sub-menu index="/genefeature">
+      <!-- Browse -->
+      <el-sub-menu index="/download/summary">
         <template #title>
-          <router-link to="/genefeature" class="submenu-title" exact-active-class="exact-active-link">
+          <router-link to="/download/summary" class="submenu-title" exact-active-class="exact-active-link">
             <font-awesome-icon :icon="['fas', 'dna']" class="menu-icon" />
-            <span>Gene Feature</span>
+            <span>Browse</span>
           </router-link>
         </template>
-        <el-menu-item index="/genefeature/brassicacarinata">Brassica carinata</el-menu-item>
-        <el-menu-item index="/genefeature/juncea">Brassica juncea</el-menu-item>
-        <el-menu-item index="/genefeature/napus">Brassica napus</el-menu-item>
-        <el-menu-item index="/genefeature/nigra">Brassica nigra</el-menu-item>
-        <el-menu-item index="/genefeature/oleracea">Brassica oleracea</el-menu-item>
-        <el-menu-item index="/genefeature/rapa">Brassica rapa</el-menu-item>
+        <el-menu-item index="/download/summary">Summary</el-menu-item>
+        <el-menu-item index="/browse">Brassica  L.</el-menu-item>
+
       </el-sub-menu>
 
       <!-- Search -->
@@ -45,32 +42,13 @@
             <span>Search</span>
           </router-link>
         </template>
-        <el-menu-item index="/search/homologous">Homologous gene</el-menu-item>
-        <el-menu-item index="/search/expression">Expression</el-menu-item>
-        <el-menu-item index="/search/splicing">Alternative splicing</el-menu-item>
-        <el-menu-item index="/search/coexpression">Co-expression</el-menu-item>
-        <el-menu-item index="/search/tf">TF</el-menu-item>
-      </el-sub-menu>
 
-      <!-- Tools -->
-      <el-sub-menu index="/tools">
-        <template #title>
-          <router-link to="/tools" class="submenu-title" exact-active-class="exact-active-link">
-            <font-awesome-icon :icon="['fas', 'cogs']" class="menu-icon" />
-            <span>Tools</span>
-          </router-link>
-        </template>
-        <el-menu-item index="/tools/blast">Blast</el-menu-item>
-        <el-menu-item index="/tools/jbrowse">Jbrowse</el-menu-item>
-        <el-menu-item index="/tools/qprimer">qPrimer</el-menu-item>
-        <el-menu-item index="/tools/efp">eFP</el-menu-item>
-        <el-menu-item index="/tools/seqfetch">Seq fetch</el-menu-item>
-        <el-menu-item index="/tools/go">Go Enrichment</el-menu-item>
-        <el-menu-item index="/tools/KEGG">KEGG Enrichment</el-menu-item>
-        <el-menu-item index="/tools/hmmer">HMMER</el-menu-item>
-
-
-
+        <el-menu-item index="/search/expression">Gene Expression</el-menu-item>
+        <el-menu-item index="/search/homologous">Gene Homologous</el-menu-item>
+        <el-menu-item index="/search/efp">Gene eFP </el-menu-item>
+        <el-menu-item index="/search/tf"> Gene Regulation Network  </el-menu-item>
+        <el-menu-item index="/search/splicing">Gene Alternative Splicing</el-menu-item>
+        <el-menu-item index="/search/pantranme">Gene Pantranscriptome </el-menu-item>
       </el-sub-menu>
 
       <!-- Analysis -->
@@ -81,14 +59,28 @@
             <span>Analysis</span>
           </router-link>
         </template>
-
-        <el-menu-item index="/analysis/differ">Genetic Differences Between Species</el-menu-item>
-        <el-menu-item index="/analysis/network">Regulatory Network Prediction</el-menu-item>
-        <el-menu-item index="/analysis/coexpression">Interspecies Co-expression</el-menu-item>
-
-
-
+        <el-menu-item index="/analysis/deseq">DEseq2</el-menu-item>
+        <el-menu-item index="/analysis/wgcna">WGCNA</el-menu-item>
+        <el-menu-item index="/analysis/go">Go Enrichment</el-menu-item>
+        <el-menu-item index="/analysis/KEGG">KEGG Enrichment</el-menu-item>
       </el-sub-menu>
+
+
+
+      <!-- Tools -->
+      <el-sub-menu index="/tools">
+        <template #title>
+          <router-link to="/tools" class="submenu-title" exact-active-class="exact-active-link">
+            <font-awesome-icon :icon="['fas', 'cogs']" class="menu-icon" />
+            <span>Tools</span>
+          </router-link>
+        </template>
+        <el-menu-item index="/tools/qprimer">qPrimer</el-menu-item>
+        <el-menu-item index="/tools/seqfetch">Seq fetch</el-menu-item>
+        <el-menu-item index="/tools/blast">Blast</el-menu-item>
+        <el-menu-item index="/tools/jbrowse">Jbrowse</el-menu-item>
+      </el-sub-menu>
+
 
 
 
@@ -100,13 +92,23 @@
             <span>Download</span>
           </router-link>
         </template>
-
-
-        <el-menu-item index="/download/summary">Summmary</el-menu-item>
-        <el-menu-item index="/download/data">Data</el-menu-item>
+        <el-menu-item index="/download/data">Genome Data</el-menu-item>
         <el-menu-item index="/download/api">API</el-menu-item>
       </el-sub-menu>
 
+      
+      <!-- Help -->
+      <el-sub-menu index="/help">
+        <template #title>
+          <router-link to="/more/help" class="submenu-title" exact-active-class="exact-active-link">
+            <font-awesome-icon :icon="['fas', 'ellipsis-h']" class="menu-icon" />
+            <span>Help</span>
+          </router-link>
+        </template>
+        <el-menu-item index="/more/help">Help</el-menu-item>
+        <el-menu-item index="/more/about">About</el-menu-item>
+
+      </el-sub-menu>
 
       <!-- More -->
       <el-sub-menu index="/more">
@@ -116,11 +118,15 @@
             <span>More</span>
           </router-link>
         </template>
-        <el-menu-item index="/more/help">Help</el-menu-item>
         <el-menu-item index="/more/links">Links</el-menu-item>
-        <el-menu-item index="/more/about">About</el-menu-item>
         <el-menu-item index="/more/update">Update</el-menu-item>
       </el-sub-menu>
+
+
+
+
+
+
     </el-menu>
     <div class="search-container">
       <SearchComponent />
@@ -156,7 +162,7 @@ const goHome = () => {
   justify-content: space-between;
   background: linear-gradient(135deg,  #8fd3f4 , #42b983); /* 渐变背景 */
   padding: 15px 30px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   position: fixed;
   top: 0;
   left: 0;
@@ -174,7 +180,7 @@ const goHome = () => {
 .logo {
   width: 220px; /* 调整Logo大小 */
   vertical-align: middle;
-  margin-right: 15px;
+  margin-right: 20px;
 }
 
 .el-menu-demo {
@@ -190,7 +196,7 @@ const goHome = () => {
 .el-menu-demo >>> .el-sub-menu__title {
   margin: 0 15px;
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 550;
   color: #ffffff; /* 菜单项文字颜色为白色 */
   transition: color 0.3s, background-color 0.3s;
   display: flex;
@@ -217,13 +223,14 @@ const goHome = () => {
   border-bottom: none; /* 移除下划线 */
 }
 
+
 .el-menu-demo >>> .el-sub-menu__title {
   display: flex;
   align-items: center;
 }
 
 .submenu-title {
-  color: #ffffff;
+  color: #292525;
   text-decoration: none;
   transition: color 0.3s;
   display: flex;
@@ -245,6 +252,7 @@ const goHome = () => {
   border: none; /* 去除默认边框 */
 }
 
+
 .menu-item-link {
   display: flex;
   align-items: center; /* 确保图标和文字都在同一行并垂直居中 */
@@ -258,5 +266,51 @@ const goHome = () => {
 
 .menu-item-link.exact-active-link {
   color: #ffffff; /* 恢复为白色 */
+}
+
+/* 响应式调整 */
+@media screen and (max-width: 1024px) {
+  .logo {
+    width: 180px; /* 调整Logo大小 */
+  }
+
+  .el-menu-demo >>> .el-menu-item,
+  .el-menu-demo >>> .el-sub-menu__title {
+    font-size: 16px; /* 缩小字体大小 */
+    margin: 0 10px; /* 减少菜单项之间的间距 */
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .logo {
+    width: 150px; /* 进一步缩小Logo */
+  }
+
+  .el-menu-demo >>> .el-menu-item,
+  .el-menu-demo >>> .el-sub-menu__title {
+    font-size: 14px; /* 缩小字体到适合小屏幕 */
+    margin: 0 8px; /* 减少菜单项间距 */
+  }
+
+  .search-container {
+    display: none; /* 在极小屏幕上隐藏搜索栏以节省空间 */
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .logo {
+    width: 120px; /* 极小屏幕调整Logo大小 */
+  }
+
+  .el-menu-demo >>> .el-menu-item,
+  .el-menu-demo >>> .el-sub-menu__title {
+    font-size: 12px; /* 进一步缩小字体 */
+    margin: 0 6px; /* 减少间距 */
+  }
+
+  .el-menu-demo >>> .fa,
+  .el-menu-demo >>> .menu-icon {
+    display: none; /* 隐藏图标以节省空间 */
+  }
 }
 </style>

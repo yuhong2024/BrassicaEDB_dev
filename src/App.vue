@@ -17,7 +17,14 @@
 import Header from './components/Base/Header.vue';
 import Footer from './components/Base/Footer.vue';
 import FooterLinks from './components/Base/FooterLinks.vue';
+
 import { RouterView } from 'vue-router';
+import '@/assets/css/styles.css';  // 引入全局样式
+
+
+
+
+
 </script>
 
 <style scoped>
@@ -25,7 +32,7 @@ import { RouterView } from 'vue-router';
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #f5f5f5; /* 修改背景颜色 */
+  background-color: #F5F9ED; /* 修改背景颜色 */
 }
 
 .main-content {
@@ -36,7 +43,8 @@ import { RouterView } from 'vue-router';
   padding-top: 70px;
   padding-bottom: 60px;
   box-sizing: border-box;
-  background-color: #ffffff; /* 白色背景 */
+  //background-color: #ffffff; /* 白色背景 */
+  background-color: #F5F9ED; /* 白色背景 */
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 添加阴影 */
 }

@@ -1,56 +1,30 @@
 <template>
   <div class="container">
-    <!-- 直接写在当前页面的面包屑导航栏 -->
-    <div class="breadcrumb-container">
-      <div class="breadcrumb-left">
-        <h1>Seq Fetch</h1>
-      </div>
-      <div class="breadcrumb-right">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item" v-for="(item, index) in breadcrumbs" :key="index">
-              <router-link :to="item.path">{{ item.name }}</router-link>
-            </li>
-          </ol>
-        </nav>
-      </div>
-    </div>
 
-    <!-- Introduction Section -->
-    <el-card class="intro-card" shadow="hover">
-      <div class="intro-content">
-        <img src="@/assets/img/home/tools/seqfetch.png" alt="Seq Fetch Image" class="intro-image" />
-        <div class="intro-text">
-          <h2>Seq Fetch</h2>
-          <p>
-            Use Seq Fetch to retrieve nucleotide sequences based on gene IDs. Upload a text file or enter gene IDs manually. Adjust parameters as needed and fetch your sequences.
-          </p>
-        </div>
-      </div>
-    </el-card>
-
+    <seq />
     <!-- Form Section -->
     <el-card class="form-card">
       <el-row :gutter="20">
         <!-- Left Side: Species Select and Promoter Length -->
         <el-col :span="12">
-          <el-form-item label="下拉式选择物种" prop="species">
+          <el-form-item label="Select Species" prop="species">
             <el-select v-model="form.species" placeholder="Select a species">
-              <el-option label="Species 1" value="s1"></el-option>
-              <el-option label="Species 2" value="s2"></el-option>
-              <el-option label="Species 3" value="s3"></el-option>
-              <el-option label="Species 4" value="s4"></el-option>
-              <el-option label="Species 5" value="s5"></el-option>
+              <el-option label="Brassica carinata" value="s1"></el-option>
+              <el-option label="Brassica juncea" value="s2"></el-option>
+              <el-option label="Brassica napus" value="s3"></el-option>
+              <el-option label="Brassica nigra" value="s4"></el-option>
+              <el-option label="Brassica oleracea" value="s5"></el-option>
+              <el-option label="Brassica rapa" value="s6"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="输入启动子长度" prop="promoter_length">
-            <el-input v-model="form.promoter_length" placeholder="1500"></el-input>
+          <el-form-item label="Enter Promoter Length" prop="promoter_length">
+            <el-input v-model="form.promoter_length" placeholder="e.g., 1500"></el-input>
           </el-form-item>
         </el-col>
 
         <!-- Right Side: Output Prefix and Example -->
         <el-col :span="12">
-          <el-form-item label="结果输出名称" prop="out_prefix">
+          <el-form-item label="Output Prefix" prop="out_prefix">
             <el-input v-model="form.out_prefix" placeholder="e.g., 1500bp"></el-input>
           </el-form-item>
           <el-button type="info" @click="loadExample">Example</el-button>
@@ -60,11 +34,11 @@
       <!-- Gene ID Input or File Upload -->
       <el-row :gutter="20">
         <el-col :span="24">
-          <el-form-item label="基因ID输入或提交文件" prop="input_text">
+          <el-form-item label="Gene ID Input or File Upload" prop="input_text">
             <el-input
                 v-model="form.input_text"
                 type="textarea"
-                placeholder="BnaA01G0354500ZS, BnaA01G0357800ZS, BnaA01G0231100ZS, ..."
+                placeholder="e.g., BnaA01G0354500ZS, BnaA01G0357800ZS, BnaA01G0231100ZS, ..."
                 :rows="6"
             ></el-input>
           </el-form-item>
@@ -110,12 +84,7 @@
 <script setup>
 import { ref } from 'vue';
 import { ElMessage } from 'element-plus';
-
-const breadcrumbs = [
-  { name: 'Home', path: '/' },
-  { name: 'Tools', path: '/tools' },
-  { name: 'Seq Fetch', path: '/tools/seqfetch' }
-];
+import seq from "@/components/Tools/Title/seq.vue";
 
 // Form data
 const form = ref({
@@ -208,86 +177,10 @@ const loadExample = () => {
 /* 主容器样式 */
 .container {
   width: 100%;
-  max-width: 1400px;
+  max-width: 100%;
   margin: 0 auto;
   padding: 20px;
   box-sizing: border-box;
-}
-
-/* 面包屑导航栏样式 */
-.breadcrumb-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  background-color: #f0f4f8;
-  border-bottom: 1px solid #ddd;
-  margin-bottom: 20px;
-}
-
-.breadcrumb-left h1 {
-  margin: 0;
-  font-size: 1.5rem;
-  color: #333;
-}
-
-.breadcrumb-right nav {
-  display: flex;
-}
-
-.breadcrumb {
-  display: flex;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.breadcrumb-item + .breadcrumb-item::before {
-  content: " / ";
-  padding: 0 0.5rem;
-  color: #6c757d;
-}
-
-.breadcrumb-item a {
-  color: #42b983;
-  text-decoration: none;
-}
-
-.breadcrumb-item a:hover {
-  text-decoration: underline;
-}
-
-/* 卡片式布局 */
-.el-card {
-  margin-bottom: 30px;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-}
-
-/* Introduction 样式 */
-.intro-content {
-  display: flex;
-  align-items: center;
-}
-
-.intro-image {
-  width: 120px;
-  height: auto;
-  margin-right: 20px;
-  border-radius: 8px;
-}
-
-.intro-text h2 {
-  margin: 0;
-  font-size: 24px;
-}
-
-.intro-text p {
-  margin-top: 10px;
-  font-size: 16px;
-  line-height: 1.6;
 }
 
 /* 输入卡片样式 */

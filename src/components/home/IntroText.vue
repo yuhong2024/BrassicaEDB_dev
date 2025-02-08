@@ -14,7 +14,7 @@
 .intro-text {
   width: 100%;
   height: 400px; /* 设置合适的高度 */
-  background-image: url('@/assets/img/home/display/site.svg'); /* 背景图片路径 */
+  background-image: url('@/assets/img/home/display/ad.png'); /* 背景图片路径 */
   background-size: cover; /* 背景图片覆盖整个容器 */
   background-position: center; /* 背景图片居中 */
   position: relative; /* 使文本层可绝对定位 */

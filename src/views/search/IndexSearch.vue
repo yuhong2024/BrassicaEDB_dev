@@ -1,142 +1,182 @@
 <template>
+  <!-- 页面整体容器 -->
   <div class="container">
-    <!-- 标题居中对齐 -->
+    <!-- 标题 -->
     <h1 class="page-title">BEDB Search</h1>
 
-    <!-- Search Sections -->
-    <el-row :gutter="20">
-      <el-col v-for="searchItem in searchItems" :key="searchItem.name" :span="12">
-        <el-card shadow="hover" class="search-card" @click="goToPage(searchItem.route)">
-          <el-row>
-            <el-col :span="8">
-              <img :src="searchItem.image" alt="Search Image" class="search-image" />
-            </el-col>
-            <el-col :span="16" class="search-content">
-              <h3 class="search-title">{{ searchItem.name }}</h3>
-              <p>{{ searchItem.description }}</p>
-            </el-col>
-          </el-row>
-        </el-card>
-      </el-col>
-    </el-row>
+    <!-- 搜索模块布局 -->
+    <div class="search-section">
+      <el-row :gutter="30" justify="center">
+        <el-col v-for="searchItem in searchItems" :key="searchItem.name" :xs="24" :sm="24" :md="12" :lg="12">
+          <el-card shadow="hover" class="search-card" @click="goToPage(searchItem.route)">
+            <!-- 卡片内容 -->
+            <div class="card-content">
+              <img :src="searchItem.image" alt="Icon" class="search-image" />
+              <div class="card-text">
+                <h3 class="search-title">{{ searchItem.name }}</h3>
+                <p>{{ searchItem.description }}</p>
+              </div>
+            </div>
+          </el-card>
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { useRouter } from 'vue-router';
 
+// 路由跳转
 const router = useRouter();
+const goToPage = (route) => router.push(route);
 
-// 卡片中的搜索模块数据
-import CoImage from '@/assets/img/analysis/Co.svg';
-import GeneImage from '@/assets/img/analysis/Gene.svg';
-import HomImage from '@/assets/img/analysis/Hom.svg';
-import TFImage from '@/assets/img/analysis/TF.svg';
-import TranscriptImage from '@/assets/img/analysis/Transcript.svg';
+// 图片导入
+import ExpressionImage from '@/assets/img/analysis/Transcript.svg';
+import HomologousImage from '@/assets/img/home/search/Hom.svg';
+import EfpImage from '@/assets/img/home/search/efp.svg';
+import RegulationImage from '@/assets/img/analysis/TF.svg';
+import SplicingImage from '@/assets/img/home/search/AS.svg';
+import PantranmeImage from '@/assets/img/home/search/Pan.svg';
 
+// 搜索模块数据
 const searchItems = [
   {
-    name: 'Co-expression Network Module',
-    image: CoImage,
-    description: 'Weighted Gene Co-expression Network Analysis (WGCNA) is a systems biology method for identifying co-expression relationships and modules...',
-    route: '/search/coexpression'
+    name: 'Gene Expression',
+    image: ExpressionImage,
+    description: 'Analyze gene expression patterns across different tissues, treatments, and developmental stages using comprehensive RNA-seq data.',
+    route: '/search/expression'
   },
   {
-    name: 'TF Regulatory Network Module',
-    image: TFImage,
-    description: 'Transcription factors are proteins that can bind to specific sequences of DNA to regulate the transcriptional activity of genes...',
-    route: '/search/tf'
-  },
-  {
-    name: 'Alternative Splicing Module',
-    image: GeneImage,
-    description: 'Alternative Splicing is an important process in gene expression regulation, which allows the same gene to produce multiple different mRNA transcripts...',
-    route: '/search/splicing'
-  },
-  {
-    name: 'Homologous Genes Module',
-    image: HomImage,
-    description: 'Homologous genes are genes that have similar sequences and functions in different species...',
+    name: 'Gene Homologous',
+    image: HomologousImage,
+    description: 'Identify homologous genes across species, elucidate their functions, and accelerate Brassica genetic research and breeding.',
     route: '/search/homologous'
   },
   {
-    name: 'Transcriptional Expression Module',
-    image: TranscriptImage,
-    description: 'RNA-seq (RNA sequencing) is a high-throughput sequencing technique for studying gene transcription expression...',
-    route: '/search/expression'
+    name: 'Gene eFP',
+    image: EfpImage,
+    description: 'Visualize gene expression data in different tissues and conditions using electronic Fluorescent Pictograph browser.',
+    route: '/search/efp'
+  },
+  {
+    name: 'Gene Regulation Network',
+    image: RegulationImage,
+    description: 'Explore transcription factor-target relationships and regulatory interactions at the transcriptional level across multiple Brassica species.',
+    route: '/search/tf'
+  },
+  {
+    name: 'Gene Alternative Splicing',
+    image: SplicingImage,
+    description: 'Investigate splice variants and explore gene structure, expression, and function across multiple Brassica species.',
+    route: '/search/splicing'
+  },
+  {
+    name: 'Gene Pantranme',
+    image: PantranmeImage,
+    description: 'Analyze gene expression patterns and relationships across the Brassica pan-transcriptome to understand gene function and evolution.',
+    route: '/search/pantranme'
   }
 ];
-
-// 页面跳转函数
-const goToPage = (route) => {
-  router.push(route);
-};
 </script>
 
 <style scoped>
-/* 主容器样式 */
+/* 页面背景样式 */
 .container {
-  width: 100%;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 20px;
-  box-sizing: border-box;
+  padding: 30px;
+  background: linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%);
+  border-radius: 12px;
 }
 
-/* 标题样式 */
+/* 页面标题样式 */
 .page-title {
   text-align: center;
-  font-size: 2.5rem;
+  font-size: 2.8rem;
   color: #2c3e50;
   margin-bottom: 40px;
+  font-weight: bold;
+  text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* 卡片式布局 */
+/* 卡片外观 */
 .search-card {
-  margin-bottom: 20px;
-  padding: 20px;
-  display: flex;
-  background-color: #fdfdfd;
-  border-radius: 12px; /* 添加圆角 */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 增加阴影效果 */
-  transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+  height: 250px;
+  margin-bottom: 30px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  border-radius: 15px;
   cursor: pointer;
 }
 
-.search-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); /* 更强的悬浮效果 */
-  background-color: #f5f5f5; /* 悬浮时变为浅灰色背景 */
+.card-content {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  height: 100%;
+  gap: 25px;
 }
 
 .search-image {
-  width: 100%;
-  height: auto;
+  width: 100px;
+  height: 100px;
   object-fit: contain;
-  border-radius: 8px; /* 圆角图片 */
+  transition: transform 0.3s;
 }
 
-.search-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding-left: 20px;
+.card-text {
+  flex: 1;
+  text-align: left;
 }
 
 .search-title {
   font-size: 1.5rem;
-  margin-bottom: 10px;
-  color: #409EFF;
-  transition: color 0.3s;
+  margin-bottom: 15px;
+  color: #333;
+  font-weight: bold;
 }
 
-.search-title:hover {
-  color: #66b1ff; /* 悬停时变亮 */
-}
-
-.search-content p {
-  margin: 0;
-  font-size: 1rem;
+.card-text p {
+  font-size: 1.1rem;
   color: #666;
+  line-height: 1.6;
+}
+
+/* 悬停效果 */
+.search-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.search-card:hover .search-image {
+  transform: scale(1.1);
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .container {
+    padding: 20px;
+  }
+  
+  .search-card {
+    height: auto;
+    min-height: 200px;
+  }
+  
+  .card-content {
+    flex-direction: column;
+    text-align: center;
+    padding: 15px;
+  }
+  
+  .search-image {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 15px;
+  }
+  
+  .card-text {
+    text-align: center;
+  }
 }
 </style>

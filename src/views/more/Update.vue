@@ -1,137 +1,108 @@
+<script setup>
+import { ref, onMounted } from 'vue';
+import { marked } from 'marked';
+import UpdateTitle from '@/components/More/Title/update.vue';
+
+const renderedContent = ref('');
+
+// 加载 Markdown 文件
+const loadUpdateHistory = async () => {
+  try {
+    const response = await fetch(new URL('@/assets/md/Update.md', import.meta.url));
+    const markdownText = await response.text();
+    renderedContent.value = marked(markdownText);
+  } catch (error) {
+    console.error('Error loading update history:', error);
+    renderedContent.value = '<p>Failed to load update history. Please try again later.</p>';
+  }
+};
+
+onMounted(() => {
+  loadUpdateHistory();
+});
+</script>
+
 <template>
   <div class="update-page">
-    <!-- Breadcrumb Navigation -->
-    <div class="breadcrumb-container">
-      <div class="breadcrumb-left">
-        <h2>Update & News</h2>
-      </div>
-      <div class="breadcrumb-right">
-        <el-breadcrumb separator="/">
-          <el-breadcrumb-item to="/">Home</el-breadcrumb-item>
-          <el-breadcrumb-item to="/more">More</el-breadcrumb-item>
-          <el-breadcrumb-item>Update & News</el-breadcrumb-item>
-        </el-breadcrumb>
-      </div>
-    </div>
+    <!-- 引入 Update.md 组件 -->
+    <UpdateTitle />
 
-    <!-- Update Timeline -->
-    <el-card class="timeline-card">
-      <h2>Update Timeline</h2>
-      <el-timeline>
-        <el-timeline-item v-for="(item, index) in updates" :key="index" :timestamp="item.date" placement="top">
-          <p v-for="(desc, descIndex) in item.descriptions" :key="descIndex">{{ desc }}</p>
-        </el-timeline-item>
-      </el-timeline>
+    <!-- 更新日志内容 -->
+    <el-card class="update-content" shadow="hover">
+      <div v-html="renderedContent" class="markdown-content"></div>
     </el-card>
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue';
-
-// 假设的更新数据
-const updates = ref([
-      {
-        date: 'Oct 2024',
-        descriptions: [
-          '10/01/2024: Refined UI with enhanced card-style layouts and responsive design for all data display pages.',
-          '10/01/2024: Navigation structure standardized across all pages, including help, links, and transcript expression modules.'
-        ]
-      },
-      {
-        date: 'Sep 2024',
-        descriptions: [
-          '9/25/2024: Introduced interactive search function for gene expression data, allowing users to filter by species and bioproject.',
-          '9/15/2024: Added animation effects for link cards and search results to enhance user experience.',
-          '9/05/2024: Fully integrated breadcrumb navigation across all pages, improving usability and consistent page flow.'
-        ]
-      },
-      {
-        date: 'Aug 2024',
-        descriptions: [
-          '8/30/2024: Launched new "Help" section with interactive BrassicaGPT module to assist users with database queries.',
-          '8/20/2024: Optimized mobile responsiveness, ensuring seamless data interaction on all devices.',
-          '8/10/2024: Improved performance of the large search input box for website links with real-time filtering.'
-        ]
-      },
-      {
-        date: 'Jul 2024',
-        descriptions: [
-          '7/25/2024: Redesigned the "Links" page with enhanced visuals, animations, and card-style display for external resources.',
-          '7/15/2024: Added fade-in animations for smoother page transitions in the gene expression and co-expression modules.',
-          '7/05/2024: Introduced new responsive navigation with custom breadcrumb functionality for better user flow.'
-        ]
-      },
-      {
-        date: 'Jun 2024',
-        descriptions: [
-          '6/28/2024: Launched redesigned "Transcript Expression" page with interactive charts, including trend plots, heatmaps, and bar plots.',
-          '6/15/2024: Introduced real-time visual feedback for search results using transition animations and dynamic card layouts.',
-          '6/05/2024: Improved data loading times for large datasets by optimizing API requests in gene expression queries.'
-        ]
-      },
-      {
-        date: 'May 2024',
-        descriptions: [
-          '5/31/2024: PLINK binary files have been added in the download module.',
-          '5/20/2024: Updated page layouts for better scalability and performance on different screen sizes.',
-          '5/10/2024: Added carousel animation for image-based content on the co-expression and transcription factor pages.'
-        ]
-      },
-      {
-        date: 'Apr 2024',
-        descriptions: [
-          '4/25/2024: New interactive charts for transcriptomic data visualization, including gene expression boxplots and scatterplots.',
-          '4/15/2024: Enhanced the navigation experience with hover and focus animations for better accessibility.',
-          '4/05/2024: Integrated feedback on page layouts, ensuring all pages follow consistent design principles and mobile responsiveness.'
-        ]
-      },
-      {
-        date: 'Mar 2024',
-        descriptions: [
-          '3/31/2024: Optimized data tables with interactive sorting and filtering for the transcript and project pages.',
-          '3/20/2024: Introduced search and quick-selection features for gene IDs on all data input forms.',
-          '3/10/2024: Added new species options to the species selection dropdown in the transcript expression query form.'
-        ]
-      }
-    ]
-);
-</script>
-
-
-
-
-
 <style scoped>
 .update-page {
-  width: 90vw;
-  max-width: 1200px;
+  width: 100%;
+  max-width: 100%;
   margin: 0 auto;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.update-content {
+  margin-top: 20px;
   padding: 20px;
 }
 
-.breadcrumb-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid #ccc;
+/* Markdown 内容样式 */
+:deep(.markdown-content) {
+  line-height: 1.8;
+  font-size: 1.1rem;
+  color: #333;
 }
 
-.breadcrumb-left h2 {
-  margin: 0;
-  font-weight: bold;
+:deep(.markdown-content h1) {
+  font-size: 2rem;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
 }
 
-.breadcrumb-right .el-breadcrumb {
-  font-size: 16px;
+:deep(.markdown-content h2) {
+  font-size: 1.6rem;
+  color: #34495e;
+  margin: 1.5rem 0 1rem;
 }
 
-.timeline-card {
-  margin-top: 20px;
+:deep(.markdown-content h3) {
+  font-size: 1.3rem;
+  color: #455a64;
+  margin: 1.2rem 0 0.8rem;
 }
 
-.el-timeline-item__timestamp {
-  font-weight: bold;
+:deep(.markdown-content ul) {
+  padding-left: 20px;
+  margin-bottom: 1rem;
+}
+
+:deep(.markdown-content li) {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+:deep(.markdown-content p) {
+  margin-bottom: 1rem;
+}
+
+/* 响应式布局 */
+@media (max-width: 768px) {
+  :deep(.markdown-content) {
+    font-size: 1rem;
+  }
+
+  :deep(.markdown-content h1) {
+    font-size: 1.8rem;
+  }
+
+  :deep(.markdown-content h2) {
+    font-size: 1.4rem;
+  }
+
+  :deep(.markdown-content h3) {
+    font-size: 1.2rem;
+  }
 }
 </style>

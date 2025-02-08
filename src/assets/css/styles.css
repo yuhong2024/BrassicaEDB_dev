@@ -1,0 +1,65 @@
+/* 设置全局字体 */
+body {
+    font-family: 'Arial', sans-serif;  /* Windows 和其他系统兼容 */
+    font-size: 16px;  /* 正文的默认字体大小 */
+    line-height: 1.5;  /* 行间距设置为1.5，增强可读性 */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 标题的字体设置 */
+h1 {
+    font-size: 38px;  /* 标题1的字体大小 */
+    line-height: 1.2;  /* 标题行间距可以适当紧凑 */
+}
+
+h2 {
+    font-size: 32px;  /* 标题2的字体大小 */
+    line-height: 1.3;
+}
+
+h3 {
+    font-size: 26px;  /* 标题3的字体大小 */
+    line-height: 1.3;
+}
+
+h4 {
+    font-size: 22px;  /* 标题4的字体大小 */
+    line-height: 1.4;
+}
+
+h5, h6 {
+    font-size: 18px;  /* 小标题可以使用和正文相同的大小 */
+    line-height: 1.5;
+}
+
+/* 小字内容（如版权信息、细节描述） */
+small {
+    font-size: 14px;  /* 小字默认字体大小 */
+    line-height: 1.4;
+}
+
+
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;  /* 在较小设备上，减小字体 */
+    }
+
+    h1 {
+        font-size: 28px;
+    }
+
+    h2 {
+        font-size: 24px;
+    }
+
+    h3 {
+        font-size: 20px;
+    }
+
+    h4 {
+        font-size: 18px;
+    }
+}
+

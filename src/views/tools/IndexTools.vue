@@ -1,133 +1,168 @@
 <template>
-  <div class="tools-page">
-    <h2 class="page-title">BEDB Tools</h2>
-    <el-row :gutter="20">
-      <el-col v-for="tool in tools" :key="tool.title" :span="8">
-        <el-card shadow="hover" class="tool-card">
-          <el-row>
-            <el-col :span="8">
+  <!-- 页面整体容器 -->
+  <div class="container">
+    <!-- 标题 -->
+    <h1 class="page-title">BEDB Tools</h1>
+
+    <!-- 工具卡片布局 -->
+    <div class="tools-section">
+      <el-row :gutter="20" justify="center">
+        <el-col
+            v-for="tool in tools"
+            :key="tool.title"
+            :xs="24"
+            :sm="12"
+            :md="8"
+            :lg="8"
+        >
+          <el-card shadow="hover" class="tool-card" @click="goToPage(tool.path)">
+            <div class="card-content">
+              <!-- 图片 -->
               <img :src="tool.image" alt="Tool Image" class="tool-image" />
-            </el-col>
-            <el-col :span="16" class="tool-content">
-              <!-- 使用 router-link 包裹标题，确保点击标题时跳转 -->
-              <h3 class="tool-title">
-                <router-link :to="tool.path" class="tool-link">{{ tool.title }}</router-link>
-              </h3>
-              <p class="tool-description">{{ tool.description }}</p>
-            </el-col>
-          </el-row>
-        </el-card>
-      </el-col>
-    </el-row>
+              <!-- 文字内容 -->
+              <div class="card-text">
+                <h3 class="tool-title">{{ tool.title }}</h3>
+                <p>{{ tool.description }}</p>
+              </div>
+            </div>
+          </el-card>
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router';
+
+// 路由跳转函数
+const router = useRouter();
+const goToPage = (route) => {
+  router.push(route);
+};
+
+// 图片导入
 import imageBlast from '@/assets/img/home/tools/blast.png';
-import imageEfp from '@/assets/img/home/tools/efp.png';
 import imageGo from '@/assets/img/home/tools/go.png';
 import imageJbrowse from '@/assets/img/home/tools/jbrowse.png';
 import imageKegg from '@/assets/img/home/tools/kegg.png';
 import imagePrimer from '@/assets/img/home/tools/primer.png';
 import imageSeqfetch from '@/assets/img/home/tools/seqfetch.png';
 
+// 工具数据
 const tools = [
-  { title: 'Blast', description: 'A tool for comparing an input nucleotide or protein sequence to .', image: imageBlast, path: '/tools/blast' },
-  { title: 'Jbrowse', description: 'A fast, embeddable genome browser built with JavaScript and HTML5.', image: imageJbrowse, path: '/tools/jbrowse' },
-  { title: 'Primer', description: 'A tool for designing primers for PCR amplification.', image: imagePrimer, path: '/tools/qprimer' },
-  { title: 'GO enrichment', description: 'A tool for analyzing GO enrichment.', image: imageGo, path: '/tools/go' },
-  { title: 'Seq-fetch', description: 'A tool for fetching sequences from a database.', image: imageSeqfetch, path: '/tools/seqfetch' },
-  { title: 'KEGG enrichment', description: 'A tool for analyzing KEGG pathway enrichment.', image: imageKegg, path: '/tools/kegg' },
-  { title: 'eFP-seq', description: 'A tool for visualizing RNA-seq data.', image: imageEfp, path: '/tools/efp' },
-  { title: 'HMMER', description: 'A tool for searching sequence databases for sequence homologs, and for making sequence alignments.', image: imageEfp, path: '/tools/hmmer' }
+  {
+    title: 'Blast',
+    description: 'A tool for comparing an input nucleotide or protein sequence.',
+    image: imageBlast,
+    path: '/tools/blast',
+  },
+  {
+    title: 'Jbrowse',
+    description: 'A fast, embeddable genome browser built with JavaScript and HTML5.',
+    image: imageJbrowse,
+    path: '/tools/jbrowse',
+  },
+  {
+    title: 'Primer',
+    description: 'A tool for designing primers for PCR amplification.',
+    image: imagePrimer,
+    path: '/tools/qprimer',
+  },
+  {
+    title: 'GO enrichment',
+    description: 'A tool for analyzing GO enrichment.',
+    image: imageGo,
+    path: '/tools/go',
+  },
+  {
+    title: 'Seq-fetch',
+    description: 'A tool for fetching sequences from a database.',
+    image: imageSeqfetch,
+    path: '/tools/seqfetch',
+  },
+  {
+    title: 'KEGG enrichment',
+    description: 'A tool for analyzing KEGG pathway enrichment.',
+    image: imageKegg,
+    path: '/tools/kegg',
+  },
 ];
 </script>
 
 <style scoped>
-/* Global page styles */
-.tools-page {
-  padding: 40px;
-  background-color: #f8fafc; /* Light background for contrast */
+/* 页面背景样式 */
+.container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  background: linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%); /* 渐变背景色 */
+  box-sizing: border-box;
+  border-radius: 12px;
 }
 
-/* Title styling */
+/* 页面标题 */
 .page-title {
-  font-size: 2.5rem;
-  font-weight: bold;
   text-align: center;
+  font-size: 2.5rem;
   color: #2c3e50;
   margin-bottom: 40px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
+  font-weight: bold;
+  text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Card styling */
+/* 卡片外观 */
 .tool-card {
   display: flex;
-  padding: 20px;
+  align-items: center;
   transition: transform 0.3s, box-shadow 0.3s;
-  height: 150px;
-  border-radius: 15px;
-  border: none;
-  background-color: #ffffff; /* White card for clarity */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-  margin-bottom: 30px;
+  border-radius: 12px;
+  height: 180px;
+  cursor: pointer;
+  margin-bottom: 20px;
 }
 
 .tool-card:hover {
-  transform: translateY(-10px); /* Lift effect on hover */
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* Stronger shadow on hover */
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* Image styling */
-.tool-image {
-  width: 100%;
-  height: auto;
-  border-radius: 12px; /* Smooth round corners */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle image shadow */
-}
-
-/* Content styling */
-.tool-content {
+/* 卡片内容 */
+.card-content {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding-left: 20px;
+  align-items: center;
+  gap: 15px;
+  padding: 10px;
 }
 
-/* Title styling */
+/* 图片样式 */
+.tool-image {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+  transition: transform 0.3s;
+}
+
+.tool-card:hover .tool-image {
+  transform: scale(1.1);
+}
+
+/* 卡片文字内容 */
+.card-text {
+  text-align: left;
+}
+
 .tool-title {
-  font-size: 1.5rem;
-  margin: 0 0 10px;
-  font-weight: bold;
-}
-
-.tool-link {
-  text-decoration: none;
-  color: #2c9c69; /* Normal deep green */
-  transition: color 0.3s;
-}
-
-.tool-link:hover {
-  color: #f39c12; /* Change to yellowish color on hover */
-}
-
-/* Description styling */
-.tool-description {
-  font-size: 1rem;
-  color: #7f8c8d;
-  line-height: 1.6;
   margin: 0;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
 }
 
-/* Media queries for responsive design */
-@media (max-width: 768px) {
-  .tool-card {
-    height: auto;
-    padding: 15px;
-  }
-  .tool-title {
-    font-size: 1.25rem;
-  }
+.card-text p {
+  margin: 5px 0 0;
+  font-size: 0.9rem;
+  color: #666;
+  line-height: 1.4;
 }
 </style>

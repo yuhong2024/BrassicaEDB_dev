@@ -1,159 +1,235 @@
 <template>
-  <div class="container">
-    <!-- 统一的面包屑导航栏 -->
-    <div class="breadcrumb-container">
-      <div class="breadcrumb-left">
-        <h1>Help</h1>
-      </div>
-      <div class="breadcrumb-right">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item" v-for="(item, index) in breadcrumbs" :key="index">
-              <router-link :to="item.path">{{ item.name }}</router-link>
-            </li>
-          </ol>
-        </nav>
-      </div>
-    </div>
+  <div class="page-container">
+    <!-- 左侧目录导航 -->
+    <aside class="toc">
+      <h3 class="toc-title">Table of Contents</h3>
+      <ul>
+        <li v-for="item in toc" :key="item.id" :class="`toc-level-${item.level}`">
+          <a href="#" @click.prevent="scrollTo(item.id)">{{ item.text }}</a>
+        </li>
+      </ul>
+    </aside>
 
-    <!-- BrassicaGPT Card -->
-    <el-card class="gpt-card" shadow="hover">
-      <h2>BrassicaGPT</h2>
-      <p>Interact with BrassicaGPT for quick help and guidance.</p>
-      <el-input
-          v-model="gptQuery"
-          placeholder="Type your question here..."
-          clearable
-          style="margin-bottom: 10px;"
-      />
-      <el-button type="primary" @click="askBrassicaGPT">Ask BrassicaGPT</el-button>
-    </el-card>
-
-    <!-- Help Guide -->
-    <el-card class="help-card" shadow="hover">
-      <h2>BrassicaEDB Help</h2>
-      <div class="help-content">
-        <h3>1. How to cite the BrassicaEDB?</h3>
-        <p>
-          When using BrassicaEDB, please credit it as your source. The recommended citation format is:
-        </p>
-        <blockquote>
-          Chao H, Li T, Luo C, et al. BrassicaEDB: A Gene Expression Database for Brassica Crops. Int. J. Mol. Sci. 2020, 21, 5831.
-          <a href="https://www.mdpi.com/1422-0067/21/16/5831" target="_blank">View Full-Text</a>
-        </blockquote>
-        <p>
-          For non-profit use, no permission is required, but citation is appreciated. For for-profit uses, please contact us.
-        </p>
-
-        <h3>2. How to use the BrassicaEDB?</h3>
-        <h4>2.1 Search Data</h4>
-        <p>There are three ways to search for gene data:</p>
-        <ol>
-          <li>Input gene ID or description to search. Results will show in a pop-up window.</li>
-          <li>Upload sequences to the "BLAST" module to find similar genes.</li>
-          <li>Use the "Browse Genes" module for detailed information.</li>
-        </ol>
+    <!-- Markdown 内容区域 -->
+    <main class="markdown-container">
+      <div class="help-page">
+        <HelpTitle />
       </div>
-    </el-card>
+      <div v-html="renderedContent" class="markdown-content"></div>
+    </main>
   </div>
 </template>
 
+
+
+
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, nextTick } from 'vue';
+import { marked } from 'marked';
+import HelpTitle from '@/components/More/Title/help.vue';
 
-// 面包屑导航数据
-const breadcrumbs = [
-  { name: 'Home', path: '/' },
-  { name: 'More', path: '/more' },
-  { name: 'Help', path: '/help' }
-];
+const renderedContent = ref('');
+const toc = ref([]);
 
-const gptQuery = ref('');
+// 加载 Markdown 文件
+const loadMarkdownFile = async () => {
+  try {
+    const markdownFile = await fetch(new URL('@/assets/md/Help.md', import.meta.url));
+    const markdownText = await markdownFile.text();
+    renderedContent.value = marked(markdownText);
 
-// BrassicaGPT 查询函数
-const askBrassicaGPT = () => {
-  if (gptQuery.value.trim() === '') {
-    this.$message.warning('Please enter a question to ask BrassicaGPT.');
-    return;
+    await nextTick(); // 确保 DOM 渲染完成
+    generateTOC(); // 动态生成目录
+  } catch (error) {
+    console.error('Error loading markdown file:', error);
+    renderedContent.value = '<p>Failed to load content. Please try again later.</p>';
   }
-  console.log('BrassicaGPT Question:', gptQuery.value);
-  gptQuery.value = ''; // 清空输入框
 };
+
+// 动态生成目录
+const generateTOC = () => {
+  const headers = document.querySelectorAll('.markdown-content h1, .markdown-content h2, .markdown-content h3');
+  toc.value = Array.from(headers).map((header) => {
+    const id = header.innerText.replace(/\s+/g, '-').toLowerCase(); // 基于标题文本生成唯一 ID
+    header.id = id; // 为标题设置 ID
+    return {
+      id,
+      text: header.innerText,
+      level: parseInt(header.tagName[1]), // 提取标题级别
+    };
+  });
+};
+
+// 平滑滚动到指定标题
+const scrollTo = (id) => {
+  const target = document.getElementById(id);
+  if (target) {
+    target.scrollIntoView({ behavior: 'smooth' });
+  }
+};
+
+// 页面加载时调用
+onMounted(() => {
+  loadMarkdownFile();
+});
 </script>
 
+
+
 <style scoped>
-/* 主容器样式 */
-.container {
-  width: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 20px;
+/* 页面主容器 - 移除多余留白 */
+.page-container {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  width: 100%; /* 改为100% */
+  margin: 0; /* 移除外边距 */
+  padding: 0; /* 移除内边距 */
   box-sizing: border-box;
 }
 
-/* 面包屑导航栏样式 */
-.breadcrumb-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  background-color: #f0f4f8;
-  border-bottom: 1px solid #ddd;
-  margin-bottom: 20px;
+/* 左侧目录样式 */
+.toc {
+  flex: 0 0 250px; /* 稍微增加目录宽度 */
+  padding: 15px 10px; /* 减小内边距 */
+  background-color: #f5f7fa;
+  border-radius: 0; /* 移除圆角 */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  height: 100vh; /* 全屏高度 */
+  overflow-y: auto;
+  margin: 0; /* 移除外边距 */
 }
 
-.breadcrumb-left h1 {
-  margin: 0;
-  font-size: 1.5rem;
+.toc-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
   color: #333;
 }
 
-.breadcrumb-right nav {
-  display: flex;
-}
-
-.breadcrumb {
-  display: flex;
+.toc ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.breadcrumb-item + .breadcrumb-item::before {
-  content: " / ";
-  padding: 0 0.5rem;
-  color: #6c757d;
-}
-
-.breadcrumb-item a {
-  color: #42b983;
-  text-decoration: none;
-}
-
-.breadcrumb-item a:hover {
-  text-decoration: underline;
-}
-
-/* 卡片样式 */
-.gpt-card,
-.help-card {
-  margin-bottom: 20px;
-}
-
-.help-content h3,
-.help-content h4 {
-  margin-top: 20px;
-}
-
-.help-content p,
-.help-content blockquote {
-  margin-top: 10px;
+.toc li {
   margin-bottom: 10px;
 }
 
-.help-content blockquote {
-  background-color: #f9f9f9;
-  padding: 10px;
-  border-left: 5px solid #ccc;
+.toc a {
+  color: #409eff;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.toc a:hover {
+  color: #66b1ff;
+}
+
+/* 不同级别标题的缩进 */
+.toc-level-2 {
+  margin-left: 20px;
+}
+
+.toc-level-3 {
+  margin-left: 40px;
+}
+
+/* Markdown 内容容器 */
+.markdown-container {
+  flex: 1;
+  padding: 15px 20px;
+  background-color: #ffffff;
+  border-radius: 0;
+  box-shadow: none;
+  overflow-x: hidden;
+  margin: 0;
+  max-width: calc(100% - 250px); /* 确保内容区域不会超出 */
+}
+
+/* Markdown 内容样式 */
+.markdown-content {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  line-height: 1.6;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.markdown-content h1 {
+  font-size: 2rem;
+  color: #42b983;
+  margin-top: 1.5rem;
+}
+
+.markdown-content h2 {
+  font-size: 1.6rem;
+  color: #409eff;
+  margin-top: 1.2rem;
+}
+
+.markdown-content h3 {
+  font-size: 1.4rem;
+  color: #66b1ff;
+  margin-top: 1rem;
+}
+
+/* 图片容器样式 */
+.markdown-content p:has(img) {
+  width: 100%;
+  margin: 1rem 0;
+  padding: 0;
+  text-align: center;
+}
+
+/* 图片样式优化 */
+.markdown-content img {
+  max-width: 80%; /* 更保守的宽度限制 */
+  width: auto;
+  height: auto;
+  display: inline-block;
+  margin: 0.5rem auto;
+  object-fit: contain;
+}
+
+/* 特大图片的特殊处理 */
+.markdown-content img[src*="202412182021"],
+.markdown-content img[src*="202501092235"],
+.markdown-content img[src*="202501092159"],
+.markdown-content img[src*="202501092208"],
+.markdown-content img[src*="202501092206"],
+.markdown-content img[src*="202501092205"] {
+  max-width: 70%; /* 对特定的大图片使用更小的宽度 */
+}
+
+/* 响应式布局调整 */
+@media (max-width: 1400px) {
+  .markdown-content img {
+    max-width: 75%;
+  }
+}
+
+@media (max-width: 1200px) {
+  .markdown-container {
+    max-width: calc(100% - 200px);
+  }
+  
+  .markdown-content img {
+    max-width: 70%;
+  }
+}
+
+@media (max-width: 768px) {
+  .markdown-container {
+    max-width: 100%;
+  }
+  
+  .markdown-content img {
+    max-width: 85%;
+  }
 }
 </style>

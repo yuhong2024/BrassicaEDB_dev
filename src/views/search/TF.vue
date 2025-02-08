@@ -1,383 +1,325 @@
 <template>
-  <div class="container">
+  <div class="tf-info-container">
     <!-- Breadcrumb Navigation -->
-    <div class="breadcrumb-container">
-      <div class="breadcrumb-left">
-        <h1>TF Regulation</h1>
-      </div>
-      <div class="breadcrumb-right">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item" v-for="(item, index) in breadcrumbs" :key="index">
-              <router-link :to="item.path">{{ item.name }}</router-link>
-            </li>
-          </ol>
-        </nav>
-      </div>
-    </div>
-
-    <!-- Page Introduction -->
-    <el-card class="intro-card">
-      <h2>Transcription Factor Regulation Network</h2>
-      <p>
-        Explore the TF regulation network across different species. Input a gene sequence, upload a file, and search for related TF networks. Results include visualizations and detailed data tables.
-      </p>
-    </el-card>
-
-    <!-- Search Panel -->
-    <el-card class="search-card" shadow="hover">
-      <el-row :gutter="20">
-        <el-col :span="6">
-          <el-select v-model="selectedSpecies" placeholder="选择物种" style="width: 100%;">
-            <el-option label="Species A" value="A"></el-option>
-            <el-option label="Species B" value="B"></el-option>
-            <el-option label="Species C" value="C"></el-option>
-            <el-option label="Species D" value="D"></el-option>
-            <el-option label="Species E" value="E"></el-option>
-            <el-option label="Species F" value="F"></el-option>
+    <!-- 引入 TF.vue 组件 -->
+    <TF />
+    <!-- Gene ID Search Section -->
+    <el-card class="search-card">
+      <el-row gutter="30" align="middle">
+        <!-- Species Selection -->
+        <el-col :span="8" md="10">
+          <el-select
+              v-model="selectedSpecies"
+              placeholder="Select Species"
+              class="species-select"
+              @change="updateExampleGene"
+          >
+            <el-option
+                v-for="(species, index) in speciesOptions"
+                :key="index"
+                :label="species"
+                :value="species"
+            />
           </el-select>
         </el-col>
-        <el-col :span="12">
-          <el-input v-model="geneId" placeholder="请输入序列" style="width: 100%;"></el-input>
+
+        <!-- Gene ID Input -->
+        <el-col :span="8" md="10">
+          <el-input
+              v-model="geneId"
+              type="textarea"
+              :autosize="{ minRows: 2, maxRows: 4 }"
+              placeholder="Enter Gene ID"
+              class="gene-id-input"
+          />
         </el-col>
-        <el-col :span="6">
-          <el-button type="primary" @click="searchGene" style="width: 100%;">搜索</el-button>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20" class="example-row" style="margin-top: 20px;">
-        <el-col :span="18">
-          <span>示例序列:</span>
-          <el-button @click="fillGeneId('BnaA01G0000100ZS')" type="text">BnaA01G0000100ZS</el-button>
-          <el-button @click="fillGeneId('BnaA01G0000200ZS')" type="text">BnaA01G0000200ZS</el-button>
-        </el-col>
-        <el-col :span="6">
-          <el-upload
-              class="upload-demo"
-              drag
-              action=""
-              :auto-upload="false"
-              :before-upload="handleFileUpload"
-          >
-            <i class="el-icon-upload"></i>
-            <div class="el-upload__text">拖拽文件或点击上传</div>
-            <div class="el-upload__tip">仅支持txt文件</div>
-          </el-upload>
+
+        <!-- Buttons Section -->
+        <el-col :span="8" md="4" class="right-controls">
+          <div class="button-container">
+            <el-button
+                type="primary"
+                class="submit-button"
+                @click="handleSubmit"
+            >
+              Submit
+            </el-button>
+            <el-button
+                type="text"
+                class="example-button"
+                @click="fillExampleGene"
+            >
+              Example
+            </el-button>
+          </div>
         </el-col>
       </el-row>
     </el-card>
 
-    <!-- Default State: TF Table and Carousel -->
-    <div v-if="!isSearchPerformed">
-      <el-card class="tf-table-card" shadow="hover">
-        <el-table :data="paginatedTfData" stripe>
-          <el-table-column prop="TF" label="TF" width="180"></el-table-column>
-          <el-table-column prop="A" label="Species A"></el-table-column>
-          <el-table-column prop="B" label="Species B"></el-table-column>
-          <el-table-column prop="C" label="Species C"></el-table-column>
-          <el-table-column prop="D" label="Species D"></el-table-column>
-          <el-table-column prop="E" label="Species E"></el-table-column>
-          <el-table-column prop="F" label="Species F"></el-table-column>
-        </el-table>
-        <el-pagination
-            background
-            layout="prev, pager, next"
-            :total="tfData.length"
-            :page-size="pageSize"
-            @current-change="handlePageChange"
-        />
-      </el-card>
-      <el-card class="carousel-card" shadow="hover">
-        <el-carousel height="250px" trigger="click" :autoplay="true">
-          <el-carousel-item v-for="(item, index) in carouselImages" :key="index">
-            <img :src="item" alt="Carousel Image" style="width: 100%; height: 100%;" />
-          </el-carousel-item>
-        </el-carousel>
-      </el-card>
-    </div>
+    <!-- Carousel (显示条件：showCarousel 为 true) -->
+    <Carousel v-if="showCarousel" />
 
-    <!-- Search State: TF Network Graph and Results Table -->
+    <!-- Results Section (显示条件：showCarousel 为 false) -->
     <div v-else>
-      <el-card class="network-chart-card" shadow="hover">
-        <div ref="chart" class="chart"></div>
-        <el-button @click="downloadNetworkData" type="primary" icon="el-icon-download">下载网络数据</el-button>
-      </el-card>
-      <el-card class="result-table-card" shadow="hover">
-        <el-table :data="paginatedResultData" stripe>
-          <el-table-column prop="HubGene" label="Hub Gene" width="180"></el-table-column>
-          <el-table-column prop="TargetGene" label="Target Gene"></el-table-column>
+      <!-- Homologous Data Section -->
+      <el-card v-if="homologousData && homologousData.length" class="data-card">
+        <h2>Homologous Data</h2>
+        <el-table :data="homologousData" stripe>
+          <el-table-column
+              v-for="(value, key) in homologousData[0]"
+              :key="key"
+              :prop="key"
+              :label="key.replace('_', ' ')"
+              align="center"
+          ></el-table-column>
         </el-table>
-        <el-pagination
-            background
-            layout="prev, pager, next"
-            :total="total"
-            :page-size="pageSize"
-            @current-change="handleResultPageChange"
-        />
-        <el-button @click="downloadResultData" type="primary" icon="el-icon-download">下载结果数据</el-button>
       </el-card>
+
+      <!-- TRN Data by Species with Network Graph and Table -->
+      <el-card v-if="classifiedTrnData && Object.keys(classifiedTrnData).length" class="result-card">
+        <h2>TRN Data by Species</h2>
+
+        <el-tabs v-model="activeTab" @tab-click="renderActiveTabChart" class="chart">
+          <el-tab-pane v-for="(data, species) in paginatedData" :label="species" :name="species" :key="species">
+            <!-- Network Graph Card -->
+            <el-card class="netchart" style="margin-bottom: 10px;">
+              <div :ref="`chartContainer-${species}`" :id="`network-chart-${species}`" class="network-chart"></div>
+              <p class="legend">
+                Legend:
+                <span style="color: red;">Red (TF and TF-type Target Genes)</span>,
+                <span style="color: blue;">Blue (Non-TF Target Genes)</span>
+              </p>
+            </el-card>
+
+            <!-- Data Table Card -->
+            <!-- Data Table Card -->
+            <el-card class="trn-card" shadow="hover" style="margin-top: 10px; width: 100%;">
+              <el-table :data="data" stripe style="width: 100%;">
+                <!-- TF 列 -->
+                <el-table-column prop="tf" label="TF" width="180" align="center"></el-table-column>
+
+                <!-- Target Gene 列 -->
+                <el-table-column prop="target" label="Target Gene" width="180" align="center"></el-table-column>
+
+                <!-- Value 列 -->
+                <el-table-column prop="weight" label="Value" align="center"></el-table-column>
+
+                <!-- Type 列 -->
+                <el-table-column prop="classify" label="Type" align="center">
+                  <template #default="scope">
+        <span :style="{ color: scope.row.classify === 'TF' ? 'red' : 'blue' }">
+          {{ scope.row.classify }}
+        </span>
+                  </template>
+                </el-table-column>
+              </el-table>
+
+              <!-- Pagination -->
+              <el-pagination
+                  v-model:current-page="pagination.currentPage"
+                  :page-size="pagination.pageSize"
+                  :total="classifiedTrnData[species].length"
+                  @current-change="handlePageChange"
+                  layout="prev, pager, next"
+                  class="pagination"
+              />
+            </el-card>
+
+          </el-tab-pane>
+        </el-tabs>
+      </el-card>
+
+      <!-- Error Message Display -->
+      <div v-if="errorMessage" class="error-message">
+        <p>{{ errorMessage }}</p>
+      </div>
     </div>
   </div>
 </template>
 
-<script setup>
-// 导航栏内容
-const breadcrumbs = [
-  { name: 'Home', path: '/' },
-  { name: 'Analysis', path: '/analysis' },
-  { name: 'TF Regulation', path: '/analysis/tf' }
-];
-// 其余代码保持不变
-import { ref, reactive, onMounted } from 'vue';
+<script lang="ts" setup>
+import { ref, computed, nextTick, watch, onUnmounted } from 'vue';
+import axios from 'axios';
+import Carousel from '@/components/search/tf/Carousel.vue';
 import * as echarts from 'echarts';
+import TF from '@/components/search/Title/TF.vue';
 
-// 页面数据
-const selectedSpecies = ref('');
-const geneId = ref('');
-const tfData = reactive([]); // 全部TF数据
-const paginatedTfData = ref([]); // 分页显示的TF数据
-const searchResult = reactive([]); // 搜索后的数据
-const paginatedResultData = ref([]); // 分页显示的搜索结果
-const carouselImages = ref(['/src/assets/img/test/logo.jpg', '/src/assets/img/test/tf2.png', '/src/assets/img/test/tf.jpg']);
-const total = ref(0);
-const pageSize = ref(10); // 每页10行
-const chart = ref(null);
-const isSearchPerformed = ref(false); // 搜索状态标志
+const showCarousel = ref(true); // 控制走马灯的显示
+const geneId = ref('Bca101B3G035300');
+const homologousData = ref(null);
+const trnData = ref(null);
+const classifiedTrnData = ref({});
+const activeTab = ref('');
+const errorMessage = ref('');
+const chartInstances = new Map();
+const pagination = ref({
+  currentPage: 1,
+  pageSize: 10,
+});
 
-// 加载TF表格数据
-const loadTfData = async () => {
+// 点击提交按钮的处理函数
+const handleSubmit = () => {
+  showCarousel.value = false; // 立即隐藏走马灯
+  fetchTFData(); // 调用数据获取函数
+};
+
+const fetchTFData = async () => {
   try {
-    const response = await fetch('/src/assets/tf_data.json');
-    const data = await response.json();
-    tfData.push(...data);
-    updatePaginatedData(1);
-  } catch (error) {
-    console.error('读取TF数据失败:', error);
-  }
-};
+    // 请求数据
+    const response = await axios.get(`https://brassica.wangyuhong.cn/api/tf/`, {
+      params: { gene_id: geneId.value },
+    });
+    // 处理响应数据
+    homologousData.value = response.data.homologous_data;
+    trnData.value = response.data.tf_data;
+    classifyTrnDataBySpecies();
+    errorMessage.value = '';
 
-// 读取本地txt文件数据
-const loadData = async () => {
-  try {
-    const response = await fetch('/src/assets/datatest/TF_Regulation_Network.txt');
-    const data = await response.text();
-    parseData(data);
-  } catch (error) {
-    console.error('读取数据失败:', error);
-  }
-};
-
-// 解析读取的数据
-const parseData = (data) => {
-  const lines = data.trim().split('\n');
-  lines.forEach(line => {
-    const [HubGene, TargetGene] = line.split('\t');
-    searchResult.push({ HubGene, TargetGene });
-  });
-};
-
-// 更新分页显示的数据
-const updatePaginatedData = (page) => {
-  const start = (page - 1) * pageSize.value;
-  const end = start + pageSize.value;
-  paginatedTfData.value = tfData.slice(start, end);
-};
-
-// 搜索基因
-const searchGene = () => {
-  const filteredData = searchResult.filter(row => row.HubGene === geneId.value);
-  if (filteredData.length > 0) {
-    total.value = filteredData.length;
-    isSearchPerformed.value = true;
-    updatePaginatedResultData(1); // 初始化分页显示
-    drawNetworkChart(filteredData); // 使用过滤后的数据生成网络图
-  } else {
-    alert('未找到匹配的基因ID');
-  }
-};
-
-// 更新分页显示的搜索结果
-const updatePaginatedResultData = (page) => {
-  const start = (page - 1) * pageSize.value;
-  const end = start + pageSize.value;
-  paginatedResultData.value = searchResult.slice(start, end);
-};
-
-// 生成网络图
-const drawNetworkChart = (filteredData) => {
-  const myChart = echarts.init(chart.value);
-  const nodes = [
-    { name: geneId.value, symbolSize: 60, itemStyle: { color: '#c23531' } }
-  ];
-  const links = [];
-
-  filteredData.forEach(row => {
-    nodes.push({ name: row.TargetGene, symbolSize: 40, itemStyle: { color: '#61a0a8' } });
-    links.push({ source: geneId.value, target: row.TargetGene });
-  });
-
-  const options = {
-    title: { text: 'TF Regulation Network', left: 'center' },
-    legend: {
-      data: [
-        { name: 'TF', icon: 'rect', itemStyle: { color: '#c23531' } },
-        { name: 'Target', icon: 'rect', itemStyle: { color: '#61a0a8' } }
-      ],
-      top: 'top',
-      left: 'left',
-      textStyle: {
-        fontSize: 12
+    // 自动切换到第一个物种的数据并渲染图表
+    nextTick(() => {
+      const speciesList = Object.keys(classifiedTrnData.value);
+      if (speciesList.length > 0) {
+        activeTab.value = speciesList[0];
       }
+      nextTick(renderActiveTabChart);
+    });
+  } catch (error) {
+    homologousData.value = null;
+    trnData.value = null;
+    errorMessage.value = `Error fetching data: ${error.message}`;
+  }
+};
+
+const classifyTrnDataBySpecies = () => {
+  classifiedTrnData.value = trnData.value.reduce((acc, item) => {
+    const species = item.species;
+    if (!acc[species]) acc[species] = [];
+    acc[species].push(item);
+    return acc;
+  }, {});
+};
+
+// Paginate TRN data for each species
+const paginatedData = computed(() => {
+  const result = {};
+  for (const [species, data] of Object.entries(classifiedTrnData.value)) {
+    const start = (pagination.value.currentPage - 1) * pagination.value.pageSize;
+    const end = start + pagination.value.pageSize;
+    result[species] = data.slice(start, end);
+  }
+  return result;
+});
+
+// Handle page change
+const handlePageChange = () => {
+  nextTick(() => renderActiveTabChart());
+};
+
+// Generate Network Graph
+const generateNetworkChart = (species) => {
+  const chartDom = document.getElementById(`network-chart-${species}`);
+  if (!chartDom) return;
+
+  // 清理已有图表实例
+  if (chartInstances.has(species)) {
+    chartInstances.get(species).dispose();
+  }
+
+  // 初始化 ECharts 实例
+  const chartInstance = echarts.init(chartDom, null, {
+    width: chartDom.offsetWidth,
+    height: 600,
+  });
+  chartInstances.set(species, chartInstance);
+
+  // 数据处理
+  const tfGene = classifiedTrnData.value[species][0]?.tf; // 中心 TF 基因
+  const data = [
+    // 中心 TF 基因
+    {
+      name: tfGene,
+      category: 'TF',
+      itemStyle: { color: '#D5614A' }, // 红色
+      symbolSize: 50, // 尺寸较大
+      label: { show: true, position: 'right', formatter: '{b}' }, // 始终显示标签
     },
+    // Target 基因
+    ...classifiedTrnData.value[species].map((item) => ({
+      name: item.target,
+      category: 'Target',
+      itemStyle: { color: '#81B5CD' }, // 蓝色
+      symbolSize: 30, // 尺寸较小
+      label: {
+        show: false, // 初始不显示
+        emphasis: { show: true }, // 鼠标悬停时显示标签
+      },
+    })),
+  ];
+
+  // 连接线数据
+  const links = classifiedTrnData.value[species].map((item) => ({
+    source: tfGene,
+    target: item.target,
+    lineStyle: { color: '#869197', width: 2 }, // 连线颜色和样式
+  }));
+
+  // ECharts 配置项
+  const option = {
+    tooltip: { trigger: 'item' },
+    legend: [
+      {
+        data: ['TF', 'Target'],
+        textStyle: { color: '#333' },
+      },
+    ],
     series: [
       {
         type: 'graph',
         layout: 'force',
-        roam: true,
-        force: { repulsion: 1000 },
-        data: nodes,
-        links: links,
-        label: {
-          show: true,
-          position: 'right',
-          formatter: '{b}',
+        data,
+        links,
+        categories: [
+          { name: 'TF', itemStyle: { color: '#D5614A' } },
+          { name: 'Target', itemStyle: { color: '#81B5CD' } },
+        ],
+        roam: true, // 支持拖拽和缩放
+        label: { show: true, position: 'right' },
+        emphasis: {
+          focus: 'adjacency', // 鼠标悬停时高亮连线
+          lineStyle: { width: 3 },
         },
         lineStyle: {
           color: 'source',
-          curveness: 0.3
-        }
-      }
-    ]
+          curveness: 0, // 连线弯曲程度
+        },
+        force: {
+          edgeLength: [50, 100], // 连线长度范围
+          repulsion: 200, // 节点之间的斥力
+          gravity: 0.05, // 引力参数
+          layoutAnimation: false, // 布局动画
+        },
+      },
+    ],
   };
 
-  myChart.setOption(options);
+  // 设置图表配置
+  chartInstance.setOption(option);
 };
 
-// 下载网络数据
-const downloadNetworkData = () => {
-  const dataStr = JSON.stringify({ geneId: geneId.value, data: searchResult }, null, 2);
-  const blob = new Blob([dataStr], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = `${geneId.value}_network_data.json`;
-  link.click();
-  URL.revokeObjectURL(url);
+// 渲染图表的函数
+const renderActiveTabChart = () => {
+  // 只有当activeTab有值时才渲染对应的图表
+  if (activeTab.value) {
+    nextTick(() => generateNetworkChart(activeTab.value)); // 使用nextTick确保DOM更新
+  }
 };
 
-// 下载结果数据
-const downloadResultData = () => {
-  const dataStr = JSON.stringify({ geneId: geneId.value, data: searchResult }, null, 2);
-  const blob = new Blob([dataStr], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = `${geneId.value}_result_data.json`;
-  link.click();
-  URL.revokeObjectURL(url);
-};
-
-// 处理分页
-const handlePageChange = (page) => {
-  updatePaginatedData(page);
-};
-
-const handleResultPageChange = (page) => {
-  updatePaginatedResultData(page);
-};
-
-// 示例基因ID点击填充
-const fillGeneId = (exampleGeneId) => {
-  geneId.value = exampleGeneId;
-};
-
-// 文件上传处理
-const handleFileUpload = (file) => {
-  const reader = new FileReader();
-  reader.onload = (event) => {
-    geneId.value = event.target.result.trim();
-  };
-  reader.readAsText(file);
-  return false; // 防止自动上传
-};
-
-onMounted(() => {
-  loadTfData(); // 加载默认TF表格数据
-  loadData();   // 加载本地txt数据
+// Cleanup chart instances on component unmount
+onUnmounted(() => {
+  chartInstances.forEach((chart) => chart.dispose());
+  chartInstances.clear();
 });
-
-
-
-
 </script>
 
-<style scoped>
-/* 主容器样式 */
-.container {
-  width: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 20px;
-  box-sizing: border-box;
-}
 
-/* 面包屑导航栏样式 */
-.breadcrumb-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  background-color: #f0f4f8;
-  border-bottom: 1px solid #ddd;
-  margin-bottom: 20px;
-}
 
-.breadcrumb-left h1 {
-  margin: 0;
-  font-size: 1.5rem;
-  color: #333;
-}
-
-.breadcrumb-right nav {
-  display: flex;
-}
-
-.breadcrumb {
-  display: flex;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.breadcrumb-item + .breadcrumb-item::before {
-  content: " / ";
-  padding: 0 0.5rem;
-  color: #6c757d;
-}
-
-.breadcrumb-item a {
-  color: #42b983;
-  text-decoration: none;
-}
-
-.breadcrumb-item a:hover {
-  text-decoration: underline;
-}
-
-/* Introduction 样式 */
-.intro-card,
-.search-card,
-.network-chart-card,
-.result-table-card,
-.tf-table-card {
-  margin-bottom: 20px;
-}
-
-.chart {
-  width: 100%;
-  height: 500px;
-}
-
-.carousel-card {
-  margin-top: 20px;
-}
-</style>

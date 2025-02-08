@@ -1,0 +1,74 @@
+[
+  {
+    "title": "BrassicaEDB v1.0",
+    "url": "https://brassica.biodb.org/",
+    "description": "BrassicaEDB - A Gene Expression Database for Brassica Crops",
+    "favicon": "https://brassica.biodb.org/favicon.ico"
+  },
+  {
+    "title": "QPrimerDB",
+    "url": "https://qprimerdb.biodb.org/",
+    "description": "A resource for designing quality primers for biological research.",
+    "favicon": "https://qprimerdb.biodb.org/favicon.ico"
+  },
+  {
+    "title": "iAnimal Database",
+    "url": "https://ianimal.pro/index",
+    "description": "Explore animal genetic resources and their information.",
+    "favicon": "https://ianimal.pro/favicon.ico"
+  },
+  {
+    "title": "PlantTFDB",
+    "url": "https://planttfdb.gao-lab.org/",
+    "description": "A comprehensive database of transcription factors in plants.",
+    "favicon": "https://planttfdb.gao-lab.org/favicon.ico"
+  },
+  {
+    "title": "Bioinfo Toolkits",
+    "url": "https://sgs.bioinfotoolkits.net/home",
+    "description": "A collection of bioinformatics tools for data search.",
+    "favicon": "https://sgs.bioinfotoolkits.net/favicon.ico"
+  },
+  {
+    "title": "Millet Database",
+    "url": "https://db.cngb.org/millet/",
+    "description": "Comprehensive millet genome and variation resources.",
+    "favicon": "https://db.cngb.org/favicon.ico"
+  },
+  {
+    "title": "SWISS-MODEL",
+    "url": "https://swissmodel.expasy.org/",
+    "description": "A fully automated protein structure homology-modelling server.",
+    "favicon": "https://swissmodel.expasy.org/favicon.ico"
+  },
+  {
+    "title": "TAIR",
+    "url": "https://www.arabidopsis.org/",
+    "description": "The Arabidopsis Information Resource for plant research.",
+    "favicon": "https://www.arabidopsis.org/favicon.ico"
+  },
+  {
+    "title": "IGV",
+    "url": "https://igv.org/",
+    "description": "The Integrative Genomics Viewer (IGV) for interactive genomics visualization.",
+    "favicon": "https://igv.org/favicon.ico"
+  },
+  {
+    "title": "JBrowse 2",
+    "url": "https://jbrowse.org/jb2/demos/",
+    "description": "A modern genome browser built with React and JavaScript.",
+    "favicon": "https://jbrowse.org/favicon.ico"
+  },
+  {
+    "title": "Gramene",
+    "url": "https://igv.org/",
+    "description": "A curated resource for comparative genomics in crops and model plants.",
+    "favicon": "https://www.gramene.org/favicon.ico"
+  },
+  {
+    "title": "Bnapus Database",
+    "url": "http://cbi.hzau.edu.cn/bnapus/",
+    "description": "Database focusing on Brassica napus research and genomic data.",
+    "favicon": "http://cbi.hzau.edu.cn/favicon.ico"
+  }
+]

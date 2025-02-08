@@ -1,420 +1,353 @@
 <template>
-  <div class="container">
-    <!-- Breadcrumb Navigation -->
-    <div class="breadcrumb-container">
-      <div class="breadcrumb-left">
-        <h1>Co-expression Network</h1>
-      </div>
-      <div class="breadcrumb-right">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item" v-for="(item, index) in breadcrumbs" :key="index">
-              <router-link :to="item.path">{{ item.name }}</router-link>
-            </li>
-          </ol>
-        </nav>
-      </div>
-    </div>
+  <WG />
 
-    <!-- Page Introduction -->
-    <el-card class="intro-card">
-      <h2>CO-expression Network</h2>
-      <p>
-        Explore the co-expression network across different species. Input a gene sequence, upload a file, and search for related networks. Results include visualizations and detailed data tables.
-      </p>
-    </el-card>
-
-    <!-- Search Panel -->
-    <el-card class="search-card" shadow="hover">
-      <el-row :gutter="20">
-        <el-col :span="6">
-          <el-select v-model="selectedSpecies" placeholder="选择物种" style="width: 100%;">
-            <el-option label="Species A" value="A"></el-option>
-            <el-option label="Species B" value="B"></el-option>
-            <el-option label="Species C" value="C"></el-option>
-            <el-option label="Species D" value="D"></el-option>
-            <el-option label="Species E" value="E"></el-option>
-            <el-option label="Species F" value="F"></el-option>
-          </el-select>
-        </el-col>
-        <el-col :span="12">
-          <el-input v-model="geneId" placeholder="请输入序列" style="width: 100%;"></el-input>
-        </el-col>
-        <el-col :span="6">
-          <el-button type="primary" @click="searchGene" style="width: 100%;">搜索</el-button>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20" class="example-row" style="margin-top: 20px;">
-        <el-col :span="18">
-          <span>示例基因ID:</span>
-          <el-button @click="fillGeneId('BnaA01G0000100ZS')" type="text">BnaA01G0000100ZS</el-button>
-          <el-button @click="fillGeneId('BnaA01G0000500ZS')" type="text">BnaA01G0000500ZS</el-button>
-        </el-col>
-        <el-col :span="6">
-          <el-upload
-              class="upload-demo"
-              drag
-              action=""
-              :auto-upload="false"
-              :before-upload="handleFileUpload"
-          >
-            <i class="el-icon-upload"></i>
-            <div class="el-upload__text">拖拽文件或点击上传</div>
-            <div class="el-upload__tip">仅支持txt文件</div>
-          </el-upload>
-        </el-col>
-      </el-row>
-    </el-card>
-
-    <!-- Default State: Bar Chart and Carousel -->
-    <div v-if="!searchResult.length">
-      <el-card class="chart-card" shadow="hover">
-        <div ref="barChart" class="chart"></div>
-      </el-card>
-      <el-card class="carousel-card" shadow="hover">
-        <el-carousel :interval="4000" type="card" height="400px">
-          <el-carousel-item v-for="(item, index) in carouselImages" :key="index">
-            <img :src="item" alt="Carousel Image" class="carousel-image" />
-          </el-carousel-item>
-        </el-carousel>
-      </el-card>
-    </div>
-
-    <!-- Search State: Network Graph and Results Table -->
-    <div v-else>
-      <el-card class="network-chart-card" shadow="hover">
-        <div ref="chart" class="chart"></div>
-        <el-button @click="downloadNetworkData" type="primary" style="margin-top: 10px;">下载网络图数据</el-button>
-      </el-card>
-      <el-card class="result-table-card" shadow="hover">
-        <el-table :data="paginatedCoexpData" stripe>
-          <el-table-column prop="HubGene" label="Hub Gene" width="180"></el-table-column>
-          <el-table-column prop="TargetGene" label="Target Gene"></el-table-column>
-        </el-table>
-        <el-pagination
-            v-if="total > pageSize"
-            background
-            layout="prev, pager, next"
-            :total="total"
-            :page-size="pageSize"
-            @current-change="handlePageChange"
+  <!-- Gene ID Search Section -->
+  <el-card class="search-card">
+    <h2 class="form-title">Co-expression Network</h2>
+    <el-row gutter="20" align="middle" class="search-row">
+      <!-- Input Field on the Left with Larger Height and Font -->
+      <el-col :span="16" md="14">
+        <el-input
+            v-model="geneId"
+            placeholder="Enter Gene ID"
+            class="gene-id-input"
         />
-        <el-button @click="downloadResultData" type="primary" style="margin-top: 10px;">下载表格数据</el-button>
-      </el-card>
+      </el-col>
+
+      <!-- Example Buttons (Top Right) -->
+      <el-col :span="8" md="6" class="example-buttons">
+        <el-space>
+          <el-button @click="geneId = 'BolC06g049580.2J'" type="text" class="example-button">
+            Example: BolC06g049580.2J
+          </el-button>
+          <el-button @click="geneId = 'Bca101B3G006160'" type="text" class="example-button">
+            Bca101B3G006160
+          </el-button>
+        </el-space>
+      </el-col>
+
+      <!-- Submit Button (Bottom Right) -->
+      <el-col :span="6" md="4" class="submit-button-container">
+        <el-button type="primary" @click="handleSubmit" class="submit-button">Submit</el-button>
+      </el-col>
+    </el-row>
+  </el-card>
+
+
+
+
+
+    <!-- Carousel (显示条件：showCarousel 为 true) -->
+    <Carousel v-if="showCarousel" />
+
+    <!-- Results Section (显示条件：showCarousel 为 false) -->
+    <div v-else>
+      <!-- Homologous Data Section -->
+      <div v-if="homologousData && Object.keys(homologousData).length" class="section">
+        <h2>Homologous Data:</h2>
+        <el-card shadow="always" class="data-card">
+          <el-table :data="[homologousData]" stripe>
+            <el-table-column
+                v-for="(value, key) in homologousData"
+                :key="key"
+                :prop="key"
+                :label="key.replace('_', ' ')"
+                align="center"
+            ></el-table-column>
+          </el-table>
+        </el-card>
+      </div>
+
+    <el-card class="result-card">
+      <!-- WGCNA Data Section with Network Graph and Table -->
+      <div v-if="classifiedWGCNAData && Object.keys(classifiedWGCNAData).length" class="section">
+        <h2>WGCNA Data by Species:</h2>
+        <el-tabs v-model="activeTab" @tab-click="renderActiveTabChart">
+          <el-tab-pane
+              v-for="(data, species) in paginatedData"
+              :label="species"
+              :name="species"
+              :key="species"
+          >
+            <!-- Network Graph Container -->
+            <div :ref="`chartContainer-${species}`" :id="`network-chart-${species}`" class="network-chart"></div>
+            <p class="legend">
+              Legend:
+              <span style="color: red;">Red (Hub Gene)</span>,
+              <span style="color: blue;">Blue (Target Genes)</span>
+            </p>
+
+            <!-- WGCNA Data Table -->
+            <el-card class="wgcna-card" shadow="hover" style="width: 100%; padding: 0px;">
+              <el-table :data="data" stripe style="width: 100%;">
+                <el-table-column prop="gene_id_1" label="Hub Gene" align="center"></el-table-column>
+                <el-table-column prop="gene_id_2" label="Target Gene" align="center"></el-table-column>
+                <el-table-column prop="value" label="Value" align="center"></el-table-column>
+                <el-table-column prop="species" label="Species" align="center"></el-table-column>
+              </el-table>
+
+              <!-- Pagination -->
+              <el-pagination
+                  v-model:current-page="pagination.currentPage"
+                  :page-size="pagination.pageSize"
+                  :total="classifiedWGCNAData[species].length"
+                  @current-change="handlePageChange"
+                  layout="prev, pager, next"
+                  class="pagination"
+                  style="text-align: center; margin-top: 10px;"
+              />
+            </el-card>
+
+          </el-tab-pane>
+        </el-tabs>
+      </div>
+    </el-card>
+    <!-- Error Message Display -->
+    <div v-if="errorMessage" class="error-message">
+      <p>{{ errorMessage }}</p>
     </div>
   </div>
+
 </template>
 
-<script setup>
-const breadcrumbs = [
-  {name: 'Home', path: '/'},
-  {name: 'Analysis', path: '/analysis'},
-  {name: 'Co-expression', path: '/analysis/coexpression'}
-];
-import {ref, reactive, onMounted} from 'vue';
+<script lang="ts" setup>
+import WG from '@/components/search/Title/WG.vue';
+
+import { ref, computed, nextTick, watch, onMounted, onUnmounted } from 'vue';
+import axios from 'axios';
 import * as echarts from 'echarts';
+import Carousel from '@/components/search/WGCNA/Carousel.vue'; // 导入Carousel组件
 
-// 页面数据
-const selectedSpecies = ref('');
-const geneId = ref('');
-const coexpData = reactive([]); // 全部CO-expression数据
-const paginatedCoexpData = ref([]); // 分页显示的CO-expression数据
-const searchResult = ref([]); // 搜索后的数据
-const carouselImages = ref(['/src/assets/img/test/image2.jpg', '/src/assets/img/test/image3.jpg', '/src/assets/img/test/image4.jpg']);
-const total = ref(0);
-const pageSize = ref(10); // 每页10行
-const chart = ref(null);
-const barChart = ref(null);
+const geneId = ref('BolC06g049580.2J'); // Default Gene ID
+const homologousData = ref(null);
+const wgcnaData = ref([]);
+const classifiedWGCNAData = ref({});
+const activeTab = ref('');
+const errorMessage = ref('');
+const chartInstances = new Map(); // Store echarts instances
 
-// 加载CO-expression表格数据
-const loadCoexpData = async () => {
+
+// 控制走马灯显示的状态变量
+const showCarousel = ref(true);
+// Pagination data
+const pagination = ref({
+  currentPage: 1,
+  pageSize: 10, // Set to 10 items per page
+});
+
+// 处理提交的函数
+const handleSubmit = async () => {
+  showCarousel.value = false; // 隐藏走马灯
+  await fetchWGCNAData(); // 调用数据获取函数
+};
+watch(activeTab, (newTab) => {
+  if (newTab) {
+    renderActiveTabChart(); // 重新渲染当前选中的网络图
+  }
+});
+
+
+// Fetch WGCNA Data from API
+const fetchWGCNAData = async () => {
   try {
-    const response = await fetch('/src/assets/datatest/CO-expression_Network.txt');
-    const data = await response.text();
-    parseData(data);
+    const response = await axios.get(`https://brassica.wangyuhong.cn/api/wgcna/`, {
+      params: { gene_id: geneId.value },
+    });
+    homologousData.value = response.data.homologous_data[0]; // Adjust to the new API structure
+    wgcnaData.value = response.data.wgcna_data;
+    classifyWGCNADataBySpecies();
+    activeTab.value = Object.keys(classifiedWGCNAData.value)[0]; // Set initial active tab
+    errorMessage.value = '';
+    nextTick(renderActiveTabChart); // Render chart on initial load
   } catch (error) {
-    console.error('读取CO-expression数据失败:', error);
+    homologousData.value = null;
+    wgcnaData.value = [];
+    errorMessage.value = `Error fetching data: ${error.message}`;
   }
 };
 
-// 解析读取的数据
-const parseData = (data) => {
-  const lines = data.trim().split('\n');
-  lines.forEach(line => {
-    const [HubGene, TargetGene] = line.split('\t');
-    coexpData.push({HubGene, TargetGene});
-  });
+// Classify WGCNA data by species and remove the limit to 200 entries for charting
+const classifyWGCNADataBySpecies = () => {
+  classifiedWGCNAData.value = wgcnaData.value.reduce((acc, item) => {
+    const species = item.species;
+    if (!acc[species]) acc[species] = [];
+    acc[species].push(item); // Remove entry limit to allow all entries
+    return acc;
+  }, {});
 };
 
-// 更新分页显示的数据
-const updatePaginatedData = (page) => {
-  const start = (page - 1) * pageSize.value;
-  const end = start + pageSize.value;
-  paginatedCoexpData.value = searchResult.value.slice(start, end);
-};
-
-// 搜索基因
-const searchGene = () => {
-  if (geneId.value) {
-    const filteredData = coexpData.filter(row => row.HubGene === geneId.value);
-    if (filteredData.length > 0) {
-      searchResult.value = filteredData;
-      total.value = filteredData.length;
-      updatePaginatedData(1);
-      drawNetworkChart(filteredData);
-    } else {
-      console.warn('未找到匹配数据');
-      searchResult.value = []; // 重置搜索结果
-      total.value = 0;
-    }
+// Paginate WGCNA data for each species
+const paginatedData = computed(() => {
+  const result = {};
+  for (const [species, data] of Object.entries(classifiedWGCNAData.value)) {
+    const start = (pagination.value.currentPage - 1) * pagination.value.pageSize;
+    const end = start + pagination.value.pageSize;
+    result[species] = data.slice(start, end);
   }
+  return result;
+});
+
+// Handle page change
+const handlePageChange = () => {
+  nextTick(() => renderActiveTabChart());
 };
 
-// 生成网络图
-const drawNetworkChart = (filteredData) => {
-  const myChart = echarts.init(chart.value);
-  const nodes = [
-    {name: geneId.value, symbolSize: 60, itemStyle: {color: '#c23531'}}
-  ];
-  const links = [];
+// Generate Network Graph with straight lines
+const generateNetworkChart = (species) => {
+  const chartDom = document.getElementById(`network-chart-${species}`);
+  if (!chartDom) return;
 
-  filteredData.forEach(row => {
-    nodes.push({name: row.TargetGene, symbolSize: 40, itemStyle: {color: '#61a0a8'}});
-    links.push({source: geneId.value, target: row.TargetGene});
+  // Clear and reinitialize chart instance
+  if (chartInstances.has(species)) {
+    chartInstances.get(species).dispose();
+  }
+  const chartInstance = echarts.init(chartDom, null, {
+    width: chartDom.offsetWidth,
+    height: 800,
   });
+  chartInstances.set(species, chartInstance);
 
-  const options = {
-    title: {text: 'CO-expression Network', left: 'center'},
-    legend: {
-      data: [
-        {name: 'Hub Gene', icon: 'circle', textStyle: {color: '#c23531'}},
-        {name: 'Target Gene', icon: 'circle', textStyle: {color: '#61a0a8'}},
-      ],
-      bottom: 0,
-      left: 'center',
-      orient: 'horizontal',
+
+
+  const hubGene = classifiedWGCNAData.value[species][0].gene_id_1;
+  const data = [
+    {
+      name: hubGene,
+      category: 'Hub Gene',
+      itemStyle: { color: '#D5614A' },
+      symbolSize: 50,
+      label: { show: true }, // Hub Gene 始终显示
     },
+    ...classifiedWGCNAData.value[species].slice(0, 200).map((item) => ({ // Limit to 200 for charting
+      name: item.gene_id_2,
+      category: 'Target',
+      itemStyle: { color: item.identifier === 'TF' ? '#D5614A' : '#81B5CD' },
+      symbolSize: 30,
+      label: { show: false }, // 默认不显示 Target 名称
+    })),
+  ];
+
+  const links = classifiedWGCNAData.value[species].slice(0, 200).map((item) => ({
+    source: hubGene,
+    target: item.gene_id_2,
+    lineStyle: { curveness: 0 }, // Straight lines
+  }));
+
+  const option = {
+    tooltip: {},
+    legend: [{ data: ['Hub Gene', 'Target'] }],
     series: [
       {
         type: 'graph',
         layout: 'force',
+        data,
+        links,
+        categories: [
+          { name: 'Hub Gene', itemStyle: { color: '#D5614A' } },
+          { name: 'Target', itemStyle: { color: '#81B5CD' } },
+        ],
         roam: true,
-        force: {repulsion: 1000},
-        data: nodes,
-        links: links,
-        label: {
-          show: true,
-          position: 'right',
-          formatter: '{b}',
-        },
-        lineStyle: {
-          color: 'source',
-          curveness: 0.3
-        }
-      }
-    ]
+        label: { show: true, position: 'right', formatter: '{b}' },
+        lineStyle: { color: 'source', width: 2 },
+        emphasis: { focus: 'adjacency', lineStyle: { width: 3 } },
+        force: { edgeLength: [70, 100], repulsion: 300, gravity: 0.1 ,layoutAnimation: false},
+      },
+    ],
   };
 
-  myChart.setOption(options);
+  chartInstance.setOption(option);
 };
 
-// 处理分页
-const handlePageChange = (page) => {
-  updatePaginatedData(page);
+// Render the active tab's chart
+const renderActiveTabChart = () => {
+  if (activeTab.value) {
+    nextTick(() => generateNetworkChart(activeTab.value)); // 使用 nextTick 确保 DOM 已更新
+  }
 };
 
-// 示例基因ID点击填充
-const fillGeneId = (exampleGeneId) => {
-  geneId.value = exampleGeneId;
-};
-
-// 文件上传处理
-const handleFileUpload = (file) => {
-  const reader = new FileReader();
-  reader.onload = (event) => {
-    geneId.value = event.target.result.trim();
-  };
-  reader.readAsText(file);
-  return false; // 阻止自动上传
-};
-
-// 加载统计图表数据
-const loadChartData = () => {
-  const myBarChart = echarts.init(barChart.value);
-  const options = {
-    xAxis: {
-      type: 'category',
-      data: [
-        'Brassica carinata',
-        'Brassica juncea',
-        'Brassica napus',
-        'Brassica nigra',
-        'Brassica oleracea',
-        'Brassica rapa'
-      ]
-    },
-    yAxis: {
-      type: 'value',
-      name: 'Gene Count',
-      axisLabel: {
-        formatter: '{value}'  // 显示数值格式
-      }
-    },
-    series: [{
-      data: [
-        24174056,
-        12022280,
-        2255771,
-        6441324,
-        8253950,
-        2150695
-      ],
-      type: 'bar',
-      barWidth: '60%',  // 控制柱形图宽度
-      itemStyle: {
-        color: function (params) {
-          const colors = ['#5470C6', '#91CC75', '#FAC858', '#EE6666', '#73C0DE', '#3BA272'];
-          return colors[params.dataIndex % colors.length];
-        }
-      }
-    }],
-    tooltip: {
-      trigger: 'axis',
-      axisPointer: {
-        type: 'shadow'  // 提示框样式
-      }
-    },
-    grid: {
-      left: '10%',
-      right: '10%',
-      bottom: '10%',
-      top: '10%',
-      containLabel: true  // 防止标签溢出图表容器
-    }
-  };
-
-  myBarChart.setOption(options);
-};
-
-
-// 下载搜索结果数据
-const downloadResultData = () => {
-  const blob = new Blob([JSON.stringify(searchResult.value, null, 2)], {type: 'application/json'});
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = `${geneId.value}_result.json`;
-  link.click();
-  URL.revokeObjectURL(url);
-};
-
-// 下载网络图数据
-const downloadNetworkData = () => {
-  const nodes = [{name: geneId.value, symbolSize: 60}];
-  searchResult.value.forEach(row => {
-    nodes.push({name: row.TargetGene, symbolSize: 40});
-  });
-
-  const data = {nodes};
-  const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = `${geneId.value}_network.json`;
-  link.click();
-  URL.revokeObjectURL(url);
-};
-
-onMounted(() => {
-  loadCoexpData(); // 加载CO-expression数据
-  loadChartData(); // 加载条形图数据
+// Cleanup on component unmount
+onUnmounted(() => {
+  chartInstances.forEach((chartInstance) => chartInstance.dispose());
 });
-
-
 </script>
 
+
 <style scoped>
-/* 主容器样式 */
-.container {
-  width: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
+.search-card {
+  background-color: #ffffff;
   padding: 20px;
-  box-sizing: border-box;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* 面包屑导航栏样式 */
-.breadcrumb-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  background-color: #f0f4f8;
-  border-bottom: 1px solid #ddd;
+.form-title {
+  font-size: 16px; /* 小标题调整为16px */
+  text-align: center;
   margin-bottom: 20px;
-}
-
-.breadcrumb-left h1 {
-  margin: 0;
-  font-size: 1.5rem;
   color: #333;
 }
 
-.breadcrumb-right nav {
+.search-row {
   display: flex;
+  align-items: center;
 }
 
-.breadcrumb {
+.gene-id-input {
+  width: 100%;
+  height: 50px; /* 增大输入框的高度 */
+  font-size: 16px; /* 增大字体 */
+}
+
+.example-buttons {
   display: flex;
-  list-style: none;
-  padding: 0;
-  margin: 0;
+  flex-direction: column;
+  gap: 5px;
 }
 
-.breadcrumb-item + .breadcrumb-item::before {
-  content: " / ";
-  padding: 0 0.5rem;
-  color: #6c757d;
-}
-
-.breadcrumb-item a {
+.example-button {
+  font-size: 14px;
   color: #42b983;
-  text-decoration: none;
 }
 
-.breadcrumb-item a:hover {
-  text-decoration: underline;
+.example-button:hover {
+  background-color: #f2f2f2;
 }
 
-/* Introduction 样式 */
-.intro-card,
-.search-card,
-.network-chart-card,
-.result-table-card,
-.chart-card,
-.carousel-card {
-  margin-bottom: 20px;
+.submit-button-container {
+  display: flex;
+  justify-content: flex-end;
 }
 
-.intro-text h2 {
-  margin: 0;
-  font-size: 24px;
-}
-
-.intro-text p {
-  margin-top: 10px;
-  font-size: 16px;
-  line-height: 1.6;
-}
-
-.chart {
+.submit-button {
   width: 100%;
-  height: 500px;
+  padding: 10px 0;
+  background-color: #42b983;
+  color: white;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.carousel-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.submit-button:hover {
+  background-color: #367e53;
+}
+
+@media (max-width: 768px) {
+  .search-row {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .submit-button-container {
+    justify-content: center;
+  }
+
+  .submit-button {
+    width: 100%;
+  }
+
+  .example-buttons {
+    flex-direction: row;
+    justify-content: space-between;
+  }
 }
 </style>
