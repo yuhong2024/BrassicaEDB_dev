@@ -1,113 +1,232 @@
 <template>
   <UpdateTitle />
   <div class="container">
-    <h1 class="page-title">Genome Data Downloads</h1>
+    <el-row justify="center">
+      <el-col :span="24">
+        <h1 class="page-title">Genome Data Downloads</h1>
 
-    <el-card class="table-card" shadow="hover">
-      <el-table :data="genomeData" stripe style="width: 100%; font-size: 16px;">
-        <!-- Genome ID -->
-        <el-table-column
-            prop="Genome ID"
-            label="Genome ID"
-            min-width="200"
-            show-overflow-tooltip
-        ></el-table-column>
-
-        <!-- Species -->
-        <el-table-column
-            prop="Species"
-            label="Species"
-            min-width="180"
-            show-overflow-tooltip
-        ></el-table-column>
-
-        <!-- Subgenome -->
-        <el-table-column
-            prop="Subgenome"
-            label="Subgenome"
-            min-width="100"
-            show-overflow-tooltip
-        ></el-table-column>
-
-        <!-- Genome -->
-        <el-table-column
-            label="Genome"
-            align="center"
-            min-width="150"
-        >
-          <template #default="scope">
-            <span
-                v-if="scope.row.genome"
-                class="download-link"
-                @click="handleDownload(scope.row.genome)"
-            >
-              Download
-            </span>
-            <span v-else>暂无数据</span>
+        <el-card class="table-card" shadow="hover">
+          <template #header>
+            <div class="card-header">
+              <span class="header-title">Available Genome Data</span>
+              <el-tag type="primary" effect="plain" size="large" class="header-tag">
+                Click "Download" to get the data file
+              </el-tag>
+            </div>
           </template>
-        </el-table-column>
 
-        <!-- GTF -->
-        <el-table-column
-            label="GTF"
-            align="center"
-            min-width="150"
-        >
-          <template #default="scope">
-            <span
-                v-if="scope.row.gtf"
-                class="download-link"
-                @click="handleDownload(scope.row.gtf)"
+          <el-table
+              :data="genomeData"
+              stripe
+              style="width: 100%"
+              :header-cell-style="{
+              background: '#f5f7fa',
+              color: '#2c3e50',
+              fontSize: '18px',
+              fontWeight: '600',
+              height: '70px'
+            }"
+              :cell-style="{
+              fontSize: '16px',
+              height: '65px'
+            }"
+          >
+            <!-- Genome ID -->
+            <el-table-column
+                prop="Genome ID"
+                label="Genome ID"
+                min-width="220"
+                show-overflow-tooltip
             >
-              Download
-            </span>
-            <span v-else>暂无数据</span>
-          </template>
-        </el-table-column>
+              <template #default="scope">
+                <span class="genome-id">{{ scope.row['Genome ID'] }}</span>
+              </template>
+            </el-table-column>
 
-        <!-- CDS -->
-        <el-table-column
-            label="CDS"
-            align="center"
-            min-width="150"
-        >
-          <template #default="scope">
-            <span
-                v-if="scope.row.cds"
-                class="download-link"
-                @click="handleDownload(scope.row.cds)"
+            <!-- Species -->
+            <el-table-column
+                prop="Species"
+                label="Species"
+                min-width="200"
+                show-overflow-tooltip
             >
-              Download
-            </span>
-            <span v-else>暂无数据</span>
-          </template>
-        </el-table-column>
+              <template #default="scope">
+                <el-tag
+                    size="large"
+                    effect="plain"
+                    type="primary"
+                    class="data-tag"
+                >
+                  {{ scope.row.Species }}
+                </el-tag>
+              </template>
+            </el-table-column>
 
-        <!-- PEP -->
-        <el-table-column
-            label="PEP"
-            align="center"
-            min-width="150"
-        >
-          <template #default="scope">
-            <span
-                v-if="scope.row.pep"
-                class="download-link"
-                @click="handleDownload(scope.row.pep)"
+            <!-- Subgenome -->
+            <el-table-column
+                prop="Subgenome"
+                label="Subgenome"
+                min-width="120"
+                show-overflow-tooltip
             >
-              Download
-            </span>
-            <span v-else>暂无数据</span>
-          </template>
-        </el-table-column>
-      </el-table>
-    </el-card>
+              <template #default="scope">
+                <el-tag
+                    size="large"
+                    type="primary"
+                    effect="light"
+                    class="data-tag"
+                >
+                  {{ scope.row.Subgenome }}
+                </el-tag>
+              </template>
+            </el-table-column>
+
+            <!-- Genome -->
+            <el-table-column
+                label="Genome"
+                align="center"
+                min-width="150"
+            >
+              <template #default="scope">
+                <a
+                    v-if="scope.row.genome"
+                    :href="scope.row.genome"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="download-link"
+                >
+                  <el-button
+                      type="primary"
+                      size="large"
+                      class="download-button"
+                  >
+                    Download
+                  </el-button>
+                </a>
+                <el-tag
+                    v-else
+                    type="info"
+                    effect="plain"
+                    size="large"
+                    class="no-data-tag"
+                >
+                  No Data
+                </el-tag>
+              </template>
+            </el-table-column>
+
+            <!-- GTF -->
+            <el-table-column
+                label="GTF"
+                align="center"
+                min-width="150"
+            >
+              <template #default="scope">
+                <a
+                    v-if="scope.row.gtf"
+                    :href="scope.row.gtf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="download-link"
+                >
+                  <el-button
+                      type="primary"
+                      size="large"
+                      class="download-button"
+                  >
+                    Download
+                  </el-button>
+                </a>
+                <el-tag
+                    v-else
+                    type="info"
+                    effect="plain"
+                    size="large"
+                    class="no-data-tag"
+                >
+                  No Data
+                </el-tag>
+              </template>
+            </el-table-column>
+
+            <!-- CDS -->
+            <el-table-column
+                label="CDS"
+                align="center"
+                min-width="150"
+            >
+              <template #default="scope">
+                <a
+                    v-if="scope.row.cds"
+                    :href="scope.row.cds"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="download-link"
+                >
+                  <el-button
+                      type="primary"
+                      size="large"
+                      class="download-button"
+                  >
+                    Download
+                  </el-button>
+                </a>
+                <el-tag
+                    v-else
+                    type="info"
+                    effect="plain"
+                    size="large"
+                    class="no-data-tag"
+                >
+                  No Data
+                </el-tag>
+              </template>
+            </el-table-column>
+
+            <!-- PEP -->
+            <el-table-column
+                label="PEP"
+                align="center"
+                min-width="150"
+            >
+              <template #default="scope">
+                <a
+                    v-if="scope.row.pep"
+                    :href="scope.row.pep"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="download-link"
+                >
+                  <el-button
+                      type="primary"
+                      size="large"
+                      class="download-button"
+                  >
+                    Download
+                  </el-button>
+                </a>
+                <el-tag
+                    v-else
+                    type="info"
+                    effect="plain"
+                    size="large"
+                    class="no-data-tag"
+                >
+                  No Data
+                </el-tag>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-card>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
 import UpdateTitle from "@/components/More/Title/update.vue";
+import { ElMessage } from "element-plus";
 
 const genomeData = ref([]);
 
@@ -136,20 +255,6 @@ const loadGenomeData = async () => {
   }
 };
 
-// 文件下载方法
-const handleDownload = (url) => {
-  if (url) {
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = true;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  } else {
-    console.error("No URL provided for download.");
-  }
-};
-
 // 加载数据文件
 onMounted(() => {
   loadGenomeData();
@@ -159,37 +264,123 @@ onMounted(() => {
 <style scoped>
 .container {
   width: 100%;
-  margin: 0 auto;
-  padding: 4px;
+  max-width: 100%;
+  /* padding: 20px 40px; */
+  box-sizing: border-box;
 }
 
 .page-title {
   text-align: center;
-  margin-bottom: 28px;
-  font-size: 32px; /* 增大字体 */
+  margin-bottom: 40px;
+  font-size: 42px;
   font-weight: bold;
+  color: #2c3e50;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .table-card {
-  padding: 20px;
+  margin-bottom: 30px;
+  border-radius: 8px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+}
+
+.header-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.header-tag {
+  font-size: 16px;
+  padding: 8px 16px;
+}
+
+.genome-id {
+  font-family: 'Monaco', monospace;
+  font-size: 16px;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.data-tag {
+  font-size: 16px;
+  padding: 8px 16px;
+  font-weight: 500;
+}
+
+.no-data-tag {
+  font-size: 16px;
+  padding: 8px 16px;
+  color: #909399;
 }
 
 .download-link {
-  color: #409eff;
-  font-size: 16px; /* 增大字体 */
-  cursor: pointer;
+  text-decoration: none;
 }
 
-.download-link:hover {
-  color: #66b1ff;
+.download-button {
+  width: 130px;
+  height: 40px;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s;
 }
 
-/* 强制不换行，超出内容用省略号显示 */
-.el-table th,
-.el-table td {
-  white-space: nowrap;
-  text-overflow: ellipsis;
+.download-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
+
+:deep(.el-card__header) {
+  padding: 0 20px;
+  border-bottom: 1px solid #ebeef5;
+  background-color: #fff;
+}
+
+:deep(.el-table) {
+  border-radius: 8px;
   overflow: hidden;
-  font-size: 16px; /* 增大字体 */
+}
+
+:deep(.el-table th) {
+  background-color: #f5f7fa !important;
+}
+
+:deep(.el-table__row) {
+  transition: all 0.3s;
+}
+
+:deep(.el-table__row:hover) {
+  background-color: #f5f7fa !important;
+}
+
+/* 响应式调整 */
+@media screen and (max-width: 1400px) {
+  .container {
+    padding: 20px;
+  }
+
+  .page-title {
+    font-size: 36px;
+    margin-bottom: 30px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .page-title {
+    font-size: 32px;
+    margin-bottom: 20px;
+  }
+
+  .header-title {
+    font-size: 20px;
+  }
 }
 </style>

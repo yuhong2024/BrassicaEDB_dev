@@ -1,5 +1,5 @@
 <template>
-<!--  <Jbro />-->
+  <!--  <Jbro />-->
   <div id="jbrowse_linear_genome_view"></div>
 </template>
 

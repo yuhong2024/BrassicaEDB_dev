@@ -4,7 +4,6 @@ import Homo from '@/components/search/Title/Homo.vue';
 import { ref } from 'vue';
 import axios from 'axios';
 import { ElMessage } from 'element-plus';
-import Carousel from '@/components/search/Homgene/Carousel.vue';
 
 // 表单数据和状态
 const form = ref({
@@ -15,7 +14,6 @@ const form = ref({
 
 const apiResult = ref([]); // API 结果数据
 const showResult = ref(false); // 控制结果表格显示
-const showCarousel = ref(true); // 控制轮播图显示
 
 // 填充示例ID
 function fillExampleIds() {
@@ -37,7 +35,6 @@ function formatGeneId() {
 // 请求 API 数据
 async function fetchHomologousData() {
   showResult.value = false;
-  showCarousel.value = false;
   apiResult.value = [];
 
   const formData = new FormData();
@@ -58,12 +55,12 @@ async function fetchHomologousData() {
   } catch (error) {
     console.error('Request error:', error);
     ElMessage.error('Request failed. Please check input or try again.');
-    showCarousel.value = true;
   }
 }
 </script>
 
 <template>
+  <div class="container">
   <!-- 引入 Homo.vue 组件 -->
   <Homo />
 
@@ -99,11 +96,6 @@ async function fetchHomologousData() {
     </el-form>
   </el-card>
 
-  <!-- Carousel Section -->
-  <div class="carousel-container" v-if="!showResult && showCarousel">
-    <Carousel />
-  </div>
-
   <!-- Result Table Section -->
   <el-card class="el-card result-card" v-if="showResult && apiResult.length">
     <h3 class="result-title">Search Results:</h3>
@@ -117,19 +109,14 @@ async function fetchHomologousData() {
       <el-table-column prop="brassica_rapa" label="Brassica rapa"></el-table-column>
     </el-table>
   </el-card>
+  </div>
 </template>
 
 <style scoped>
 /* 基础样式 */
 .container {
+  margin-top: 30px;
   width: 100%;
-  max-width: 99%;
-  margin: 0 auto;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  box-sizing: border-box;
 }
 
 .el-card {
@@ -168,14 +155,6 @@ async function fetchHomologousData() {
 .submit-button {
   width: 30%;
   margin-left: 0;
-}
-
-.carousel-container {
-  background-color: #f5f5f5;
-  border-radius: 5x;
-  padding: 0px;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
-  max-width: 1560px;
 }
 
 .result-card {

@@ -43,10 +43,8 @@ import '@/assets/css/styles.css';  // 引入全局样式
   padding-top: 70px;
   padding-bottom: 60px;
   box-sizing: border-box;
-  //background-color: #ffffff; /* 白色背景 */
   background-color: #F5F9ED; /* 白色背景 */
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 添加阴影 */
 }
 
 /* Footer部分保持一致的宽度 */

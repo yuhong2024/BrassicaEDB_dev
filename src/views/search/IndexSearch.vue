@@ -83,9 +83,9 @@ const searchItems = [
 <style scoped>
 /* 页面背景样式 */
 .container {
-  max-width: 1400px;
+  max-width: 100%;
   margin: 0 auto;
-  padding: 30px;
+  padding: 10px;
   background: linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%);
   border-radius: 12px;
 }
@@ -103,9 +103,9 @@ const searchItems = [
 /* 卡片外观 */
 .search-card {
   height: 250px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   transition: transform 0.3s, box-shadow 0.3s;
-  border-radius: 15px;
+  border-radius: 10px;
   cursor: pointer;
 }
 

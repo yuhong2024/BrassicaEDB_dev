@@ -34,11 +34,13 @@ const breadcrumbs = [
 .breadcrumb-container {
   display: flex;
   justify-content: space-between;
+  max-width: 100%;
   align-items: center;
-  padding: 10px 20px;
+  margin-top: 20px ;
+
   background-color: #f0f4f8;
   border-bottom: 1px solid #ddd;
-  margin-bottom: 20px;
+
 }
 
 .breadcrumb-left h1 {

@@ -6,9 +6,9 @@
       <div class="sequences-wrapper">
         <el-collapse v-model="activeNames">
           <el-collapse-item
-            v-for="(sequence, key) in sequences"
-            :key="key"
-            :name="key"
+              v-for="(sequence, key) in sequences"
+              :key="key"
+              :name="key"
           >
             <template #title>
               <span class="sequence-title">{{ key }}</span>
@@ -26,7 +26,7 @@
       <h2 class="chart-title">{{ geneId }} - Tissue</h2>
       <div ref="tissueChartRef" class="chart" style="width: 1400px; height: 800px;"></div>
     </div>
-    
+
     <!-- Treat 类型图表 -->
     <div class="chart-wrapper">
       <h2 class="chart-title">{{ geneId }} - Treat</h2>
@@ -65,32 +65,30 @@ const colorScheme = {
 // 处理序列数据
 const formatSequences = (data) => {
   if (!data?.sequence_data) return null;
-  // 获取所有序列的键名并设置为默认展开
-  const sequenceData = data.sequence_data;
-  activeNames.value = Object.keys(sequenceData);
-  return sequenceData;
+  // 不再设置默认展开的序列
+  return data.sequence_data;
 };
 
 // 处理图表数据
 const processData = (data) => {
   if (!data?.as_exp_data) return { tissue: { traits: [], series: [] }, treat: { traits: [], series: [] } };
-  
+
   const expData = data.as_exp_data;
-  
+
   // 分离 Tissue 和 Treat 数据
   const tissueData = expData.filter(item => item.classify === 'Tissue');
   const treatData = expData.filter(item => item.classify === 'Treat');
-  
+
   const processTypeData = (typeData) => {
     if (!typeData.length) return { traits: [], series: [] };
-    
+
     // 获取所有不同的 trait 和 transcript_id
     const traits = [...new Set(typeData.map(item => item.trait))].sort();
     const transcripts = [...new Set(typeData.map(item => item.transcript_id))];
-    
+
     // 按照预定义顺序排序 transcripts
     const sortedTranscripts = transcriptOrder.filter(t => transcripts.includes(t));
-    
+
     // 为每个 transcript_id 创建一个系列，保持顺序一致
     const series = sortedTranscripts.map(transcript => ({
       name: transcript,
@@ -124,7 +122,7 @@ const createChartOption = (data, title) => {
       text: title,
       left: 'center',
       top: 20,
-      textStyle: { 
+      textStyle: {
         fontSize: 20,
         fontWeight: 'bold'
       }
@@ -197,28 +195,28 @@ const createChartOption = (data, title) => {
 
 const initCharts = async () => {
   if (!props.geneId) return;
-  
+
   try {
     const response = await axios.get(`https://brassicaedb.com/api/as/exp/`, {
       params: { gene_id: props.geneId }
     });
-    
+
     // 处理序列数据
     sequences.value = formatSequences(response.data);
-    
+
     // 处理图表数据
     const { tissue, treat } = processData(response.data);
-    
+
     // 初始化图表
     if (tissueChart) tissueChart.dispose();
     if (treatChart) treatChart.dispose();
-    
+
     if (tissueChartRef.value && tissue.series.length) {
       tissueChart = echarts.init(tissueChartRef.value);
       const tissueOption = createChartOption(tissue, `${props.geneId} - Tissue Expression`);
       tissueChart.setOption(tissueOption);
     }
-    
+
     if (treatChartRef.value && treat.series.length) {
       treatChart = echarts.init(treatChartRef.value);
       const treatOption = createChartOption(treat, `${props.geneId} - Treatment Expression`);
@@ -284,7 +282,7 @@ onUnmounted(() => {
 
 <style scoped>
 .charts-container {
-  width: 100%;
+  width: 102%;
   padding: 20px;
   box-sizing: border-box;
   display: flex;

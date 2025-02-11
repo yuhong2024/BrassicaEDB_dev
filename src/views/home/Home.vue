@@ -42,6 +42,12 @@
       <News />
     </el-card>
 
+    <el-card class="video">
+      <Video />
+    </el-card>
+
+
+
 
     <!-- 返回顶部按钮 -->
     <el-backtop :right="100" :bottom="100" />
@@ -60,6 +66,7 @@ import StatisticsChart from '@/components/home/StatisticsChart.vue';
 //更新
 import About from '@/components/home/About.vue';
 import News from '@/components/home/News.vue';
+import Video from '@/components/home/Video.vue';
 
 // 用来存储柱状图和饼图的配置
 const barChartOptions = ref({});

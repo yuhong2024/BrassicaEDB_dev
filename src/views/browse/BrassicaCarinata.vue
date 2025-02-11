@@ -72,10 +72,19 @@ const initChart = () => {
       data: categories,
       axisLabel: {
         fontSize: 14,
-        color: "#333",
-        formatter: (value) =>
-            value.length > 20 ? `${value.slice(0, 20)}...` : value, // 长标签截断
+        color: '#333',
+        width: 200,       // 设置标签容器宽度
+        overflow: 'break', // 文字过长时换行
+        interval: 0,      // 强制显示所有标签
+        formatter: function(value) {
+          // 将下划线替换为空格，使文本更易读
+          return value.replace(/_/g, ' ');
+        }
       },
+      nameTextStyle: {
+        fontSize: 14,
+        padding: [0, 30, 0, 0] // 调整文字位置
+      }
     },
     series: [
       {
@@ -99,11 +108,11 @@ const initChart = () => {
       },
     ],
     grid: {
-      left: "10%",
-      right: "5%",
-      bottom: "15%",
-      top: "20%",
-      containLabel: true,
+      left: '25%',  // 增加左侧留白空间
+      right: '5%',
+      bottom: '15%',
+      top: '20%',
+      containLabel: true
     },
   };
   chartInstance.setOption(option);
@@ -189,6 +198,7 @@ onBeforeUnmount(() => {
 .v-chart {
   width: 100%;
   height: 500px;
+  min-width: 600px; /* 设置最小宽度确保文字有足够空间 */
   display: flex;
   justify-content: center;
 }
@@ -197,6 +207,7 @@ onBeforeUnmount(() => {
 @media (max-width: 768px) {
   .v-chart {
     height: 400px;
+    min-width: 400px;
   }
 
   .el-card {

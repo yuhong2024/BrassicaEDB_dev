@@ -14,7 +14,7 @@ const breadcrumbs = [
   <!-- 面包屑导航 -->
   <div class="breadcrumb-container">
     <div class="breadcrumb-left">
-      <h1>TF Regulatory Network</h1>
+      <h1>Gene Regulatory Network</h1>
     </div>
     <div class="breadcrumb-right">
       <nav aria-label="breadcrumb">
@@ -41,27 +41,11 @@ const breadcrumbs = [
       <!-- 文本部分 -->
       <div class="info-container">
         <p>
-          Transcription factors can bind to specific DNA sequences to regulate the transcriptional activity of 
-          genes. Transcription factor regulatory networks are concerned with how transcription factors regulate 
-          the transcription process of genes, thereby affecting the function and properties of cells. 
-          Transcription factor regulatory network plays an equally important role in plant growth and development, 
-          environmental adaptation and evolution, and its research is of great significance for improving crop 
-          performance, coping with environmental changes, and promoting sustainable agricultural development.
+          Transcription factors can bind to specific DNA sequences to regulate the transcriptional activity of genes. Transcription factor regulatory networks are concerned with how transcription factors regulate the transcription process of genes, thereby affecting the function and properties of cells. Weighted Gene Co-expression Network Analysis (WGCNA) is a systems biology method for identifying co-expression relationships and modules between genes. It is commonly used to reveal underlying structures in gene expression data and to identify gene modules associated with a particular phenotype. Helps organize large-scale genetic data into actionable modules, further analysis and validation can help researchers gain insight into the relationship between genes and phenotypesã€.
         </p>
+
         <p>
-          Weighted Gene Co-expression Network Analysis (WGCNA) is a systems biology method for identifying 
-          co-expression relationships and modules between genes. It is commonly used to reveal underlying 
-          structures in gene expression data and to identify gene modules associated with a particular phenotype. 
-          Helps organize large-scale genetic data into actionable modules, further analysis and validation can 
-          help researchers gain insight into the relationship between genes and phenotypes, researchers find 
-          patterns in complex genomic data, understand biological mechanisms, and provide valuable clues for 
-          subsequent experimental research.
-        </p>
-        <p>
-          We performed WGCNA analysis on the obtained transcriptome data and identified the transcription 
-          factors of six <i>Brassica</i> species. At the same time, we predicted the regulatory network of 
-          each transcription factor, and combined the two networks to obtain the regulatory network of 
-          transcription factor co-expression.
+          We performed WGCNA on the obtained transcriptome data and identified the transcription factors of six Brassica species. At the same time, we predicted the regulatory network of each transcription factor, and combined the two networks to obtain the regulatory network of transcription factor co-expression.
         </p>
       </div>
     </div>

@@ -81,10 +81,10 @@ const moduleLogo = '@/assets/logo.jpg';
 
 <style scoped>
 .container {
-  width: 90vw;
+  width: 100vw;
   max-width: 100%; /* 控制最大宽度 */
   margin: 0 auto;    /* 居中显示 */
-  padding: 0 40px;  /* 两侧间距 */
+  padding: 0 10px;  /* 两侧间距 */
 }
 
 .module-card {

@@ -37,7 +37,7 @@ function formatBases(bases) {
 // 获取数据
 onMounted(async () => {
   try {
-    const response = await axios.get('https://brassica.wangyuhong.cn/api/homeboard/');
+    const response = await axios.get('https://brassicaedb.com/api/homeboard/');
     const data = response.data.data_summary;
     statistics.value = [
       { name: 'BioProject', value: data.BioProject },

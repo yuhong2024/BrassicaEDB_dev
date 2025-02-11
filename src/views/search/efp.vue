@@ -6,52 +6,53 @@
     <!-- 搜索区域 -->
     <div class="search-wrapper">
       <div class="search-container">
-        <h2 class="species-title">Brassica napus</h2>
-        
-        <div class="search-box">
-          <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">Species</label>
+          <el-select
+              v-model="species"
+              placeholder="Select Species"
+              class="species-select"
+              disabled
+          >
+            <el-option label="Brassica napus" value="Brassica napus" />
+          </el-select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Gene ID</label>
+          <div class="input-group">
             <el-input
-              v-model="geneId"
-              placeholder="Enter Gene ID"
-              class="gene-input"
+                v-model="geneId"
+                placeholder="Enter Gene ID"
+                class="gene-input"
             />
             <el-button
-              type="primary"
-              @click="fetchData"
-              class="submit-button"
+                type="primary"
+                @click="fetchData"
+                :loading="loading"
+                class="submit-button"
             >
-              Submit
+              Search
             </el-button>
             <el-button
-              link
-              type="info"
-              @click="fillExample"
-              class="example-button"
+                type="default"
+                @click="fillExample"
+                class="example-button"
             >
-              Example
+              Fill Example
             </el-button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 默认图片展示 -->
-    <div v-if="showDefaultImage" class="image-container">
-      <img
-          src="@/assets/img/search/efp/efplook.jpg"
-          alt="Default Image"
-          class="default-image"
-      />
-    </div>
-
     <!-- 结果展示 -->
-    <div v-else class="result-container">
+    <div v-if="tableData.length > 0" class="result-container">
       <el-card>
         <el-tabs v-model="activeTab" type="card">
           <!-- eFP Map Tab -->
           <el-tab-pane label="eFP Map" name="efp">
             <Efptool
-                v-if="efpData.length > 0"
                 :data="efpData"
                 :svgPath="testEfpSvg"
                 :width="'100%'"
@@ -65,41 +66,41 @@
           <el-tab-pane label="Chart" name="chart">
             <div class="chart-tab-container">
               <!-- 表格部分 -->
-              <div v-if="tableData.length" class="table-container">
-                <el-table 
-                  :data="paginatedData" 
-                  style="width: 100%"
-                  :max-height="400"
-                  border
+              <div class="table-container">
+                <el-table
+                    :data="paginatedData"
+                    style="width: 100%"
+                    :max-height="400"
+                    border
                 >
-                  <el-table-column 
-                    label="Sample" 
-                    prop="Sample"
-                    min-width="200"
+                  <el-table-column
+                      label="Sample"
+                      prop="Sample"
+                      min-width="200"
                   ></el-table-column>
-                  <el-table-column 
-                    label="TPM" 
-                    prop="TPM"
-                    width="120"
+                  <el-table-column
+                      label="TPM"
+                      prop="TPM"
+                      width="120"
                   ></el-table-column>
                 </el-table>
 
                 <el-pagination
-                  :current-page="currentPage"
-                  :page-size="pageSize"
-                  :total="tableData.length"
-                  @current-change="handlePageChange"
-                  layout="prev, pager, next"
-                  class="pagination"
+                    :current-page="currentPage"
+                    :page-size="pageSize"
+                    :total="tableData.length"
+                    @current-change="handlePageChange"
+                    layout="prev, pager, next"
+                    class="pagination"
                 ></el-pagination>
               </div>
 
               <!-- 图表容器 -->
               <div
-                v-if="tableData.length"
-                ref="chartRef"
-                class="chart-container"
-                style="min-height: 500px; width: 100%;"
+                  v-if="tableData.length"
+                  ref="chartRef"
+                  class="chart-container"
+                  style="min-height: 500px; width: 100%;"
               ></div>
             </div>
           </el-tab-pane>
@@ -125,7 +126,8 @@ const currentPage = ref(1);
 const pageSize = 10;
 const chartRef = ref(null);
 const activeTab = ref('efp'); // 默认 Tab
-const showDefaultImage = ref(true); // 控制默认图片显示状态
+const loading = ref(false);
+const species = ref('Brassica napus');
 
 // 分页计算
 const paginatedData = computed(() => {
@@ -136,6 +138,7 @@ const paginatedData = computed(() => {
 // 获取数据
 const fetchData = async () => {
   try {
+    loading.value = true;
     const response = await axios.get('https://brassica.wangyuhong.cn/api/eFP_tpm/', {
       params: { gene_id: geneId.value },
     });
@@ -145,12 +148,13 @@ const fetchData = async () => {
       value: item.TPM,
     }));
     currentPage.value = 1;
-    activeTab.value = 'efp'; // 默认 Tab 设置
-    showDefaultImage.value = false; // 隐藏默认图片
+    activeTab.value = 'efp';
 
-    nextTick(renderChart); // 渲染图表
+    nextTick(renderChart);
   } catch (error) {
     console.error('API请求失败', error);
+  } finally {
+    loading.value = false;
   }
 };
 
@@ -177,7 +181,7 @@ const renderChart = () => {
     if (existingChart) {
       existingChart.dispose();
     }
-    
+
     const chart = echarts.init(chartDom);
     const chartData = paginatedData.value.map(item => ({ name: item.Sample, value: item.TPM }));
 
@@ -254,99 +258,73 @@ watch(activeTab, (newTab) => {
 <style scoped>
 .main-container {
   width: 100%;
-  padding: 0;
+  margin-top: 30px;
+
 }
 
 .search-wrapper {
-  background-color: #f8f9fa;
-  padding: 15px 0;
-  margin: 10px 0;
-  border-top: 1px solid #eaeaea;
-  border-bottom: 1px solid #eaeaea;
-}
-
-.search-container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.species-title {
-  text-align: center;
-  font-style: italic;
-  font-size: 1.8rem;
-  color: #2c3e50;
-  margin-bottom: 15px;
-}
-
-.search-box {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  background-color: white;
-  padding: 15px;
+  background-color: #fff;
+  padding: 40px;
+  margin: 20px 0;
   border-radius: 8px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
 }
 
-.input-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.search-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px 40px;
+}
+
+.form-group {
+  margin-bottom: 30px;
+}
+
+.form-label {
+  display: block;
+  font-size: 14px;
+  color: #606266;
+  margin-bottom: 15px;
+}
+
+.species-select {
   width: 100%;
-  max-width: 700px;
+}
+
+.input-group {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  min-height: 45px;
 }
 
 .gene-input {
   flex: 1;
-  
-  :deep(.el-input__inner) {
-    height: 40px;
-    font-size: 14px;
-    border-radius: 4px;
-  }
 }
 
-.submit-button {
-  height: 40px;
-  padding: 0 20px;
-  font-size: 14px;
+:deep(.el-input__inner) {
+  height: 45px;
+  line-height: 45px;
 }
 
+.submit-button,
 .example-button {
-  height: 40px;
-  font-size: 14px;
+  height: 45px;
+  padding: 0 20px;
+  font-size: 15px;
 }
 
+/* 响应式调整 */
 @media (max-width: 768px) {
-  .search-wrapper {
-    padding: 10px 0;
-  }
-
-  .input-row {
+  .input-group {
     flex-direction: column;
-    width: 100%;
   }
 
-  .gene-input {
-    width: 100%;
-  }
-
+  .gene-input,
   .submit-button,
   .example-button {
     width: 100%;
   }
-}
-
-.image-container {
-  margin-top: 20px;
-  text-align: center;
-}
-
-.default-image {
-  max-width: 100%;
-  height: auto;
 }
 
 .result-container {

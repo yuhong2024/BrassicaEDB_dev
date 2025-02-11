@@ -1,325 +1,613 @@
 <template>
-  <div class="tf-info-container">
-    <!-- Breadcrumb Navigation -->
-    <!-- 引入 TF.vue 组件 -->
+  <div class="main-container">
     <TF />
-    <!-- Gene ID Search Section -->
-    <el-card class="search-card">
-      <el-row gutter="30" align="middle">
-        <!-- Species Selection -->
-        <el-col :span="8" md="10">
-          <el-select
-              v-model="selectedSpecies"
-              placeholder="Select Species"
-              class="species-select"
-              @change="updateExampleGene"
-          >
-            <el-option
-                v-for="(species, index) in speciesOptions"
-                :key="index"
-                :label="species"
-                :value="species"
-            />
-          </el-select>
-        </el-col>
-
-        <!-- Gene ID Input -->
-        <el-col :span="8" md="10">
-          <el-input
-              v-model="geneId"
-              type="textarea"
-              :autosize="{ minRows: 2, maxRows: 4 }"
-              placeholder="Enter Gene ID"
-              class="gene-id-input"
-          />
-        </el-col>
-
-        <!-- Buttons Section -->
-        <el-col :span="8" md="4" class="right-controls">
-          <div class="button-container">
+    <div class="api-test-container">
+      <div class="input-section">
+        <el-form :model="form" label-width="120px" class="search-form">
+          <el-form-item label="Gene ID">
+            <el-input
+                v-model="form.gene_id"
+                placeholder="请输入基因ID"
+                class="search-input">
+            </el-input>
+          </el-form-item>
+          <el-form-item class="button-item">
             <el-button
                 type="primary"
-                class="submit-button"
-                @click="handleSubmit"
+                @click="fetchData"
+                :loading="loading"
+                size="large"
             >
-              Submit
+              {{ loading ? 'Searching...' : 'Search' }}
             </el-button>
-            <el-button
-                type="text"
-                class="example-button"
-                @click="fillExampleGene"
-            >
-              Example
-            </el-button>
-          </div>
-        </el-col>
-      </el-row>
-    </el-card>
+          </el-form-item>
+        </el-form>
+      </div>
 
-    <!-- Carousel (显示条件：showCarousel 为 true) -->
-    <Carousel v-if="showCarousel" />
+      <div v-if="loading" class="loading-container">
+        <el-loading :visible="true" />
+      </div>
 
-    <!-- Results Section (显示条件：showCarousel 为 false) -->
-    <div v-else>
-      <!-- Homologous Data Section -->
-      <el-card v-if="homologousData && homologousData.length" class="data-card">
-        <h2>Homologous Data</h2>
-        <el-table :data="homologousData" stripe>
-          <el-table-column
-              v-for="(value, key) in homologousData[0]"
-              :key="key"
-              :prop="key"
-              :label="key.replace('_', ' ')"
-              align="center"
-          ></el-table-column>
-        </el-table>
-      </el-card>
+      <el-alert
+          v-if="error"
+          :title="error"
+          type="error"
+          show-icon
+          :closable="false"
+          class="error-alert"
+      />
 
-      <!-- TRN Data by Species with Network Graph and Table -->
-      <el-card v-if="classifiedTrnData && Object.keys(classifiedTrnData).length" class="result-card">
-        <h2>TRN Data by Species</h2>
+      <div v-if="result && !loading" class="result-section">
+        <el-card v-if="result.GrnHomologous?.length" class="data-card">
+          <template #header>
+            <div class="card-header">
+              <h2>Homologous Data</h2>
+            </div>
+          </template>
+          <el-table
+              :data="result.GrnHomologous"
+              style="width: 100%"
+              border
+              :header-cell-style="{
+                background: '#f5f7fa',
+                color: '#2c3e50',
+                fontSize: '16px',
+                fontWeight: '600',
+                height: '60px'
+              }"
+              :cell-style="{
+                fontSize: '15px',
+                height: '55px'
+              }">
+            <el-table-column
+                v-for="column in tableColumns"
+                :key="column.prop"
+                :prop="column.prop"
+                :label="column.label"
+                align="center">
+            </el-table-column>
+          </el-table>
+        </el-card>
 
-        <el-tabs v-model="activeTab" @tab-click="renderActiveTabChart" class="chart">
-          <el-tab-pane v-for="(data, species) in paginatedData" :label="species" :name="species" :key="species">
-            <!-- Network Graph Card -->
-            <el-card class="netchart" style="margin-bottom: 10px;">
-              <div :ref="`chartContainer-${species}`" :id="`network-chart-${species}`" class="network-chart"></div>
-              <p class="legend">
-                Legend:
-                <span style="color: red;">Red (TF and TF-type Target Genes)</span>,
-                <span style="color: blue;">Blue (Non-TF Target Genes)</span>
-              </p>
-            </el-card>
+        <el-card v-if="result.GrnOrganismGrouped" class="data-card">
+          <template #header>
+            <div class="card-header">
+              <h2>GRN Data by Species</h2>
+            </div>
+          </template>
+          <el-tabs v-model="activeTab" @tab-click="renderActiveTabChart">
+            <el-tab-pane
+                v-for="(data, species) in result.GrnOrganismGrouped"
+                :key="species"
+                :label="formatSpeciesName(species)"
+                :name="species">
+              <el-card class="network-card">
+                <div :id="`network-chart-${species}`" class="network-chart"></div>
+                <p class="legend">
+                  Legend:
+                  <span class="legend-item tf">Red (TF and TF-type Target Genes)</span>,
+                  <span class="legend-item non-tf">Blue (Non-TF Target Genes)</span>
+                </p>
+              </el-card>
 
-            <!-- Data Table Card -->
-            <!-- Data Table Card -->
-            <el-card class="trn-card" shadow="hover" style="margin-top: 10px; width: 100%;">
-              <el-table :data="data" stripe style="width: 100%;">
-                <!-- TF 列 -->
-                <el-table-column prop="tf" label="TF" width="180" align="center"></el-table-column>
-
-                <!-- Target Gene 列 -->
-                <el-table-column prop="target" label="Target Gene" width="180" align="center"></el-table-column>
-
-                <!-- Value 列 -->
-                <el-table-column prop="weight" label="Value" align="center"></el-table-column>
-
-                <!-- Type 列 -->
-                <el-table-column prop="classify" label="Type" align="center">
+              <el-table
+                  :data="paginatedData"
+                  stripe
+                  style="width: 100%"
+                  :header-cell-style="{
+                    background: '#f5f7fa',
+                    color: '#2c3e50',
+                    fontSize: '16px',
+                    fontWeight: '600',
+                    height: '60px'
+                  }"
+                  :cell-style="{
+                    fontSize: '15px',
+                    height: '55px'
+                  }"
+              >
+                <el-table-column
+                    prop="Coregene"
+                    label="Coregene"
+                    align="center">
                   <template #default="scope">
-        <span :style="{ color: scope.row.classify === 'TF' ? 'red' : 'blue' }">
-          {{ scope.row.classify }}
-        </span>
+                    <span class="gene-text">{{ scope.row.Coregene }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                    prop="Targetgene"
+                    label="Target Gene"
+                    align="center">
+                  <template #default="scope">
+                    <span class="gene-text">{{ scope.row.Targetgene }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                    prop="Classification"
+                    label="Classification"
+                    align="center">
+                  <template #default="scope">
+                    <el-tag
+                        :type="scope.row.Classification === 'TF_Hub' ? 'success' : 'info'"
+                        size="large"
+                        class="classification-tag">
+                      {{ scope.row.Classification }}
+                    </el-tag>
                   </template>
                 </el-table-column>
               </el-table>
 
-              <!-- Pagination -->
-              <el-pagination
-                  v-model:current-page="pagination.currentPage"
-                  :page-size="pagination.pageSize"
-                  :total="classifiedTrnData[species].length"
-                  @current-change="handlePageChange"
-                  layout="prev, pager, next"
-                  class="pagination"
-              />
-            </el-card>
-
-          </el-tab-pane>
-        </el-tabs>
-      </el-card>
-
-      <!-- Error Message Display -->
-      <div v-if="errorMessage" class="error-message">
-        <p>{{ errorMessage }}</p>
+              <div class="pagination-container">
+                <el-pagination
+                    v-model:current-page="currentPage"
+                    v-model:page-size="pageSize"
+                    :page-sizes="[15, 30, 50, 100]"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="getCurrentSpeciesData.length"
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    background
+                />
+              </div>
+            </el-tab-pane>
+          </el-tabs>
+        </el-card>
       </div>
     </div>
   </div>
 </template>
 
-<script lang="ts" setup>
-import { ref, computed, nextTick, watch, onUnmounted } from 'vue';
-import axios from 'axios';
-import Carousel from '@/components/search/tf/Carousel.vue';
-import * as echarts from 'echarts';
-import TF from '@/components/search/Title/TF.vue';
+<script>
+import axios from 'axios'
+import * as echarts from 'echarts'
+import TF from '@/components/search/Title/TF.vue'
 
-const showCarousel = ref(true); // 控制走马灯的显示
-const geneId = ref('Bca101B3G035300');
-const homologousData = ref(null);
-const trnData = ref(null);
-const classifiedTrnData = ref({});
-const activeTab = ref('');
-const errorMessage = ref('');
-const chartInstances = new Map();
-const pagination = ref({
-  currentPage: 1,
-  pageSize: 10,
-});
-
-// 点击提交按钮的处理函数
-const handleSubmit = () => {
-  showCarousel.value = false; // 立即隐藏走马灯
-  fetchTFData(); // 调用数据获取函数
-};
-
-const fetchTFData = async () => {
-  try {
-    // 请求数据
-    const response = await axios.get(`https://brassica.wangyuhong.cn/api/tf/`, {
-      params: { gene_id: geneId.value },
-    });
-    // 处理响应数据
-    homologousData.value = response.data.homologous_data;
-    trnData.value = response.data.tf_data;
-    classifyTrnDataBySpecies();
-    errorMessage.value = '';
-
-    // 自动切换到第一个物种的数据并渲染图表
-    nextTick(() => {
-      const speciesList = Object.keys(classifiedTrnData.value);
-      if (speciesList.length > 0) {
-        activeTab.value = speciesList[0];
-      }
-      nextTick(renderActiveTabChart);
-    });
-  } catch (error) {
-    homologousData.value = null;
-    trnData.value = null;
-    errorMessage.value = `Error fetching data: ${error.message}`;
-  }
-};
-
-const classifyTrnDataBySpecies = () => {
-  classifiedTrnData.value = trnData.value.reduce((acc, item) => {
-    const species = item.species;
-    if (!acc[species]) acc[species] = [];
-    acc[species].push(item);
-    return acc;
-  }, {});
-};
-
-// Paginate TRN data for each species
-const paginatedData = computed(() => {
-  const result = {};
-  for (const [species, data] of Object.entries(classifiedTrnData.value)) {
-    const start = (pagination.value.currentPage - 1) * pagination.value.pageSize;
-    const end = start + pagination.value.pageSize;
-    result[species] = data.slice(start, end);
-  }
-  return result;
-});
-
-// Handle page change
-const handlePageChange = () => {
-  nextTick(() => renderActiveTabChart());
-};
-
-// Generate Network Graph
-const generateNetworkChart = (species) => {
-  const chartDom = document.getElementById(`network-chart-${species}`);
-  if (!chartDom) return;
-
-  // 清理已有图表实例
-  if (chartInstances.has(species)) {
-    chartInstances.get(species).dispose();
-  }
-
-  // 初始化 ECharts 实例
-  const chartInstance = echarts.init(chartDom, null, {
-    width: chartDom.offsetWidth,
-    height: 600,
-  });
-  chartInstances.set(species, chartInstance);
-
-  // 数据处理
-  const tfGene = classifiedTrnData.value[species][0]?.tf; // 中心 TF 基因
-  const data = [
-    // 中心 TF 基因
-    {
-      name: tfGene,
-      category: 'TF',
-      itemStyle: { color: '#D5614A' }, // 红色
-      symbolSize: 50, // 尺寸较大
-      label: { show: true, position: 'right', formatter: '{b}' }, // 始终显示标签
+export default {
+  name: 'TFSearch',
+  components: {
+    TF
+  },
+  data() {
+    return {
+      form: {
+        gene_id: 'Bca101C2G037520'
+      },
+      result: null,
+      activeTab: '',
+      chartInstances: new Map(),
+      loading: false,
+      error: null,
+      currentPage: 1,
+      pageSize: 15,
+    }
+  },
+  computed: {
+    tableColumns() {
+      if (!this.result?.GrnHomologous?.[0]) return []
+      return Object.entries(this.result.GrnHomologous[0])
+          .filter(([key]) => key !== 'id')
+          .map(([key]) => ({
+            prop: key,
+            label: key.split('_')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ')
+          }))
     },
-    // Target 基因
-    ...classifiedTrnData.value[species].map((item) => ({
-      name: item.target,
-      category: 'Target',
-      itemStyle: { color: '#81B5CD' }, // 蓝色
-      symbolSize: 30, // 尺寸较小
-      label: {
-        show: false, // 初始不显示
-        emphasis: { show: true }, // 鼠标悬停时显示标签
-      },
-    })),
-  ];
+    getCurrentSpeciesData() {
+      if (!this.activeTab || !this.result?.GrnOrganismGrouped) return [];
+      return this.result.GrnOrganismGrouped[this.activeTab] || [];
+    },
+    paginatedData() {
+      const start = (this.currentPage - 1) * this.pageSize;
+      const end = start + this.pageSize;
+      return this.getCurrentSpeciesData.slice(start, end);
+    }
+  },
+  methods: {
+    async fetchData() {
+      this.loading = true;
+      this.error = null;
+      try {
+        const response = await axios.get('https://brassicaedb.com/api/grn/', {
+          params: { gene_id: this.form.gene_id }
+        });
+        this.result = response.data;
+        if (this.result?.GrnOrganismGrouped) {
+          this.activeTab = Object.keys(this.result.GrnOrganismGrouped)[0];
+          this.$nextTick(() => {
+            this.renderActiveTabChart();
+          });
+        }
+      } catch (error) {
+        console.error('Request failed:', error);
+        this.error = 'Request failed, please try again';
+      } finally {
+        this.loading = false;
+      }
+    },
+    formatSpeciesName(species) {
+      return species.replace('_', ' ')
+    },
+    renderActiveTabChart() {
+      if (this.activeTab) {
+        this.$nextTick(() => {
+          this.generateNetworkChart(this.activeTab)
+        })
+      }
+    },
+    generateNetworkChart(species) {
+      const chartDom = document.getElementById(`network-chart-${species}`);
+      if (!chartDom) return;
 
-  // 连接线数据
-  const links = classifiedTrnData.value[species].map((item) => ({
-    source: tfGene,
-    target: item.target,
-    lineStyle: { color: '#869197', width: 2 }, // 连线颜色和样式
-  }));
+      // 设置容器高度
+      chartDom.style.height = '800px';  // 增加图表高度
 
-  // ECharts 配置项
-  const option = {
-    tooltip: { trigger: 'item' },
-    legend: [
-      {
-        data: ['TF', 'Target'],
-        textStyle: { color: '#333' },
-      },
-    ],
-    series: [
-      {
-        type: 'graph',
-        layout: 'force',
-        data,
-        links,
-        categories: [
-          { name: 'TF', itemStyle: { color: '#D5614A' } },
-          { name: 'Target', itemStyle: { color: '#81B5CD' } },
-        ],
-        roam: true, // 支持拖拽和缩放
-        label: { show: true, position: 'right' },
-        emphasis: {
-          focus: 'adjacency', // 鼠标悬停时高亮连线
-          lineStyle: { width: 3 },
+      // 获取当前物种的数据
+      const speciesData = this.result.GrnOrganismGrouped[species];
+      if (!speciesData || !speciesData.length) return;
+
+      // 清理已存在的实例
+      if (this.chartInstances.has(species)) {
+        this.chartInstances.get(species).dispose();
+      }
+
+      const chart = echarts.init(chartDom);
+      this.chartInstances.set(species, chart);
+
+      const nodes = new Set();
+      const edges = [];
+
+      speciesData.forEach(item => {
+        nodes.add(item.Coregene);
+        nodes.add(item.Targetgene);
+
+        edges.push({
+          source: item.Coregene,
+          target: item.Targetgene,
+          classification: item.Classification
+        });
+      });
+
+      const option = {
+        animation: false,
+        tooltip: {
+          trigger: 'item',
+          formatter: function(params) {
+            if (params.dataType === 'edge') {
+              return `${params.data.source} -> ${params.data.target}<br/>Type: ${params.data.classification}`;
+            }
+            return params.name;
+          }
         },
-        lineStyle: {
-          color: 'source',
-          curveness: 0, // 连线弯曲程度
-        },
-        force: {
-          edgeLength: [50, 100], // 连线长度范围
-          repulsion: 200, // 节点之间的斥力
-          gravity: 0.05, // 引力参数
-          layoutAnimation: false, // 布局动画
-        },
+        series: [{
+          type: 'graph',
+          layout: 'force',
+          data: [...nodes].map(node => ({
+            name: node,
+            value: node,
+            category: edges.some(e => e.source === node) ? 0 :
+                edges.some(e => e.target === node && e.classification === 'TF_Hub') ? 1 : 2,
+            symbolSize: edges.some(e => e.source === node) ? 20 : 10,
+            itemStyle: {
+              color: edges.some(e => e.source === node) ? '#D5614A' :  // 中心节点为红色
+                  edges.some(e => e.target === node && e.classification === 'TF_Hub') ? '#D5614A' :  // TF_Hub目标为红色
+                      '#81B5CD'  // 普通目标为蓝色
+            }
+          })),
+          categories: [
+            { name: 'Coregene' },
+            { name: 'TF_Hub Target' },
+            { name: 'Normal Target' }
+          ],
+          edges: edges.map(edge => ({
+            source: edge.source,
+            target: edge.target,
+            lineStyle: {
+              color: edge.classification === 'TF_Hub' ? '#D5614A' : '#81B5CD',
+              curveness: 0
+            }
+          })),
+          force: {
+            repulsion: 200,
+            gravity: 0.1,
+            edgeLength: 100,
+            layoutAnimation: false
+          },
+          draggable: true,
+          emphasis: {
+            focus: 'adjacency'
+          }
+        }]
+      };
+
+      chart.setOption(option);
+
+      // 处理窗口大小变化
+      const handleResize = () => {
+        chart.resize();
+      };
+      window.addEventListener('resize', handleResize);
+
+      // 组件销毁时清理
+      this.$once('hook:beforeDestroy', () => {
+        window.removeEventListener('resize', handleResize);
+      });
+    },
+    handleSizeChange(val) {
+      this.pageSize = val;
+      this.currentPage = 1;
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val;
+    }
+  },
+  mounted() {
+    this.fetchData();
+  },
+  beforeUnmount() {
+    this.chartInstances.forEach(chart => chart.dispose())
+    this.chartInstances.clear()
+  },
+  watch: {
+    'result.GrnOrganismGrouped': {
+      handler(newVal) {
+        if (newVal) {
+          this.activeTab = Object.keys(newVal)[0]
+          this.$nextTick(() => {
+            this.renderActiveTabChart()
+          })
+        }
       },
-    ],
-  };
-
-  // 设置图表配置
-  chartInstance.setOption(option);
-};
-
-// 渲染图表的函数
-const renderActiveTabChart = () => {
-  // 只有当activeTab有值时才渲染对应的图表
-  if (activeTab.value) {
-    nextTick(() => generateNetworkChart(activeTab.value)); // 使用nextTick确保DOM更新
+      immediate: true
+    },
+    // 监听 activeTab 变化，自动刷新网络图
+    activeTab: {
+      handler(newTab) {
+        if (newTab) {
+          this.$nextTick(() => {
+            this.generateNetworkChart(newTab);
+          });
+        }
+      },
+      immediate: true
+    }
   }
-};
-
-// Cleanup chart instances on component unmount
-onUnmounted(() => {
-  chartInstances.forEach((chart) => chart.dispose());
-  chartInstances.clear();
-});
+}
 </script>
 
+<style scoped>
 
+.main-container {
+  width: 100%;
+  margin-top: 30px;
 
+}
+
+.api-test-container {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.input-section {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 60px 24px;
+  margin: 10px 0;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.search-form {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: 100%;
+}
+
+:deep(.el-form-item__label) {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 50px;
+}
+
+:deep(.el-input__inner) {
+  height: 50px;
+  line-height: 50px;
+  font-size: 16px;
+  padding: 0 15px;
+}
+
+.button-item {
+  margin-left: 0;
+  padding-left: 120px;
+}
+
+:deep(.el-button) {
+  padding: 12px 30px;
+  font-size: 16px;
+}
+
+.result-section {
+  margin-top: 10px;
+}
+
+.result-section h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.result-section pre {
+  margin-top: 30px;
+  background: #f5f7fa;
+  padding: 15px;
+  border-radius: 4px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.data-card {
+  margin: 10px 0;
+  width: 100%;
+}
+
+.data-card h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+:deep(.el-table) {
+  margin-bottom: 20px;
+}
+
+:deep(.el-table th) {
+  background-color: #f5f7fa;
+  color: #606266;
+  font-weight: bold;
+}
+
+:deep(.el-tabs__content) {
+  padding: 20px 0;
+}
+
+.network-card {
+  width: 100%;
+  margin: 20px 0;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.network-chart {
+  width: 100%;
+  min-height: 300px;
+  margin: 0 auto;
+}
+
+.legend {
+  text-align: center;
+  margin-top: 20px;
+  padding: 10px;
+  font-size: 16px;
+  background-color: #f5f7fa;
+  border-radius: 4px;
+}
+
+.legend span {
+  margin: 0 15px;
+  padding: 4px 12px;
+  border-radius: 2px;
+}
+
+/* 响应式调整 */
+@media screen and (max-width: 1200px) {
+  .description-box {
+    flex-direction: column;
+  }
+
+  .gene-form {
+    max-width: 100%;
+  }
+}
+
+.input-card {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 40px 24px; /* 增加上下内边距 */
+  margin: 10px 0;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+.search-form {
+  display: flex;
+  flex-direction: column; /* 改为纵向排列 */
+  gap: 20px; /* 增加表单项之间的间距 */
+}
+
+.button-item {
+  margin-left: 100px; /* 与输入框对齐 */
+}
+
+:deep(.el-form-item) {
+  margin-bottom: 0;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+.error-alert {
+  margin: 20px 0;
+}
+
+.gene-text {
+  font-family: 'Monaco', monospace;
+  font-size: 14px;
+  color: #2c3e50;
+}
+
+.classification-tag {
+  font-size: 14px;
+  padding: 8px 12px;
+}
+
+.pagination-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+.legend {
+  margin-top: 15px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.legend-item {
+  margin: 0 10px;
+}
+
+.legend-item.tf {
+  color: #D5614A;
+}
+
+.legend-item.non-tf {
+  color: #81B5CD;
+}
+
+/* 分页器样式 */
+:deep(.el-pagination) {
+  font-size: 14px;
+  font-weight: normal;
+  padding: 2px 5px;
+}
+
+:deep(.el-pagination .el-pagination__total) {
+  font-size: 14px;
+}
+
+:deep(.el-pagination .el-pagination__sizes) {
+  margin-left: 15px;
+}
+
+:deep(.el-select .el-input) {
+  width: 110px;
+}
+
+:deep(.el-pagination button) {
+  min-width: 35px;
+  height: 35px;
+}
+
+:deep(.el-pagination.is-background .el-pager li) {
+  min-width: 35px;
+  height: 35px;
+  line-height: 35px;
+}
+</style>

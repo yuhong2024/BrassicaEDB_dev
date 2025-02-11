@@ -18,134 +18,162 @@
 
     <!-- 右侧卡片：Global Visitors -->
     <el-card class="content-card right-card">
-      <h3 class="global-title">Global Visitors</h3>
+      <h2 class="global-title">Global Visitors</h2>
       <p class="global-description">
-        This feature shows the real-time global visitors and statistics about the usage.
+        Real-time global visitors and usage statistics.
       </p>
+
+      <!-- Clustrmaps 访问统计 -->
+      <div class="visitor-map" ref="mapContainer"></div>
+
       <div class="visit-stats">
-        <p><strong>Date and Time:</strong> {{ stats.date }}</p>
-        <p><strong>Today's Visits:</strong> {{ stats.todayCount }}</p>
-        <p><strong>Total Visits:</strong> {{ stats.totalCount }}</p>
+        <p><strong>Date and Time:</strong> {{ currentDateTime }}</p>
       </div>
     </el-card>
   </div>
 </template>
 
 <script setup>
-import {onMounted, ref} from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import Plyr from 'plyr';
-import 'plyr/dist/plyr.css'; // 引入 Plyr 样式
-
-// 引入本地图片
+import 'plyr/dist/plyr.css';
 import adImage from '@/assets/img/home/display/ad.png';
 
 const videoPlayer = ref(null);
+const mapContainer = ref(null);
+const currentDateTime = ref('');
 
 const stats = ref({
-  date: '',
   todayCount: 0,
-  totalCount: 0,
+  totalCount: 0
 });
 
+// 更新当前时间
+const updateDateTime = () => {
+  const now = new Date();
+  currentDateTime.value = now.toLocaleString();
+};
+
+// 初始化 Clustrmaps
+const initClustrmaps = () => {
+  const script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.id = 'clustrmaps';
+  script.src = '//cdn.clustrmaps.com/map_v2.js?cl=2456d9&w=400&t=tt&d=7QquNvfAS3DeD0uQ7inLeT4Zturel7azIoX5nYldeAw&co=e1eaf0&ct=4d2020';
+  mapContainer.value.appendChild(script);
+};
+
 onMounted(() => {
-  // 初始化 Plyr.js
+  // 初始化视频播放器
   new Plyr(videoPlayer.value, {
     controls: ['play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'fullscreen'],
     autoplay: false,
-    tooltips: {controls: true},
+    tooltips: { controls: true },
   });
 
-  // 处理访问量统计
-  loadVisitStats();
+  // 初始化访问统计地图
+  initClustrmaps();
+
+  // 更新时间
+  updateDateTime();
+  const timeInterval = setInterval(updateDateTime, 1000);
+
+  // 清理定时器
+  onUnmounted(() => {
+    clearInterval(timeInterval);
+  });
 });
-
-function loadVisitStats() {
-  const startDate = '2024-12-01'; // 设置开始计数日期
-  const currentDate = new Date().toLocaleDateString();
-
-  // 获取本地存储的数据
-  const storedDate = localStorage.getItem('visitDate');
-  const todayVisits = localStorage.getItem('todayVisits') || 0;
-  const totalVisits = localStorage.getItem('totalVisits') || 0;
-
-  // 如果是新的日期，重置今日访问量
-  if (storedDate !== currentDate) {
-    localStorage.setItem('visitDate', currentDate);
-    localStorage.setItem('todayVisits', 0);
-  }
-
-  // 如果是2024年12月1日后才开始计数，则更新统计
-  if (currentDate >= startDate) {
-    const newTodayVisits = parseInt(todayVisits) + 1;
-    const newTotalVisits = parseInt(totalVisits) + 1;
-
-    // 更新 localStorage
-    localStorage.setItem('todayVisits', newTodayVisits);
-    localStorage.setItem('totalVisits', newTotalVisits);
-
-    // 更新统计数据
-    stats.value.date = currentDate + ' ' + new Date().toLocaleTimeString();
-    stats.value.todayCount = newTodayVisits;
-    stats.value.totalCount = newTotalVisits;
-  }
-}
 </script>
 
 <style scoped>
 .main-container {
-  display: flex; /* 使用 Flexbox 布局 */
-  width: 100%; /* 容器宽度占满整个父级 */
-  gap: 20px; /* 两个卡片之间的间隔 */
-  margin: 0; /* 去除多余的外边距 */
-  padding: 0; /* 去除内边距 */
+  display: flex;
+  gap: 15px; /* 减少卡片间距 */
+  padding: 0;
+  margin: 0;
+  width: 100%;
 }
 
 .content-card {
-  border-radius: 10px;
+  border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  padding: 15px; /* 减少内边距 */
+  margin: 0;
   background-color: #fff;
 }
 
 .left-card {
-  flex: 7; /* 左侧卡片占70% */
+  flex: 7;
 }
 
 .right-card {
-  flex: 3; /* 右侧卡片占30% */
+  flex: 3;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  text-align: center;
-}
-
-.video-wrapper {
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.plyr {
-  width: 100%; /* 视频宽度占满卡片 */
-  height: auto;
+  justify-content: flex-start; /* 改为顶部对齐 */
+  gap: 15px; /* 添加内部元素间距 */
 }
 
 .video-title, .global-title {
-  margin-bottom: 15px;
-  font-size: 1.5rem;
+  font-size: 1.8rem; /* 增大标题字体 */
   font-weight: bold;
   color: #333;
+  margin: 0 0 15px 0;
 }
 
 .global-description {
-  font-size: 1rem;
+  font-size: 1.2rem; /* 增大描述文字 */
   color: #555;
-  line-height: 1.6;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.video-wrapper {
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 0;
+}
+
+.plyr {
+  width: 100%;
+  aspect-ratio: 16/9; /* 保持视频比例 */
+}
+
+.visitor-map {
+  width: 400px;
+  height: 300px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .visit-stats {
-  margin-top: 20px;
-  font-size: 1rem;
+  margin-top: auto; /* 将时间推到底部 */
+  font-size: 1.1rem; /* 增大时间字体 */
   color: #333;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 10px;
+  border-radius: 6px;
+}
+
+.visit-stats p {
+  margin: 0;
+}
+
+/* 响应式布局 */
+@media (max-width: 1200px) {
+  .main-container {
+    flex-direction: column;
+  }
+
+  .left-card, .right-card {
+    width: 100%;
+  }
+
+  .visitor-map {
+    width: 100%;
+    max-width: 400px;
+  }
 }
 </style>

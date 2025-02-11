@@ -42,27 +42,11 @@ const breadcrumbs = [
       <!-- Text Section -->
       <div class="info-container">
         <p>
-      The overall set of all genomic variations of a species, which contains genomic information of all 
-      individuals of the species, revealing genetic diversity and variation within the species. Core Genome: 
-      A collection of genes present in all individuals, usually essential genes for a species, that are 
-      retained in all members of the species and are responsible for maintaining the basic biological 
-      functions of the species. Accessory Genome: Includes genes that are not present in all individuals 
-      and are usually associated with adaptation, environmental response, pathogenicity, or other specific 
-      functions. These genes may only be present in some individuals, or may be activated under different 
-      environmental conditions.
+          Pan-transcriptome refers to the collection of all transcripts produced by all individuals or tissues of a species under different conditions, including the core transcriptome and the variable transcriptome. A core transcriptome is a transcript that is universally expressed in all individuals or tissues and is usually associated with basic biological functions. A variable transcriptome is a transcript that is expressed only in a particular individual, tissue, or condition, reflecting the specificity of the individual or tissue. The regulation of the expression of core transcripts and variable transcripts between different species can be studied from the aspect of species evolution, comparing the transcriptome of different species and revealing the evolutionary mechanism.
     </p>
+
     <p>
-      Pangenomics shows the genetic differences between individuals within a species and can help reveal 
-      genomic differences between individuals, different subspecies, different environments, or different 
-      conditions. Helps to understand the evolution of species: By analyzing the pan-genome, it is possible 
-      to gain insight into the evolutionary history of species, the horizontal transfer, mutation and 
-      selection process of genes, and how to adapt to the environment through genome changes.
-    </p>
-    <p>
-      We collected all the published genomes of <i>Brassica napus</i>, <i>Brassica oleracea</i> and 
-      <i>Brassica rapa</i>, conducted pairby-pair comparison of each genome of these three species through 
-      blast, and sorted out the best comparison results. The core genes and variable genes of these three 
-      species were analyzed.
+      We collected all the published genomes of Brassica napus, Brassica oleracea and Brassica rapa, conducted pairby-pair comparison of each genome of these three species through blast, and sorted out the best comparison results. The core genes and variable genes of these three species were analyzed.
     </p>
       </div>
     </div>

@@ -101,10 +101,9 @@ onMounted(drawBarChart);
 <style scoped>
 /* 主容器样式 */
 .container {
+  margin-top: 20px;
   width: 100%;
   max-width: 100%;
-  margin: 0 auto;
-  padding: 20px;
   box-sizing: border-box;
 }
 

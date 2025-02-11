@@ -42,12 +42,7 @@ const breadcrumbs = [
       <!-- Text Section -->
       <div class="info-container">
         <p>
-          Homologous genes are genes that have similar sequences and functions in different species, derived
-          from their common ancestral genes. They can be traced back to a common ancestral gene, with distinct
-          genes formed through species differentiation or gene duplication events during evolution. The study
-          of homologous genes is of great significance for understanding gene function, genome evolution and
-          genetic relationships among species. By comparing homologous genes in different species, scientists
-          can infer the origin and evolution of these genes and reveal their function in the organism.
+          Homologous genes are genes that have similar sequences and functions in different species, derived from their common ancestral genes. They can be traced back to a common ancestral gene, with distinct genes formed through species differentiation or gene duplication events during evolution.The study of homologous genes is of great significance for understanding gene function, genome evolution and genetic relationships among species. By comparing homologous genes in different species, scientists can infer the origin and evolution of these genes and reveal their function in the organism.
         </p>
         <p>
           We used blast to analyze the representative genomes of six species of <i>Brassica</i> L., including

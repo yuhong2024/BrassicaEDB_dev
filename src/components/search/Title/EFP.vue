@@ -15,7 +15,7 @@ const breadcrumbs = [
   <!-- Breadcrumb Navigation -->
   <div class="breadcrumb-container">
     <div class="breadcrumb-left">
-      <h1>eFP</h1>
+      <h1>Gene eFP-seq</h1>
     </div>
     <div class="breadcrumb-right">
       <nav aria-label="breadcrumb">
@@ -39,14 +39,21 @@ const breadcrumbs = [
       <div class="image-container">
         <img :src="speciesImage" alt="eFP Image" class="species-image" />
       </div>
+
       <!-- Text Section -->
       <div class="info-container">
         <p>
-          eFP-seq visualizes RNA-seq data, helping researchers explore gene expression
-          across various conditions. This tool simplifies the process of analyzing
-          transcriptome-level data and aids in functional genomics and breeding research.
+          eFP-seq (Express-Fusion Protein sequencing) is a highly effective gene expression analysis technique for studying gene regulation, protein function, and cell biological processes by capturing and quantification of Fusion protein expression. The combination of RNA-seq and eFP-seq allows the researchers to simultaneously obtain the level of gene transcription and the specific dynamics of the fusion protein within the cell.
+        </p>
+        <p>
+          We conducted transcriptome sequencing and analysis on 103 different tissue periods of Brassica napus, and showed the expression levels of each gene obtained at different periods in the corresponding images.
         </p>
       </div>
+
+
+
+
+
     </div>
   </div>
 </template>
@@ -121,11 +128,19 @@ const breadcrumbs = [
   border-radius: 8px;
 }
 
+
+
 .info-container {
   flex: 1;
-  font-size: 1.1rem;
+}
+
+.info-container p {
+  font-size: 1.10rem;
+  line-height: 1.4;
   color: #333;
-  line-height: 1.6;
+  margin-bottom: 15px;
+  text-align: justify;
+  letter-spacing: 0.2px;
 }
 
 /* Responsive Design */

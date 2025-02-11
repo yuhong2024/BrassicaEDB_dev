@@ -2,8 +2,6 @@
 // Import species image
 import speciesImage from '@/assets/img/home/search/AS.svg';
 
-
-
 // Breadcrumbs Configuration
 const breadcrumbs = [
   { name: 'Home', path: '/' },
@@ -16,16 +14,12 @@ const breadcrumbs = [
   <!-- Breadcrumb Navigation -->
   <div class="breadcrumb-container">
     <div class="breadcrumb-left">
-      <h1>Alternative Splicing</h1>
+      <h1>Gene Alternative Splicing</h1>
     </div>
     <div class="breadcrumb-right">
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-          <li
-              class="breadcrumb-item"
-              v-for="(item, index) in breadcrumbs"
-              :key="index"
-          >
+          <li class="breadcrumb-item" v-for="(item, index) in breadcrumbs" :key="index">
             <router-link :to="item.path">{{ item.name }}</router-link>
           </li>
         </ol>
@@ -43,24 +37,10 @@ const breadcrumbs = [
       <!-- Text Section -->
       <div class="info-container">
         <p>
-          Alternative Splicing is an important process in gene expression regulation, which allows the same 
-          gene to produce multiple different mRNA transcripts through different splicing methods, thus encoding 
-          different proteins. This process greatly increases the complexity of the genome and the diversity of 
-          proteins. After mRNA transcription, introns (introns) are removed and exons (exons) are connected to 
-          form mature mRNA. Variable splicing is the process in which different mRNA variants are produced by 
-          selecting different exons or introns.
+          Alternative Splicing is an important process in gene expression regulation, which allows the same gene to produce multiple different mRNA transcripts through different splicing methods, thus encoding different proteins. In plants, alternative splicing not only increases the complexity of the genome, but also provides flexible regulatory mechanisms for plants under complex environmental conditions, helping them adapt to various growth and development environments. There are five types of alternative splicing : Alternative3' splice site (A3SS), Alternative5' splice site (A5SS), Mutuallyexclusive exons (MXE), Retainedintron (RI), Skippedexon (SE)
         </p>
         <p>
-          In plants, alternative splicing also plays an important role and, similar to animals, plays a key 
-          role in regulating gene expression and function. Variable splicing in plants not only increases the 
-          complexity of the genome, but also provides flexible regulatory mechanisms for plants under complex 
-          environmental conditions, helping them adapt to various growth and development environments.
-        </p>
-        <p>
-          We used <i>Brassica carinata</i> (10167), <i>Brassica juncea</i> (Tumida_V2), <i>Brassica napus</i> 
-          (ZS11), <i>Brassica nigra</i> (NI100_V2), <i>Brassica oleracea</i> (JZS_V2) and <i>Brassica rapa</i> 
-          (Chiifu_V4) as reference genomes. First, star and stringtie were used to predict new transcripts for 
-          each species, and salon was used to calculate TPM for each transcript.
+          We used <i>Brassica carinata</i> (10167), <i>Brassica juncea</i> (Tumida V2), <i>Brassica napus</i> (ZS11), <i>Brassica nigra</i> (NI100 V2), <i>Brassica oleracea</i> (JZS V2) and <i>Brassica rapa</i> (Chiifu V4) were used as reference genomes. First, star and stringtie were used to predict new transcripts for each species, and salon was used to calculate TPM for each transcript.
         </p>
       </div>
     </div>
@@ -85,10 +65,6 @@ const breadcrumbs = [
   color: #333;
 }
 
-.breadcrumb-right nav {
-  display: flex;
-}
-
 .breadcrumb {
   display: flex;
   list-style: none;
@@ -107,28 +83,21 @@ const breadcrumbs = [
   text-decoration: none;
 }
 
-.breadcrumb-item a:hover {
-  text-decoration: underline;
-}
-
-/* Card Layout */
+/* Introduction Section */
 .introduction-card {
   background: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
-  padding: 20px;
-  margin-bottom: 20px;
+  padding: 25px;
+  margin: 15px 0;
 }
 
-/* Introduction Section */
 .introduction {
   display: flex;
-  align-items: center;
   gap: 20px;
 }
 
 .image-container {
-  flex: 0 0 150px;
+  flex: 0 0 200px;
 }
 
 .species-image {
@@ -139,25 +108,36 @@ const breadcrumbs = [
 
 .info-container {
   flex: 1;
-  font-size: 1.1rem;
+}
+
+.info-container p {
+  font-size: 1.10rem;
+  line-height: 1.4;
   color: #333;
-  line-height: 1.6;
+  margin-bottom: 15px;
+  text-align: justify;
+  letter-spacing: 0.2px;
+}
+
+i {
+  font-style: italic;
+  color: #333;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
   .introduction {
     flex-direction: column;
-    text-align: center;
   }
 
   .image-container {
-    width: 120px;
-    margin-bottom: 15px;
+    width: 160px;
+    margin: 0 auto 15px;
   }
 
-  .info-container {
-    text-align: left;
+  .info-container p {
+    font-size: 1.1rem;
+    line-height: 1.5;
   }
 }
 </style>
